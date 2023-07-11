@@ -1,0 +1,905 @@
+@import "_variables.scss";
+@import "_mixins.scss";
+
+
+* {
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: $violet;
+
+    &:hover {
+        color: $violet;
+    }
+}
+
+p {
+    margin: 0;
+    color: $dark;
+}
+
+/* ========================================================= */
+/* UTILITIES */
+/* ========================================================= */
+
+.color-violet {
+    color: $violet;
+}
+.color-dark {
+    color: $dark;
+}
+.color-grey {
+    color: $grey;
+}
+.color-light-grey {
+    color: $light-grey;
+}
+.color-soft-grey {
+    color: $soft-grey;
+}
+.color-bootstrap-grey {
+    color: $bootstrap-grey;
+}
+.color-red {
+    color: $red;
+}
+
+.text-line{
+    text-decoration: line-through;
+}
+
+.bg-violet {
+    background-color: $violet;
+}
+.bg-dark {
+    background-color: $dark;
+}
+.bg-grey {
+    background-color: $grey;
+}
+.bg-light-grey {
+    background-color: $light-grey;
+}
+.bg-soft-grey {
+    background-color: $soft-grey;
+}
+.bg-bootstrap-grey {
+    background-color: $bootstrap-grey;
+}
+.bg-red {
+    background-color: $red;
+}
+
+.border-violet {
+    border-color: $violet;
+}
+.border-dark {
+    border-color: $dark;
+}
+.border-grey {
+    border-color: $grey;
+}
+.border-light-grey {
+    border-color: $light-grey;
+}
+.border-soft-grey {
+    border-color: $soft-grey;
+}
+.border-bootstrap-grey {
+    border-color: $bootstrap-grey;
+}
+.border-red {
+    border-color: $red;
+}
+
+.align-right {
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.flex {
+    display: flex;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-border {
+    border: none !important;
+}
+
+/* ========================================================= */
+/* GENERAL LAYOUT */
+/* ========================================================= */
+
+html {
+    font-size: 14px;
+}
+
+body {
+    padding-top: 70px;
+    padding-bottom: 20px;
+    background: $light-grey;
+    min-height: 100vh;
+}
+
+.overlay {
+    background-color: rgba(10,9,9,0.64);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 999;
+    padding-bottom: 0px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* NEOBOX */
+/* ================================ */
+
+.neobox {
+    @include neobox();
+}
+
+.neobox-title {
+    padding: 20px 30px 20px 27px;
+    border-left: 3px solid $violet;
+    border-bottom: 1px solid $light-grey;
+    display: flex;
+
+    > * {
+        margin: 0;
+    }
+}
+
+.neobox-subtitle {
+    min-height: 60px;
+    padding: 5px 30px;
+    border-top: 1px solid $light-grey;
+    border-left: 3px solid $violet;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > * {
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0;
+    }
+}
+
+li.neobox-subtitle {
+    border-top: none;
+    border-bottom: 1px solid $light-grey;
+}
+
+.neobox-content {
+    padding: 20px 30px;
+    position: relative;
+
+    .img-account{
+        width:130px;
+        height:130px;
+    }
+}
+
+.neobox-subtitle,
+.neobox-content {
+
+    + .neobox-content {
+        border-top: 1px solid $light-grey;
+    }
+}
+
+.neobox-header {
+    padding: 15px 20px;
+    background: $soft-grey;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $light-grey;
+    align-items: flex-start;
+
+    .neobox-header-container {
+        display: flex;
+        align-items: flex-start;
+
+        &:first-child {
+            flex: 1;
+        }
+
+        &:last-child {
+            align-items: flex-end;
+        }
+
+        .btn-group {
+            height: 50px;
+        }
+    }
+}
+
+.neobox-footer {
+    padding: 20px 30px;
+    border-top: 1px solid $light-grey;
+}
+
+.extra-padding {
+    padding: 20px 100px;
+}
+
+/* NEO SELECT CONTROL */
+/* ================================ */
+
+.neo-select-control {
+    border: 1px solid $bootstrap-grey;
+    background: white;
+    position: relative;
+    border-radius: 4px;
+    margin-right: 10px;
+    height: 50px;
+    min-width: 150px;
+
+    &::after {
+        content: "›";
+        font-size: 1.5rem;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: calc(50% - 10px);
+        right: 5px;
+        transform: rotate(90deg);
+        pointer-events: none;
+    }
+
+    label {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        pointer-events: none;
+    }
+
+    select {
+        line-height: 2rem;
+        width: 100%;
+        height: 100%;
+        border: 0px solid transparent;
+        background: transparent;
+        border-top: 1.2rem solid transparent;
+        padding: 0 35px 0px 10px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-progress-appearance: none;
+        cursor: pointer;
+        outline: none;
+    }
+}
+
+/* NEO SELECT 2 CONTROL */
+/* ================================ */
+
+.neo-select2-control {
+    min-width: 150px;
+    margin-right: 10px;
+    flex: 1;
+
+    > .select2 {
+        
+    }
+
+    .select2-container {
+        width: 100% !important;
+
+        .select2-selection--single {
+            height: auto;
+
+            .select2-selection__rendered {
+                padding: 17px 20px 3px 8px;
+            }
+        }
+    }
+}
+
+/* NEO SEARCH CONTROL */
+/* ================================ */
+
+.neo-search-control {
+    background: white;
+    position: relative;
+    display: flex;
+    width: 200px; 
+    
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        font-size: 2.2rem;
+        color: $violet;
+        width: 40px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    input {
+        padding: 0 0 0 40px;
+        width: 100%; 
+    }
+}
+
+/* ========================================================= */
+/* HEADER */
+/* ========================================================= */
+
+.main-header {
+    @include neobox;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    nav {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .navbar-toggler-icon{
+        font-size: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collapsing-elements {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1;
+    }
+
+    .dropdown-menu {
+        margin-top: 15px;
+
+        .dropdown-item:active {
+            color: $violet;
+            background: $soft-grey;
+        }
+    }
+    
+    .navbar-collapse.show,
+    .navbar-collapse.collapsing {
+        position: absolute;
+        top: 70px;
+        background: white;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+
+        .collapsing-elements {
+            display: block;
+        }
+
+        .nav-connected-user {
+            flex-direction: column
+        }
+    }
+
+    .logo {
+        width: 100px;
+        height: 50px;
+        margin-right: 25px;
+        background: url(../images/logo.png) center center no-repeat;
+        background-size: contain;
+    }
+}
+
+/* MAIN NAV */
+/* ================================ */
+
+.main-nav {
+
+    > .nav-item {
+        font-weight: bold;
+        margin: 0 5px;
+        text-transform: uppercase;
+        
+        .nav-link {
+            font-size: 0.95rem;
+            color: $grey;
+            padding: 5px 10px;
+            
+            &:hover {
+                color: white;
+                background: $violet;
+            }
+        }
+    }
+}
+
+.nav-visitor-user {
+
+    .nav-link {
+        color: $grey;
+        margin-left: 15px;
+
+        &:hover {
+            color: $violet;
+        }
+    }
+}
+
+
+.nav-connected-user {
+    display: flex;
+
+    .user {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &::after {
+            content: none;
+        }
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .user-info {
+        margin: 0 10px;
+        max-width: 150px;
+
+        p {
+            line-height: 1;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        i {
+            color: $grey;
+        }
+    }
+}
+
+.header-user-messages,
+.header-user-notifications {
+    margin: 0 35px 0 0;
+    position: relative;
+
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        font-size: 2.2rem;
+        margin-right: -5px;
+        color: $dark;
+    }
+
+    &:hover {
+        text-decoration: none;
+        
+        [class^="icon-"], 
+        [class*=" icon-"] {
+            color: $violet;
+        }
+    }
+}
+
+.notification-drop {
+     background:  $violet;
+     position: absolute;
+     bottom: 0;
+     left: 100%;
+     color: white;
+     border-radius: 4px;
+     font-size: .8rem;
+     min-width: 19px;
+     display: inline-block;
+     text-align: center;
+     padding: 0 2px;
+     box-sizing: border-box;
+}
+
+.notification-drop-big {
+    font-size: 1.2rem;
+    padding: 5px;
+}
+
+/* ========================================================= */
+/* USER DROPDOWN */
+/* ========================================================= */
+
+.dropdown-user-connected-menu {
+    margin-top: 15px;
+    margin-right: -15px;
+}
+
+
+/* ========================================================= */
+/* FORMS */
+/* ========================================================= */
+
+.form-group-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    li {
+        padding: 0;
+        margin: 0 0 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* ERRORS */
+/* ================================ */
+
+.validation-summary-errors ul {
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+
+    li {
+        color: $red;
+    }
+}
+
+.field-validation-error {
+    background: $red;
+    border-radius: 2px;
+    padding: 2px 5px;
+    font-size: .8rem;
+    
+
+    span {
+        color: white;
+    }
+}
+
+/* ========================================================= */
+/* CROPPIE / IMAGE UPLOAD CROP */
+/* ========================================================= */
+
+.croppie-content {
+    width: 100%;
+    height: 350px;
+    padding-bottom: 55px;
+}
+
+.croppie-preview-container {
+    padding: 20px;
+    background: $soft-grey;
+    border: 1px solid $bootstrap-grey;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    img {
+        margin-bottom: 20px;
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 50%;
+    }
+
+    .custom-file {
+        width: auto;
+    }
+}
+
+/* ========================================================= */
+/* PAGE TOP HEADER */
+/* ========================================================= */
+
+.page-top {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+/* ========================================================= */
+/* PROJECT USER / LINE FORM WITH BTN */
+/* ========================================================= */
+
+.row-with-btn .btn {
+    margin-top: 21px;
+
+    &.btn-sm {
+        margin-top: 30px;
+    }
+}
+
+.own-project-list {
+
+    .item {
+        align-items: flex-start !important;
+
+        ul li {
+            align-items: center !important;
+            min-height: 40px;
+
+            &:last-child {
+                border: none;
+            }
+
+            .item-picture {
+                margin: 0 10px !important;
+            }
+
+            img {
+                max-width: 30px;
+                max-height: 30px;    
+                margin: 0 !important;
+            }
+        }
+    }
+}
+
+.project-need-row {
+
+    .item-picture {
+        margin: 15px 0px 0;
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 4px 0;
+        }
+    }
+}
+
+/* ========================================================= */
+/* LISTING PAGES */
+/* ========================================================= */
+
+.items-listing {
+    @include items-listing();
+}
+
+/* ========================================================= */
+/* PAGINATION */
+/* ========================================================= */
+
+.neo-pagination {
+    display: flex;
+    justify-content: space-between;
+
+    
+    .neo-pagination-left,
+    .neo-pagination-center,
+    .neo-pagination-right {
+        display: flex;
+    }
+    
+    .neo-pagination-left {
+        flex: 1;
+
+        .neo-pagination-link {
+            margin-right: 10px;
+        }
+    }
+    .neo-pagination-center {
+        flex: 2;
+        justify-content: center;
+
+        .neo-pagination-link {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+    .neo-pagination-right {
+        flex: 1;
+        justify-content: flex-end;
+        
+        .neo-pagination-link {
+            margin-left: 10px;
+        }
+    }
+
+    .neo-pagination-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $violet;
+        background: $violet;
+        color: white !important;
+        font-size: 1.2rem;
+        min-width: 35px;
+        height: 40px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all .3s ease;
+
+        &:hover,
+        &:focus {
+            background: lighten($violet, 10);
+            color: #fff;
+        }
+    }
+
+    .neo-pagination-etc {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $grey;
+        font-size: 1.2rem;
+        min-width: 35px;
+        height: 40px;
+    }
+}
+
+/* ========================================================= */
+/* PROFILE */
+/* ========================================================= */
+
+.profile-presentation {
+    display: flex;
+}
+
+.profile-presentation-picture {
+    margin-right: 20px;
+
+    img {
+        max-width: 150px;
+        border-radius: 50%;
+    }
+}
+
+.profile-presentation-text {
+    flex: 1;
+    margin-top: 1rem;
+
+    h2 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: $violet;
+    }
+}
+
+/* PROFILE MODAL */
+/* ================================ */
+
+.modal .profile-presentation-picture {
+    margin-right: 0px;
+
+    img {
+        max-width: 100px;
+    }
+}
+
+/* ========================================================= */
+/* LISTING SMALL */
+/* ========================================================= */
+
+.items-listing-small {
+    @include items-listing();
+
+    .item {
+        padding: 10px 0;
+        align-items: center;
+
+        &:last-child {
+            border: none;
+        }
+
+        .form-control {
+            height: 34px !important;
+        }
+    }
+}
+
+/* ========================================================= */
+/* POPUP CONFIRM */
+/* ========================================================= */
+
+body .jconfirm .jconfirm-box .jconfirm-buttons button {
+    @extend .btn;
+    font-family: Montserrat !important;
+    text-transform: none !important;
+    font-weight: 300 !important;
+
+    &.btn-default {
+        background: $bootstrap-grey !important;
+        border-color: $bootstrap-grey !important;
+    }
+
+    &.btn-blue {
+        background: $violet !important;
+    }
+}
+
+/* ========================================================= */
+/* PARAMETERS */
+/* ========================================================= */
+
+.deleteSpecButton {
+    display: inline-block;
+    cursor: pointer;
+    color: $grey;
+    font-size: 1.5rem;
+    margin: -8px 0 0;
+    top: 5px;
+    position: relative;
+
+    &:hover {
+        color: $dark;
+    }
+}
+
+/* ========================================================= */
+/* TABLE CANDIDAT */
+/* ========================================================= */
+
+#tableCandidat .neobox-subtitle {
+    border-top: none;
+    border-bottom: 1px solid $light-grey;
+}
+
+/* ========================================================= */
+/* TABLE ADMINISTRATOR */
+/* ========================================================= */
+
+table {
+    .item-primary {
+        width: 30%;
+
+        .form-control {
+            min-width: 150px;
+        }
+    }
+    
+    .item-secondary {
+        width: 15%;
+        
+        .form-control {
+           min-width: 70px;
+        }
+    }
+    
+    .item-minor {
+        width: auto;
+        
+        .form-control {
+           // min-width: 100px;
+        }
+    }
+}

@@ -1,0 +1,11 @@
+﻿@using Neoma.RazorClassLib.Views.Emails.ConfirmAccount
+@using Neoma.RazorClassLib.Views.Shared
+@model ConfirmAccountEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Bienvenue!";
+}
+<p>
+    Votre inscription a bien été prise en compte. Veuillez cliquer sur le lien ci-dessous pour confirmer votre mail.
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Confirmer compte", Model.ConfirmEmailUrl))

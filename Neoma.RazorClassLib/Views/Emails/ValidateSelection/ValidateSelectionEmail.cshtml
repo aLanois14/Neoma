@@ -1,0 +1,12 @@
+﻿@using Neoma.RazorClassLib.Views.Shared
+@using Neoma.RazorClassLib.Views.Emails.ValidateSelection
+@model ValidateSelectionEmailViewModel
+
+@{
+    ViewData["EmailTitle"] = "Vous avez été ajouté dans un projet";
+}
+<p>
+    @Model.FondateurName vous a ajouté dans le projet <b>@Model.ProjetName</b>.
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Consulter détail", Model.EmailUrl))

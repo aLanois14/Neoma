@@ -1,0 +1,18 @@
+﻿@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Accès refusé";
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="neobox-content extra-padding text-center">
+                <p class="text-danger">Vous n'avez pas accès à cette page.</p>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,239 @@
+﻿@using Neoma.Utility
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using Neoma.Extensions
+@using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    var currentUser = SignInManager.UserManager.Users.FirstOrDefault(u => u.Id == User.getUserId());
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Neoma</title>
+
+    @RenderSection("Styles", required: false)
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/lib/icomoon/style.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/select2/dist/css/select2.min.css" />
+        <link rel="stylesheet" href="~/lib/rateyo/jquery.rateyo.min.css" />
+        <link rel="stylesheet" href="~/lib/confirm/dist/jquery-confirm.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/lib/icomoon/style.css" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/select2/dist/css/select2.min.css" />
+        <link rel="stylesheet" href="~/lib/rateyo/jquery.rateyo.min.css" />
+        <link rel="stylesheet" href="~/lib/confirm/dist/jquery-confirm.min.css" />
+    </environment>
+
+
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <nav class="navbar-expand-md">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon icon-bars"></span>
+                    </button>
+                    @if (currentUser.RoleActuel == "Co-surfeur")
+                    {
+                        <a asp-controller="ListeProjets" asp-action="Index" class="logo"></a>
+                    }
+                    else if (currentUser.RoleActuel == "Fondateur")
+                    {
+                        <a asp-controller="Candidat" asp-action="Index" class="logo"></a>
+                    }
+                    else if (currentUser.RoleActuel == "Swimmer")
+                    {
+                        <a asp-controller="Aficionado" asp-action="Index" class="logo"></a>
+                    }
+                    else if (currentUser.RoleActuel == "Administrateur")
+                    {
+                        <a asp-area="Admin" asp-controller="Utilisateur" asp-action="Index" class="logo"></a>
+                    }
+                    else if (currentUser.RoleActuel == "Super utilisateur")
+                    {
+                        <a asp-controller="ListeProjets" asp-action="Index" class="logo"></a>
+                    }
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <div class="collapsing-elements">
+
+                            <ul class="navbar-nav mr-auto main-nav">
+
+                                @if (currentUser.RoleActuel == "Super utilisateur")
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Tableau de bord
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="ListeProjets">
+                                                Liste Projets
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                                @if (currentUser.RoleActuel == "Co-surfeur" || currentUser.RoleActuel == "Fondateur")
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Projets
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            @if (currentUser.RoleActuel == "Fondateur")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="MesProjets">
+                                                    Mes Projets
+                                                </a>
+                                            }
+                                            @if (currentUser.RoleActuel == "Co-surfeur")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="MatchingCandidat">
+                                                    Matching
+                                                </a>
+                                            }
+                                            <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="ListeProjets">
+                                                Liste Projets
+                                            </a>
+                                            @if (currentUser.RoleActuel == "Co-surfeur")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="CandidatureCandidat">
+                                                    Mes Candidatures
+                                                </a>
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="CandidatureRetenue">
+                                                    Mes Projets retenus
+                                                </a>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+
+
+                                @if (!(currentUser.RoleActuel == "Administrateur" && User.IsInRole(SD.SuperEndUser)))
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Co-surfeurs
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            @if (currentUser.RoleActuel == "Fondateur")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="MatchingPorteur">
+                                                    Matching
+                                                </a>
+
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="Selections">
+                                                    Mes Selections
+                                                </a>
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="CandidaturePorteur">
+                                                    Liste Candidatures
+                                                </a>
+                                            }
+                                            @if (currentUser.RoleActuel == "Co-surfeur" || currentUser.RoleActuel == "Fondateur" || currentUser.RoleActuel == "Administrateur" || currentUser.RoleActuel == "Super utilisateur")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="Candidat">
+                                                    Liste Co-surfeurs
+                                                </a>
+                                            }
+                                            @if (currentUser.RoleActuel == "Swimmer")
+                                            {
+                                                <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="Aficionado">
+                                                    Liste Swimmers
+                                                </a>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (currentUser.RoleActuel == "Administrateur")
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Fondateurs
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a asp-area="" class="dropdown-item" asp-action="Index" asp-controller="Porteur">
+                                                Liste Fondateurs
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Administration
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="Role">Rôle</a>
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="Specialite">Spécialité</a>
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="Organisme">Organisme</a>
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="TypeProjet">Type de projet</a>
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="Utilisateur">Utilisateur</a>
+                                            <a class="dropdown-item" asp-area="Admin" asp-action="Index" asp-controller="SuperUser">Super utilisateur</a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </div>
+                }
+            </nav>
+        </div>
+    </header>
+
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        <input type="hidden" id="notification-message" data-request-url="@Url.Action("GetNbMessage", "Home")" />
+        <input type="hidden" id="notification" data-request-url="@Url.Action("InitializeCount", "Home")" />
+        @RenderBody()
+        <!-- <hr />
+        <footer>
+            <p>&copy; 2018 - Neoma</p>
+        </footer> -->
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/popper/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/rateyo/jquery.rateyo.min.js"></script>
+        <script type="text/javascript" src="~/lib/confirm/dist/jquery-confirm.min.js"></script>
+        <script src="~/lib/autosize/dist/autosize.min.js"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/chat.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/popper/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/rateyo/jquery.rateyo.min.js"></script>
+        <script type="text/javascript" src="~/lib/confirm/dist/jquery-confirm.min.js"></script>
+        <script src="~/lib/autosize/dist/autosize.min.js"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/chat.js"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

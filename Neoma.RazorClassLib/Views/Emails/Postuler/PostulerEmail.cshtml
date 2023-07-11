@@ -1,0 +1,11 @@
+﻿@using Neoma.RazorClassLib.Views.Shared
+@using Neoma.RazorClassLib.Views.Emails.Postuler
+@model PostulerEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Vous avez reçu une candidature";
+}
+<p>
+    @Model.CandidatName a postulé pour votre projet <b>@Model.ProjetName</b>.
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Consulter détail", Model.EmailUrl))

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Neoma.Models.PorteursViewModel.TableListPorteur>
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@functions{
+    IHtmlContent Specialite(int role, List<Specialite> specialite)
+    {
+        List<Specialite> list = new List<Specialite>();
+        string text = "";
+        foreach (var spec in specialite)
+        {
+            if (spec.RoleId == role)
+            {
+                list.Add(spec);
+            }
+        }
+
+        if (list.Count > 0)
+        {
+            Specialite last = list.Last();
+            foreach (var special in list)
+            {
+                text += !special.Equals(last) ? special.Name + " - " : special.Name;
+            }
+        }
+        return Html.Raw(text);
+    }
+}
+
+@foreach (var index in Model)
+{
+
+    var base64 = Convert.ToBase64String(index.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+    string FiltreRecherche = @ViewBag.TestFilter;
+    string Prenom_Nom = string.Format("{0} {1}", index.User.Prenom, index.User.Nom);
+    string Description = index.User.Description;
+    bool RolesOK = false;
+
+    foreach(var role in index.Role)
+    {
+        RolesOK = (FiltreRecherche == null || FiltreRecherche == "") || string.Format("{0} ({1})", role.Name, Specialite(role.Id, index.Specialite)).ToLower().Contains(FiltreRecherche);
+        if (RolesOK) { break; }
+    }
+
+    bool AffichageOK = (FiltreRecherche == null || FiltreRecherche == "") || (Prenom_Nom.ToLower().Contains(FiltreRecherche) || (Description != null && Description.ToLower().Contains(FiltreRecherche)) || RolesOK);
+
+    if (AffichageOK)
+    {
+        <li class="item">
+            <a asp-controller="Porteur" asp-action="DetailPorteur" asp-route-id="@index.User.Id" class="item-picture">
+                <img src="@imgAvatar" alt="" />
+            </a>
+            <a asp-controller="Porteur" asp-action="DetailPorteur" asp-route-id="@index.User.Id" class="item-primary">
+                <h3>@Prenom_Nom</h3>
+                <ul>
+                    @foreach (var role in index.Role)
+                    {
+                        <li>@role.Name (@Specialite(role.Id, index.Specialite))</li>
+                    }
+                </ul>
+                <p class="color-grey">@Description</p>
+            </a>
+        </li>
+    }
+}

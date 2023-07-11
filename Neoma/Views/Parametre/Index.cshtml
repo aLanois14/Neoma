@@ -1,0 +1,491 @@
+﻿@model Neoma.Models.AccountViewModel.ParameterViewModel
+@using Neoma.Extensions
+@using Neoma.Utility
+@{
+    ViewData["Title"] = "Paramètres";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    string photo(byte[] photo64)
+    {
+        var base64 = Convert.ToBase64String(photo64);
+        return string.Format("data:image/jpg;base64,{0}", base64);
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/croppie/croppie.css" />
+
+    <style>
+        .deleteSpec {
+            background-color: gainsboro;
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/croppie/croppie.js"></script>
+    <script src="~/lib/inputmask-4/js/inputmask.js"></script>
+    <script>
+        $(function() {
+            autosize(document.querySelectorAll('textarea'));
+            $('.make-select2').select2({
+                tags: true,
+                width: "100%"
+            });
+
+            $('.make-select2').on("select2:select", function () {
+                $("#btnSubmit").removeAttr("disabled");
+            });
+
+            $('.make-select2').on("select2:unselect", function () {
+                if ($(".specialite").select2('data') == "") {
+                    if (!$(".deleteSpec").length) {
+                        $("#btnSubmit").attr("disabled", "disabled");
+                    }
+                }
+            });
+
+            $("body").on("submit", "#formulaire", function (e) {
+                e.preventDefault();
+                $.confirm({
+                    title: 'Confirmation',
+                    content: 'Voulez-vous valider vos modifications ?',
+                    buttons: {
+                        Valider: function () {
+                            e.currentTarget.submit();
+                            return true;
+                        },
+                        Annuler: function () {
+                            return true;
+                        }
+                    }
+                });
+            });
+
+            $("body").on("change", ".Role", function () {
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+                $("#btnSubmit").attr("disabled", "disabled");
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "Parametre")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role": role},
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id).text(value.name));
+                        });
+                    }
+                });
+            });
+
+            $("body").on("click", ".remove", function () {
+                $(this).closest('.row').remove();
+            });
+
+            $("#btnSubmit").click(function () {
+
+                var ListSkill = [];
+                ListSkill = ListRowSkill();
+                var idsDeleteSpecs = getDeleteSpecsIds();
+                var suppression = (idsDeleteSpecs !== "");
+                var ajout = false;
+                for (var i = 0; i < ListSkill.length; i++) {
+                    if (ListSkill[i].Specialite.length > 0)
+                        ajout = true;
+                };
+                var message = "";
+                if (ajout && !suppression)
+                    message = "Voulez-vous ajouter ces spécialités ?";
+                else if (suppression && !ajout)
+                    message = "Voulez-vous retirer ces spécialités ?";
+                else
+                    message = "Voulez-vous ajouter/retirer ces spécialités ?";
+
+                $.confirm({
+                    title: 'Confirmation',
+                    content: message,
+                    buttons: {
+                        Valider: function () {
+                            var Candidat = {};
+                            Candidat.Id = $("#Utilisateur").val();
+                            Candidat.Role = ListSkill;
+                            Candidat.IdsDeleteSpecialites = idsDeleteSpecs;
+                            var items = JSON.stringify(Candidat);
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("addSpecialite", "Parametre")',
+                                contentType: "application/json; charset=utf-8",
+                                datatype: "json",
+                                data: items,
+                                async: false,
+                                success: function (response) {
+                                    if (response.success) {
+                                        window.location.href = response.result;
+                                    }
+                                }
+                            });
+                            return true;
+                        },
+                        Annuler: function () {
+                            return true;
+                        }
+                    }
+                });
+            });
+
+            function TableAddSkill() {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("TableSpecialiteAdd", "Parametre")',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        success: function (data) {
+                            $('#rowNeeds').append(data);
+                            $('.make-select2').select2({
+                                tags: true,
+                                width: "100%"
+                            });
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            $("#addSkill").click(function () {
+                TableAddSkill();
+            });
+
+            function ListRowSkill() {
+                var ListSkill = [];
+                $("#rowNeeds .row").each(function (n) {
+                    var Role = {};
+                    var ListSpecialite = [];
+                    var specialiteInit = $(this).children().find(".specialite").select2('data');
+                    $.each(specialiteInit, function (n) {
+                        console.log(specialiteInit[n].id + " " + specialiteInit[n].text);
+                        var Specialite = {};
+                        if ($.isNumeric(specialiteInit[n].id)) {
+                            Specialite.Id = specialiteInit[n].id;
+                        }
+                        else {
+                            Specialite.Id = 0;
+                        }
+                        Specialite.Name = specialiteInit[n].text;
+                        ListSpecialite[n] = Specialite;
+                    });
+                    Role.RoleId = $(this).children().find("#Role").val();
+                    Role.UtilisateurId = $("#Utilisateur").val();
+                    Role.Specialite = ListSpecialite;
+                    ListSkill[n] = Role;
+                });
+                return ListSkill;
+            }
+
+
+
+            var myCroppie;
+            $('#croppieModal').on('shown.bs.modal', function () {
+                if ($('#Photo')[0].files && $('#Photo')[0].files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        myCroppie.croppie('bind', {
+                            url: e.target.result
+                        }).then(function () {
+                            console.log('jQuery bind complete');
+                        });
+
+                    };
+
+
+                    reader.readAsDataURL($('#Photo')[0].files[0]);
+                }
+                else {
+                    swal("Sorry - your browser doesn't support the FileReader API");
+                }
+            });
+
+            myCroppie = $('#croppie').croppie({
+                viewport: {
+                    width: 200,
+                    height: 200,
+                    type: 'circle'
+                }
+            });
+
+            //on button click
+            myCroppie.croppie('result', 'html').then(function (html) {
+                // html is div (overflow hidden)
+                // with img positioned inside.
+            });
+
+            function popupResult(result) {
+
+                if (result.html) {
+                    html = result.html;
+                }
+
+                $("#User_PhotoStr").val(result.src);
+                var preview = $('#croppiePreview');
+                preview.find('img').replaceWith('<img src="' + result.src + '" />');
+
+            }
+
+            $('body').on('change', ".custom-file-input", function () {
+                $('#croppieModal').modal();
+            });
+
+            $('.croppie-result').on('click', function () {
+                var w = 100,
+                    h = 100,
+                    size = 'viewport';
+                if (w || h) {
+                    size = { width: w, height: h };
+                }
+                myCroppie.croppie('result', {
+                    type: 'canvas',
+                    size: size,
+                    resultSize: {
+                        width: 50,
+                        height: 50
+                    }
+                }).then(function (resp) {
+                    popupResult({
+                        src: resp
+                    });
+                });
+            });
+
+
+            // INPUT MASK
+            //$(":input").inputmask();
+            Inputmask().mask(document.querySelectorAll("input"));
+        })
+
+        function deleteSpecClick(id) {
+            //console.log(id);
+            var badgeSpec = $("#Spec_" + id);
+            if (badgeSpec.hasClass("deleteSpec")) {
+                badgeSpec.removeClass("deleteSpec");
+                if (!$(".deleteSpec").length) {
+                    if ($(".specialite").select2('data') == "") {
+                        $("#btnSubmit").attr("disabled", "disabled");
+                    }
+                }
+            }
+            else {
+                badgeSpec.addClass("deleteSpec");
+                $("#btnSubmit").removeAttr("disabled");
+            }
+
+        }
+
+        function getDeleteSpecsIds() {
+            var listeDeleteSpecs = "";
+            var delSpecs = $(".deleteSpec");
+
+            for (var i = 0; i < delSpecs.length; i++) {
+                listeDeleteSpecs += "|" + delSpecs[i].id.replace("Spec_", "");
+            }
+            return listeDeleteSpecs;
+        }
+
+    </script>
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox mt-4">
+            <form method="post" id="formulaire" asp-action="EditParameter" asp-controller="Parametre" enctype="multipart/form-data">
+                <input asp-for="User.Id" type="hidden" />
+                <div class="neobox-title space-between">
+                    <h2>Mes Informations</h2>
+                    <input type="submit" class="btn btn-sm" value="Enregistrer" />
+                </div>
+
+                <div class="neobox-content">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="User.Nom"></label>
+                                        <input asp-for="User.Nom" class="form-control" />
+                                        <span asp-validation-for="User.Nom" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="User.Prenom"></label>
+                                        <input asp-for="User.Prenom" class="form-control" />
+                                        <span asp-validation-for="User.Prenom" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="Email"></label>
+                                        <input asp-for="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label>N° de téléphone</label>
+                                        <input asp-for="Phone" class="form-control" data-inputmask="'mask': '99 99 99 99 99'" />
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="User.OrganismeId">Organisme</label>
+                                        <select asp-for="User.OrganismeId" id="Organisme" asp-items="Model.Organismes.ToSelectListItem(Model.User.OrganismeId)" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                @if (!User.IsInRole(SD.SuperEndUser))
+                                {
+                                    <div class="col-lg-5">
+                                        <div class="form-group" style="float:left;margin-top:21px">
+                                            <label class="checkbox">
+                                                <input type="checkbox" asp-for="User.EstCandidat" />
+                                                <span class="custom-visual"></span>Être co-surfeur
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="col-lg-10">
+                                    <div class="form-group">
+                                        <label>Présentation</label>
+                                        <textarea asp-for="User.Description" rows="4" class="form-control"></textarea>
+                                        <span asp-validation-for="User.Description" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="croppiePreview" class="croppie-preview-container">
+                                <img src="@photo(Model.User.Photo)" />
+                                <div class="custom-file">
+                                    <input type="file" id="Photo" class="custom-file-input" />
+                                    <label class="custom-file-label">Changer une photo</label>
+                                    <span asp-validation-for="User.PhotoStr" class="text-danger"></span>
+                                    <input type="hidden" asp-for="User.PhotoStr" value="@photo(Model.User.Photo)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        @if (!User.IsInRole(SD.SuperEndUser))
+        {
+            <section class="neobox mt-4">
+                <div class="neobox-title space-between">
+                    <h2>Mes Spécialités</h2>
+                    <button class="btn btn-sm" id="btnSubmit" disabled>Enregistrer</button>
+                </div>
+
+                <div class="neobox-content">
+                    <div class="row">
+                        <div class="form-group">
+                            @foreach (var role in Model.Role)
+                            {
+                                <div class="form-group">
+                                    <label>@role.Name</label>
+                                    <div class="space-between">
+                                        <div>
+                                            @foreach (var specialite in Model.Specialite)
+                                            {
+                                                if (specialite.RoleId == role.Id)
+                                                {
+                                                    <span class="badge @(specialite.Valide ? "border-bootstrap-grey" : "badge-danger")" id="@Html.Raw(string.Format("Spec_{0}", specialite.Id))">@specialite.Name @Html.Raw(specialite.Supprimable ? string.Format("<div class='deleteSpecButton' onclick='deleteSpecClick({0})'><i class='icon-close'></i></div>", specialite.Id) : "")</span>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <input id="Utilisateur" value="@Model.User.Id" type="hidden" />
+
+                    <div id="rowNeeds">
+                        @await Component.InvokeAsync("TableSpecialiteUser", null)
+                    </div>
+                </div>
+            </section>
+
+            <section class="neobox mt-4">
+                <div class="neobox-title">
+                    <h2>Mes Projets</h2>
+                </div>
+                <div class="neobox-content">
+                    <ul class="items-listing list">
+                        @foreach (var projet in Model.Projet)
+                        {
+                            <li class="item p-2">
+                                <div class="item-primary">
+                                    <h3>@projet.Name</h3>
+                                    <p class="color-grey"><i>@projet.TypeProjet.Name</i></p>
+                                    <p>@projet.Utilisateur.Organisme.Name</p>
+                                </div>
+                                <div class="item-secondary">
+                                    <p><b>Rôles</b></p>
+                                    <ul class="color-grey">
+                                        @foreach (var besoins in projet.Besoins)
+                                        {
+                                            <li>@besoins.Role.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="item-secondary">
+                                    @if (projet.Termine)
+                                    {
+                                        <span class="badge badge-primary">Terminé</span>
+                                    }
+                                    else if (projet.Complet)
+                                    {
+                                        <span class="badge" style="background-color:mediumpurple;color:white">Complet</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success">En cours</span>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="croppieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="croppie-content">
+                <div id="croppie"></div>
+            </div>
+            <div class="modal-footer bg-soft-grey">
+                <button type="button" class="btn btn-cancel" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn croppie-result" data-dismiss="modal">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

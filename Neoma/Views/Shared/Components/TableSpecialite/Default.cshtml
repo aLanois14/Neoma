@@ -1,0 +1,81 @@
+﻿@model Neoma.Models.SpecialiteViewModel.SpecialiteRoleViewModel
+@using Neoma.Extensions
+
+<table class="items-listing-small w-100">
+    <thead>
+        <tr>
+            <th class="item-primary mr-2">
+                <label>Rôles</label>
+            </th>
+            <th class="item-primary">
+                <label>Spécialité</label>
+            </th>
+            <th>
+                <label>Valide</label>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.SpecialiteList)
+        {
+
+        <tr>
+            <td class="item-primary mr-2">
+                <select id="item_RoleId" asp-items="Model.RoleList.ToSelectListItem(item.RoleId)" class="form-control"></select>
+            </td>
+            <td class="item-primary">
+                <input asp-for="@item.Name" class="form-control" />
+            </td>
+            <td>
+                <label class="checkbox">
+                    <input type="checkbox" id="Valide" checked="@(item.Valide ? true : false)" value="@(item.Valide ? "true" : "false")"/>
+                    <span class="custom-visual"></span>
+                </label>
+            </td>
+            <td>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-square btn-success btn-sm ml-2 edit" disabled data-id="@item.Id">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    @if (item.CanDelete)
+                    {
+                        <div class="btn btn-square btn-danger btn-sm ml-2" onclick="confirmDelete('@item.Id')">
+                            <i class="fa fa-times"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="btn btn-square btn-danger btn-sm ml-2" onclick="noDelete()">
+                            <i class="fa fa-times"></i>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+        }
+            <tr>
+                <td class="item-primary mr-2">
+                    <select id="item_RoleId" asp-items="Model.RoleList.ToSelectListItem(0)" class="form-control"></select>
+                </td>
+                <td class="item-primary">
+                    <input id="item_Name" class="form-control" />
+                </td>
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox" id="Valide" checked value="true" />
+                        <span class="custom-visual"></span>
+                    </label>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-square btn-success btn-sm ml-2 create" disabled>
+                            <i class="fa fa-save"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+    </tbody>
+</table>

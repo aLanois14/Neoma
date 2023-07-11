@@ -1,0 +1,11 @@
+﻿@using Neoma.RazorClassLib.Views.Emails.SuperUser
+@using Neoma.RazorClassLib.Views.Shared
+@model SuperUserEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Compte super utilisateur";
+}
+<p>
+    Un compte super utilisateur a été créé pour vous. Veuillez cliquer sur le lien ci-dessous pour définir votre mot de passe.
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Modifier mot de passe", Model.SuperUserEmailUrl))

@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Neoma.Models.SelectionViewModel.ItemRoleSelectionViewModel>
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@functions{
+IHtmlContent Specialite(List<Specialite> specialite)
+{
+    string text = "";
+
+
+    if (specialite.Count > 0)
+    {
+        Specialite last = specialite.Last();
+        foreach (var special in specialite)
+        {
+            text += !special.Equals(last) ? special.Name + " - " : special.Name;
+        }
+    }
+    return Html.Raw(text);
+}
+}
+
+@foreach (var index in Model)
+{
+
+
+    <div class="neobox-subtitle">
+        <h3>@index.Role.Name</h3>
+    </div>
+
+    <ul class="items-listing list">
+        @foreach (var item in index.ItemSelection)
+        {
+            var base64 = Convert.ToBase64String(item.User.Photo);
+            var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+            string FiltreRecherche = @ViewBag.TestFilter;
+            string Prenom_Nom = string.Format("{0} {1}", item.User.Prenom, item.User.Nom);
+            string NomProjet = item.Projet.Name;
+            string Commentaire = item.Selection.Commentaire;
+            bool RolesOK = false;
+
+            foreach (var role in item.ItemRole)
+            {
+                RolesOK = (FiltreRecherche == null || FiltreRecherche == "") || string.Format("{0} ({1})", role.Role.Name, Specialite(role.Specialites)).ToLower().Contains(FiltreRecherche);
+                if (RolesOK) { break; }
+            }
+
+            bool AffichageOK = (FiltreRecherche == null || FiltreRecherche == "") || (Prenom_Nom.ToLower().Contains(FiltreRecherche) || (NomProjet != null && NomProjet.ToLower().Contains(FiltreRecherche)) || (Commentaire != null && Commentaire.ToLower().Contains(FiltreRecherche)) || RolesOK);
+
+            if (AffichageOK)
+            {
+
+            <li class="item">
+                <a asp-controller="Selections" asp-action="DetailSelection" asp-route-id="@item.User.Id" class="item-picture">
+                    <img src="@imgAvatar" alt="" />
+                </a>
+                <a asp-controller="Selections" asp-action="DetailSelection" asp-route-id="@item.User.Id" class="item-primary">
+                    <h3>@item.User.Prenom @item.User.Nom</h3>
+                    <ul>
+                        @foreach (var role in item.ItemRole)
+                        {
+                            <li>@role.Role.Name (@Specialite(role.Specialites))</li>
+                        }
+                    </ul>
+                    <div class="rateStar" data-rateyo-rating="@string.Format("{0}", item.Selection.Note).Replace(",",".")" data-rateyo-star-width="20px" style="margin-left:-5px;"></div>
+                </a>
+                <div class="item-secondary">
+                    <p><b>Nom du Projet</b></p>
+                    <ul class="color-grey">
+                        <li>@item.Projet.Name</li>
+                    </ul>
+                </div>
+                <div class="item-secondary">
+                    <p><b>Commentaire</b></p>
+                    <ul class="color-grey">
+                        <li>@item.Selection.Commentaire</li>
+                    </ul>
+                </div>
+                <div class="item-fluid text-right">
+                    <a class="btn btn-sm validate" asp-controller="Selections" asp-action="Validate" asp-route-id="@item.Selection.Id">
+                        Valider sélection
+                    </a>
+                    <a class="btn btn-sm delete" asp-controller="Selections" asp-action="Delete" asp-route-id="@item.Selection.Id">
+                        Supprimer
+                    </a>
+                </div>
+            </li>
+
+        }
+    }
+    </ul>
+ }

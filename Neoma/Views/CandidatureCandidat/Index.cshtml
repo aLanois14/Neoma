@@ -1,0 +1,161 @@
+﻿@model IEnumerable<Neoma.Models.Candidature>
+@using Neoma.Extensions
+
+@{
+    ViewData["Title"] = "Mes candidatures";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script>
+        $(function () {
+            $(".delete").click(function () {
+                var value = $(this).val();
+                var link = '@Url.Action("Delete", "CandidatureCandidat", new { id = "replace" })';
+                link = link.replace("replace", value);
+                $.post(link, function (data){
+                    if (data.success) {
+                        window.location.href = data.result;
+                    }
+                });
+            })
+
+            getPagination('.items-listing');
+            $('.btn-grid').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('grid');
+                $('.items-listing').removeClass('list');
+                $('.btn-list').removeClass('active');
+            });
+            $('.btn-list').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('list');
+                $('.items-listing').removeClass('grid');
+                $('.btn-grid').removeClass('active');
+            });
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Projets</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Mes candidatures
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox">
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    <div class="neo-select-control">
+                        <label>Ligne à afficher</label>
+                        <select id="maxRows">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="0" selected>Tous</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neobox-content p-0">
+                <ul class="items-listing list">
+                    @foreach (var item in Model)
+                    {
+                        var base64 = Convert.ToBase64String(item.Projet.Utilisateur.Photo);
+                        var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+                        <li class="item">
+                            <a asp-action="DetailProjet" asp-controller="CandidatureCandidat" asp-route-id="@item.Projet.Id" class="item-secondary flex">
+                                <div class="item-picture">
+                                    <img src="@imgAvatar" alt="" />
+                                </div>
+                                <div class="item-primary">
+                                    <h3>@item.Projet.Name</h3>
+                                    <p class="color-grey"><i>@item.Projet.TypeProjet.Name</i></p>
+                                    <p>@item.Projet.Utilisateur.Organisme.Name</p>
+                                    <p></p>
+                                </div>
+
+                            </a>
+
+                            <div class="item-lines">
+                                <div class="item-line item-line-title">
+                                    <div class="item-col">
+                                        <p><b>Rôles</b></p>
+                                    </div>
+                                    <div class="item-col"></div>
+                                    <div class="item-col"></div>
+                                </div>
+                                <div class="item-line">
+                                    <div class="item-col">
+                                        <p class="color-grey"><i>@item.Besoins.Role.Name</i></p>
+                                    </div>
+                                    <div class="item-col">
+                                        @switch (item.Statut.ToString())
+                                        {
+                                            case "Pending":
+                                                <span class="badge badge-warning no-border">En attente</span>
+                                                break;
+                                            case "Refused":
+                                                <span class="badge badge-danger">Refusée</span>
+                                                break;
+                                            case "Complete":
+                                                <span class="badge badge-success">Complet</span>
+                                                break;
+                                        }
+                                        @if (item.Statut.ToString() == "Refused" || item.Statut.ToString() == "Complete")
+                                        {
+                                            <span><b>Motif : </b><i>@item.Motif</i></span>
+                                        }
+                                    </div>
+                                    <div class="item-col item-col-actions align-right">
+                                        @if (item.Statut.ToString() == "Pending")
+                                        {
+                                            <button class="btn btn-sm delete" value="@item.Id">Supprimer</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+
+        <div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+
+            <div class="neo-pagination-center">
+            </div>
+
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+

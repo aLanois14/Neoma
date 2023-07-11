@@ -1,0 +1,1943 @@
+﻿@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+  padding-left: 15px;
+  padding-right: 15px; }
+
+/* Carousel */
+.carousel-caption p {
+  font-size: 20px;
+  line-height: 1.4; }
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"], .carousel-inner .items-listing tr img[src$=".svg"], .items-listing .carousel-inner tr img[src$=".svg"], .carousel-inner .items-listing-small tr img[src$=".svg"], .items-listing-small .carousel-inner tr img[src$=".svg"] {
+  width: 100%; }
+
+/* QR code generator */
+#qrCode {
+  margin: 15px; }
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+  /* Hide captions */
+  .carousel-caption {
+    display: none; } }
+
+/* ========================================================= */
+/* DROPDOWN */
+/* ========================================================= */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2); }
+  .dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 17px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent #ffffff transparent;
+    -webkit-transform: rotate(360deg); }
+  .dropdown-menu.dropdown-menu-right::before {
+    left: auto;
+    right: 17px; }
+
+.dropdown-toggle::after {
+  content: none; }
+
+.dropdown-menu .nav-item {
+  display: block;
+  width: 100%; }
+  .dropdown-menu .nav-item [class^="icon-"],
+  .dropdown-menu .nav-item [class*=" icon-"] {
+    font-size: 2.2rem; }
+  .dropdown-menu .nav-item > * {
+    padding: 10px 20px; }
+  .dropdown-menu .nav-item a,
+  .dropdown-menu .nav-item a * {
+    font-size: 1rem; }
+  .dropdown-menu .nav-item .nav-item-label {
+    color: #AAA29B;
+    font-size: .9rem;
+    display: inline-block; }
+  .dropdown-menu .nav-item .nav-item-full-link {
+    background: #4D267F;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-bottom: 1px solid white; }
+    .dropdown-menu .nav-item .nav-item-full-link * {
+      color: white; }
+  .dropdown-menu .nav-item .nav-item-full-link-text {
+    flex: 1; }
+  .dropdown-menu .nav-item .nav-link {
+    display: flex;
+    align-items: center;
+    color: #222122;
+    text-transform: none;
+    min-height: 50px;
+    width: 100%;
+    border: none;
+    background: none; }
+    .dropdown-menu .nav-item .nav-link:hover {
+      color: #4D267F; }
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  color: #222122;
+  text-transform: none;
+  min-height: 50px;
+  width: 100%;
+  border: none;
+  background: none; }
+  .dropdown-item:hover {
+    color: #4D267F; }
+
+/* ========================================================= */
+/* FORMS */
+/* ========================================================= */
+.form-group::after {
+  content: "";
+  display: block;
+  clear: both; }
+
+label {
+  font-style: italic;
+  color: #AAA29B;
+  font-size: .9rem;
+  margin-bottom: 0px; }
+
+.form-control {
+  outline: none;
+  transition: .3s all ease;
+  line-height: 1.5; }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #4D267F; }
+  .form-control:not(textarea) {
+    height: 50px;
+    line-height: 2.7; }
+
+select.form-control:not([size]):not([multiple]) {
+  height: 50px; }
+
+/* ========================================================= */
+/* BTN BUTTONS */
+/* ========================================================= */
+.btn, .custom-file-label, .messagerie-contact-attachment-button, body .jconfirm .jconfirm-box .jconfirm-buttons button {
+  border: 1px solid #4D267F;
+  background-color: #4D267F;
+  color: #fff;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: none; }
+  .btn:hover, .custom-file-label:hover, .messagerie-contact-attachment-button:hover, body .jconfirm .jconfirm-box .jconfirm-buttons button:hover, .btn:focus, .custom-file-label:focus, .messagerie-contact-attachment-button:focus, body .jconfirm .jconfirm-box .jconfirm-buttons button:focus {
+    background: #6532a6;
+    color: #fff; }
+  .btn:disabled, .custom-file-label:disabled, .messagerie-contact-attachment-button:disabled, body .jconfirm .jconfirm-box .jconfirm-buttons button:disabled {
+    background-color: #cdd3d9 !important; }
+  .btn [class^="icon-"], .custom-file-label [class^="icon-"], .messagerie-contact-attachment-button [class^="icon-"], body .jconfirm .jconfirm-box .jconfirm-buttons button [class^="icon-"],
+  .btn [class*=" icon-"], .custom-file-label [class*=" icon-"], .messagerie-contact-attachment-button [class*=" icon-"], body .jconfirm .jconfirm-box .jconfirm-buttons button [class*=" icon-"] {
+    font-size: 2.5rem;
+    margin: -10px 5px -10px -10px; }
+
+.btn-white {
+  background: white;
+  color: #4D267F; }
+
+.btn-cancel {
+  color: #AAA29B;
+  background: none;
+  border: transparent; }
+  .btn-cancel:hover {
+    background: none;
+    color: #4D267F; }
+
+.btn-danger {
+  background-color: #DC3437;
+  border-color: #DC3437; }
+
+.btn-outline {
+  background: white;
+  border-color: #cdd3d9;
+  color: #cdd3d9; }
+  .btn-outline:hover, .btn-outline:focus {
+    color: #cdd3d9;
+    background: white;
+    border-color: #6532a6;
+    z-index: 2 !important; }
+  .btn-outline.active {
+    color: #4D267F; }
+
+.btn-large {
+  padding: 10px 50px; }
+
+.btn-sm {
+  padding: 5px 10px; }
+  .btn-sm [class^="icon-"],
+  .btn-sm [class*=" icon-"] {
+    font-size: 1.5rem; }
+  .btn-sm.btn-large {
+    padding: 5px 20px; }
+
+.btn-square {
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px; }
+  .btn-square.btn-sm {
+    width: 34px;
+    height: 34px;
+    padding: 3px;
+    font-size: 1rem; }
+    .btn-square.btn-sm [class^="icon-"],
+    .btn-square.btn-sm [class*=" icon-"] {
+      font-size: 2rem; }
+  .btn-square [class^="icon-"],
+  .btn-square [class*=" icon-"] {
+    margin: 0px; }
+
+.btn-danger {
+  background: #DC3437;
+  border: #DC3437; }
+  .btn-danger:hover, .btn-danger:focus {
+    background-color: #e46062; }
+
+.btn-success {
+  background: #4caf50;
+  border: #4caf50; }
+  .btn-success:hover, .btn-success:focus {
+    background-color: #6ec071; }
+
+.checkbox {
+  display: flex;
+  cursor: pointer; }
+  .checkbox input {
+    display: none; }
+  .checkbox .custom-visual {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    background: white;
+    border: 1px solid #AAA29B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 10px; }
+    .checkbox .custom-visual::before {
+      content: "";
+      width: 10px;
+      height: 5px;
+      border-bottom: 1px solid white;
+      border-left: 1px solid white;
+      transform: rotate(-45deg);
+      margin-top: -3px; }
+  .checkbox input:checked + .custom-visual {
+    border-color: #4D267F;
+    background-color: #4D267F; }
+  .checkbox .text {
+    font-style: normal;
+    font-size: 1rem;
+    color: #222122; }
+
+.radio {
+  display: flex;
+  cursor: pointer; }
+  .radio input {
+    display: none; }
+  .radio .custom-visual {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    background: white;
+    border: 1px solid #AAA29B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 10px; }
+    .radio .custom-visual::before {
+      content: "";
+      width: 10px;
+      height: 5px;
+      border-bottom: 1px solid white;
+      border-left: 1px solid white;
+      transform: rotate(-45deg);
+      margin-top: -3px; }
+  .radio input:checked + .custom-visual {
+    border-color: #4D267F;
+    background-color: #4D267F; }
+  .radio .text {
+    font-style: normal;
+    font-size: 1rem;
+    color: #222122; }
+  .radio .custom-visual {
+    border-radius: 50%; }
+    .radio .custom-visual::before {
+      border: none;
+      background: #fff;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 0px; }
+
+.custom-file {
+  height: auto;
+  width: 100%; }
+  .custom-file .custom-file-input {
+    height: 50px;
+    width: 100%;
+    cursor: pointer;
+    position: absolute; }
+  .custom-file .custom-file-label {
+    position: relative; }
+
+.custom-file-label {
+  font-style: normal;
+  font-size: 1rem;
+  height: auto;
+  width: auto;
+  line-height: 1.9;
+  text-align: center; }
+  .custom-file-label::after {
+    content: none; }
+
+/* ========================================================= */
+/* MODAL */
+/* ========================================================= */
+.modal-footer {
+  border-radius: 0 0 4px 4px; }
+
+/* ========================================================= */
+/* BREADCRUMB */
+/* ========================================================= */
+.breadcrumb {
+  padding: 0;
+  background: none;
+  margin: 0; }
+  .breadcrumb .breadcrumb-item a {
+    color: #AAA29B; }
+  .breadcrumb .breadcrumb-item.active {
+    color: #4D267F; }
+    .breadcrumb .breadcrumb-item.active::before {
+      color: #AAA29B; }
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›"; }
+
+/* ========================================================= */
+/* BADGES */
+/* ========================================================= */
+.badge {
+  font-size: 0.9rem;
+  font-weight: normal;
+  padding: 6px 7px;
+  border: 1px solid;
+  border-radius: 50px;
+  margin: 4px 4px 4px 0; }
+
+.badge-green {
+  border-color: #4caf50;
+  background-color: #4caf50;
+  color: white; }
+
+.badge-violet {
+  border-color: #4D267F;
+  background-color: #4D267F;
+  color: white; }
+
+.badge-dark {
+  border-color: #222122;
+  background-color: #222122;
+  color: white; }
+
+.badge-grey {
+  border-color: #AAA29B;
+  background-color: #AAA29B;
+  color: white; }
+
+.badge-light-grey {
+  border-color: #F2F2F2;
+  background-color: #F2F2F2;
+  color: white; }
+
+.badge-soft-grey {
+  border-color: #F9F9F9;
+  background-color: #F9F9F9;
+  color: white; }
+
+.badge-bootstrap-grey {
+  border-color: #cdd3d9;
+  background-color: #cdd3d9;
+  color: white; }
+
+.badge-red {
+  border-color: #DC3437;
+  background-color: #DC3437;
+  color: white; }
+
+.badge-green-outline {
+  border-color: #4caf50;
+  color: #4caf50; }
+
+.badge-violet-outline {
+  border-color: #4D267F;
+  color: #4D267F; }
+
+.badge-dark-outline {
+  border-color: #222122;
+  color: #222122; }
+
+.badge-grey-outline {
+  border-color: #AAA29B;
+  color: #AAA29B; }
+
+.badge-light-grey-outline {
+  border-color: #F2F2F2;
+  color: #F2F2F2; }
+
+.badge-soft-grey-outline {
+  border-color: #F9F9F9;
+  color: #F9F9F9; }
+
+.badge-bootstrap-grey-outline {
+  border-color: #cdd3d9;
+  color: #cdd3d9; }
+
+.badge-red-outline {
+  border-color: #DC3437;
+  color: #DC3437; }
+
+/* ========================================================= */
+/* DROPDOWN */
+/* ========================================================= */
+.select2-container .select2-container--default,
+.select2-container .select2-selection--multiple {
+  min-height: 50px;
+  border-color: #cdd3d9 !important;
+  transition: .3s border ease !important; }
+  .select2-container .select2-container--default .select2-selection__choice,
+  .select2-container .select2-selection--multiple .select2-selection__choice {
+    display: flex;
+    flex-direction: row-reverse;
+    line-height: 2.5rem;
+    padding-left: 10px;
+    background: #AAA29B;
+    border-color: #AAA29B;
+    color: #222122; }
+  .select2-container .select2-container--default .select2-selection__choice__remove,
+  .select2-container .select2-selection--multiple .select2-selection__choice__remove {
+    padding: 0 10px;
+    margin-right: -5px;
+    font-size: 1.4rem;
+    color: white; }
+
+.select2-container .select2-search--inline .select2-search__field {
+  height: 37px; }
+
+.select2-container--focus .select2-selection--multiple {
+  border-color: #4D267F !important; }
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #4D267F !important; }
+
+.messagerie {
+  display: flex;
+  height: calc(100vh - 160px); }
+
+/* ========================================================= */
+/* LEFT COLUMN */
+/* ========================================================= */
+.messagerie-left-col,
+.messagerie-right-col {
+  display: flex;
+  flex-direction: column;
+  background: white; }
+
+.messagerie-left-col {
+  width: 275px;
+  border-right: 1px solid #cdd3d9; }
+
+.messagerie-left-col-toggle {
+  display: none; }
+
+/* TITLE */
+/* =============================== */
+.messagerie-title {
+  font-size: 1.5rem;
+  padding: 10px;
+  border-bottom: 1px solid #cdd3d9; }
+  .messagerie-title .notification-drop {
+    position: relative;
+    left: 0;
+    top: 0; }
+
+/* SEARCH */
+/* =============================== */
+.messagerie-search {
+  padding: 10px;
+  background: #F2F2F2;
+  border-bottom: 1px solid #cdd3d9; }
+  .messagerie-search .neo-search-control {
+    width: 100%; }
+
+/* CONTACT LIST */
+/* =============================== */
+.mesagerie-contact-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: auto; }
+
+.messagerie-contact, .messagerie-discussion-message {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #cdd3d9;
+  position: relative; }
+  .messagerie-contact.active, .active.messagerie-discussion-message {
+    background-color: #EFEFEF; }
+    .messagerie-contact.active .messagerie-contact-name, .active.messagerie-discussion-message .messagerie-contact-name {
+      color: #4D267F; }
+    .messagerie-contact.active::before, .active.messagerie-discussion-message::before {
+      content: "";
+      width: 3px;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #4D267F; }
+  .messagerie-contact.new-message::after, .new-message.messagerie-discussion-message::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #4D267F;
+    border-radius: 50%;
+    position: absolute;
+    left: 14px;
+    bottom: 14px; }
+  .messagerie-contact.contact-connected::after, .contact-connected.messagerie-discussion-message::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #4caf50;
+    border-radius: 50%;
+    position: absolute;
+    left: 14px;
+    bottom: 14px; }
+  .messagerie-contact.contact-disconnected::after, .contact-disconnected.messagerie-discussion-message::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #AAA29B;
+    border-radius: 50%;
+    position: absolute;
+    left: 14px;
+    bottom: 14px; }
+  .messagerie-contact.contact-away::after, .contact-away.messagerie-discussion-message::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #FE7501;
+    border-radius: 50%;
+    position: absolute;
+    left: 14px;
+    bottom: 14px; }
+
+.messagerie-contact-image {
+  border-radius: 50%;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px; }
+
+.messagerie-contact-text {
+  max-width: calc(100% - 60px);
+  flex: 1; }
+
+.messagerie-contact-info {
+  display: flex;
+  justify-content: space-between; }
+  .messagerie-contact-info p {
+    margin: 0; }
+
+.messagerie-contact-message {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: .9rem; }
+
+/* ========================================================= */
+/* RIGHT COLUMN */
+/* ========================================================= */
+.messagerie-right-col {
+  justify-content: flex-end;
+  flex: 1; }
+
+.messagerie-discussion {
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  flex-direction: column-reverse; }
+
+/* DATE SEPARATOR */
+/* =============================== */
+.messagerie-discussion-date-separator {
+  border-top: 1px solid #cdd3d9;
+  border-bottom: 1px solid #cdd3d9;
+  padding: 12px 20px; }
+
+/* MESSAGE */
+/* =============================== */
+.messagerie-discussion-message {
+  align-items: flex-start;
+  cursor: default;
+  border: none; }
+  .messagerie-discussion-message .messagerie-contact-date {
+    margin: 0 20px; }
+  .messagerie-discussion-message .messagerie-contact-info {
+    justify-content: flex-start; }
+  .messagerie-discussion-message .messagerie-contact-message {
+    overflow: unset;
+    white-space: normal; }
+  .messagerie-discussion-message .messagerie-contact-text {
+    max-width: 70%; }
+  .messagerie-discussion-message .messagerie-contact-load {
+    font-size: 0.8em; }
+
+.messagerie-discussion-message-right {
+  flex-direction: row-reverse;
+  text-align: right; }
+  .messagerie-discussion-message-right .messagerie-contact-image {
+    margin-left: 10px;
+    margin-right: 0px; }
+  .messagerie-discussion-message-right .messagerie-contact-info {
+    flex-direction: row-reverse; }
+
+/* SEND MESSAGE */
+/* =============================== */
+.messagerie-send-form {
+  background-color: #F9F9F9;
+  border-top: 1px solid #cdd3d9;
+  padding: 10px; }
+  .messagerie-send-form textarea {
+    min-height: 43px;
+    margin-right: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 30vh; }
+
+.messagerie-send-form-content {
+  width: 100%;
+  display: flex;
+  align-items: flex-end; }
+
+.label-form-upload {
+  font-size: 2.5rem;
+  line-height: 1;
+  display: flex;
+  height: 43px;
+  width: 43px;
+  min-width: 43px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: .3s all ease; }
+  .label-form-upload:hover {
+    color: #4D267F; }
+  .label-form-upload input {
+    display: none; }
+
+/* MESSAGE ATTACHMENT (SEND FORM) */
+/* =============================== */
+.messagerie-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -10px; }
+
+.attachment {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #cdd3d9;
+  margin: 0 10px 10px 0;
+  background: white; }
+  .attachment .attachment-preview {
+    width: 60px;
+    height: 60px; }
+  .attachment .attachment-name {
+    display: inline-block;
+    max-width: 155px;
+    hyphens: auto;
+    line-height: 1;
+    margin: 0 5px; }
+  .attachment .attachment-remove {
+    font-size: 2rem;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #AAA29B;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .attachment .attachment-remove:hover {
+      color: #4D267F; }
+
+/* MESSAGE ATTACHMENT (DISCUSSION) */
+/* =============================== */
+.messagerie-contact-attachment {
+  display: inline-flex;
+  align-items: flex-start;
+  background: #F9F9F9;
+  border: 1px solid #cdd3d9;
+  padding: 5px;
+  flex-direction: column;
+  border-radius: 4px;
+  max-width: 100%;
+  margin-bottom: 5px; }
+  .messagerie-contact-attachment .messagerie-attachment-expand {
+    display: inline-flex; }
+  .messagerie-contact-attachment .messagerie-attachment-reduce {
+    display: none; }
+  .messagerie-contact-attachment.expanded .messagerie-attachment-expand {
+    display: none; }
+  .messagerie-contact-attachment.expanded .messagerie-attachment-reduce {
+    display: inline-flex; }
+  .messagerie-contact-attachment.expanded .messagerie-contact-attachment-preview {
+    max-height: none; }
+
+.messagerie-contact-attachment-preview {
+  max-width: 100%;
+  max-height: 150px; }
+
+.messagerie-contact-attachment-name {
+  font-size: .8rem;
+  margin-top: 5px;
+  word-break: break-all;
+  hyphens: auto; }
+
+.messagerie-contact-attachment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 45px;
+  width: 100%; }
+
+.messagerie-contact-attachment-button {
+  display: inline-flex;
+  border: none;
+  background: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  text-decoration: none !important;
+  width: 35px;
+  height: 35px;
+  margin: 5px 5px 5px 0;
+  border: 1px solid #4D267F;
+  background: #4D267F;
+  border-radius: 4px;
+  padding: 0;
+  transition: .3s all ease;
+  cursor: pointer;
+  outline: none !important; }
+  .messagerie-contact-attachment-button [class^="icon-"],
+  .messagerie-contact-attachment-button [class*=" icon-"] {
+    margin: 0;
+    font-size: 1em; }
+
+* {
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased; }
+
+a {
+  color: #4D267F; }
+  a:hover {
+    color: #4D267F; }
+
+p {
+  margin: 0;
+  color: #222122; }
+
+/* ========================================================= */
+/* UTILITIES */
+/* ========================================================= */
+.color-violet {
+  color: #4D267F; }
+
+.color-dark {
+  color: #222122; }
+
+.color-grey {
+  color: #AAA29B; }
+
+.color-light-grey {
+  color: #F2F2F2; }
+
+.color-soft-grey {
+  color: #F9F9F9; }
+
+.color-bootstrap-grey {
+  color: #cdd3d9; }
+
+.color-red {
+  color: #DC3437; }
+
+.text-line {
+  text-decoration: line-through; }
+
+.bg-violet {
+  background-color: #4D267F; }
+
+.bg-dark {
+  background-color: #222122; }
+
+.bg-grey {
+  background-color: #AAA29B; }
+
+.bg-light-grey {
+  background-color: #F2F2F2; }
+
+.bg-soft-grey {
+  background-color: #F9F9F9; }
+
+.bg-bootstrap-grey {
+  background-color: #cdd3d9; }
+
+.bg-red {
+  background-color: #DC3437; }
+
+.border-violet {
+  border-color: #4D267F; }
+
+.border-dark {
+  border-color: #222122; }
+
+.border-grey {
+  border-color: #AAA29B; }
+
+.border-light-grey {
+  border-color: #F2F2F2; }
+
+.border-soft-grey {
+  border-color: #F9F9F9; }
+
+.border-bootstrap-grey {
+  border-color: #cdd3d9; }
+
+.border-red {
+  border-color: #DC3437; }
+
+.align-right {
+  text-align: right;
+  justify-content: flex-end; }
+
+.flex {
+  display: flex; }
+
+.space-between {
+  display: flex;
+  justify-content: space-between; }
+
+.no-padding {
+  padding: 0 !important; }
+
+.no-border {
+  border: none !important; }
+
+/* ========================================================= */
+/* GENERAL LAYOUT */
+/* ========================================================= */
+html {
+  font-size: 14px; }
+
+body {
+  padding-top: 70px;
+  padding-bottom: 20px;
+  background: #F2F2F2;
+  min-height: 100vh; }
+
+.overlay {
+  background-color: rgba(10, 9, 9, 0.64);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 999;
+  padding-bottom: 0px; }
+
+.container {
+  max-width: 1200px;
+  margin: auto; }
+
+/* NEOBOX */
+/* ================================ */
+.neobox {
+  background: white;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2); }
+
+.neobox-title {
+  padding: 20px 30px 20px 27px;
+  border-left: 3px solid #4D267F;
+  border-bottom: 1px solid #F2F2F2;
+  display: flex; }
+  .neobox-title > * {
+    margin: 0; }
+
+.neobox-subtitle {
+  min-height: 60px;
+  padding: 5px 30px;
+  border-top: 1px solid #F2F2F2;
+  border-left: 3px solid #4D267F;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+  .neobox-subtitle > * {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0; }
+
+li.neobox-subtitle {
+  border-top: none;
+  border-bottom: 1px solid #F2F2F2; }
+
+.neobox-content {
+  padding: 20px 30px;
+  position: relative; }
+  .neobox-content .img-account {
+    width: 130px;
+    height: 130px; }
+
+.neobox-subtitle + .neobox-content,
+.neobox-content + .neobox-content {
+  border-top: 1px solid #F2F2F2; }
+
+.neobox-header {
+  padding: 15px 20px;
+  background: #F9F9F9;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #F2F2F2;
+  align-items: flex-start; }
+  .neobox-header .neobox-header-container {
+    display: flex;
+    align-items: flex-start; }
+    .neobox-header .neobox-header-container:first-child {
+      flex: 1; }
+    .neobox-header .neobox-header-container:last-child {
+      align-items: flex-end; }
+    .neobox-header .neobox-header-container .btn-group {
+      height: 50px; }
+
+.neobox-footer {
+  padding: 20px 30px;
+  border-top: 1px solid #F2F2F2; }
+
+.extra-padding {
+  padding: 20px 100px; }
+
+/* NEO SELECT CONTROL */
+/* ================================ */
+.neo-select-control {
+  border: 1px solid #cdd3d9;
+  background: white;
+  position: relative;
+  border-radius: 4px;
+  margin-right: 10px;
+  height: 50px;
+  min-width: 150px; }
+  .neo-select-control::after {
+    content: "›";
+    font-size: 1.5rem;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: calc(50% - 10px);
+    right: 5px;
+    transform: rotate(90deg);
+    pointer-events: none; }
+  .neo-select-control label {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    pointer-events: none; }
+  .neo-select-control select {
+    line-height: 2rem;
+    width: 100%;
+    height: 100%;
+    border: 0px solid transparent;
+    background: transparent;
+    border-top: 1.2rem solid transparent;
+    padding: 0 35px 0px 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-progress-appearance: none;
+    cursor: pointer;
+    outline: none; }
+
+/* NEO SELECT 2 CONTROL */
+/* ================================ */
+.neo-select2-control {
+  min-width: 150px;
+  margin-right: 10px;
+  flex: 1; }
+  .neo-select2-control .select2-container {
+    width: 100% !important; }
+    .neo-select2-control .select2-container .select2-selection--single {
+      height: auto; }
+      .neo-select2-control .select2-container .select2-selection--single .select2-selection__rendered {
+        padding: 17px 20px 3px 8px; }
+
+/* NEO SEARCH CONTROL */
+/* ================================ */
+.neo-search-control {
+  background: white;
+  position: relative;
+  display: flex;
+  width: 200px; }
+  .neo-search-control [class^="icon-"],
+  .neo-search-control [class*=" icon-"] {
+    font-size: 2.2rem;
+    color: #4D267F;
+    width: 40px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  .neo-search-control input {
+    padding: 0 0 0 40px;
+    width: 100%; }
+
+/* ========================================================= */
+/* HEADER */
+/* ========================================================= */
+.main-header {
+  background: white;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20; }
+  .main-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .main-header nav {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+  .main-header .navbar-toggler-icon {
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .main-header .collapsing-elements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1; }
+  .main-header .dropdown-menu {
+    margin-top: 15px; }
+    .main-header .dropdown-menu .dropdown-item:active {
+      color: #4D267F;
+      background: #F9F9F9; }
+  .main-header .navbar-collapse.show,
+  .main-header .navbar-collapse.collapsing {
+    position: absolute;
+    top: 70px;
+    background: white;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column; }
+    .main-header .navbar-collapse.show .collapsing-elements,
+    .main-header .navbar-collapse.collapsing .collapsing-elements {
+      display: block; }
+    .main-header .navbar-collapse.show .nav-connected-user,
+    .main-header .navbar-collapse.collapsing .nav-connected-user {
+      flex-direction: column; }
+  .main-header .logo {
+    width: 100px;
+    height: 50px;
+    margin-right: 25px;
+    background: url(../images/logo.png) center center no-repeat;
+    background-size: contain; }
+
+/* MAIN NAV */
+/* ================================ */
+.main-nav > .nav-item {
+  font-weight: bold;
+  margin: 0 5px;
+  text-transform: uppercase; }
+  .main-nav > .nav-item .nav-link {
+    font-size: 0.95rem;
+    color: #AAA29B;
+    padding: 5px 10px; }
+    .main-nav > .nav-item .nav-link:hover {
+      color: white;
+      background: #4D267F; }
+
+.nav-visitor-user .nav-link {
+  color: #AAA29B;
+  margin-left: 15px; }
+  .nav-visitor-user .nav-link:hover {
+    color: #4D267F; }
+
+.nav-connected-user {
+  display: flex; }
+  .nav-connected-user .user {
+    display: flex;
+    align-items: center;
+    cursor: pointer; }
+    .nav-connected-user .user::after {
+      content: none; }
+  .nav-connected-user .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; }
+  .nav-connected-user .user-info {
+    margin: 0 10px;
+    max-width: 150px; }
+    .nav-connected-user .user-info p {
+      line-height: 1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden; }
+    .nav-connected-user .user-info i {
+      color: #AAA29B; }
+
+.header-user-messages,
+.header-user-notifications {
+  margin: 0 35px 0 0;
+  position: relative; }
+  .header-user-messages [class^="icon-"],
+  .header-user-messages [class*=" icon-"],
+  .header-user-notifications [class^="icon-"],
+  .header-user-notifications [class*=" icon-"] {
+    font-size: 2.2rem;
+    margin-right: -5px;
+    color: #222122; }
+  .header-user-messages:hover,
+  .header-user-notifications:hover {
+    text-decoration: none; }
+    .header-user-messages:hover [class^="icon-"],
+    .header-user-messages:hover [class*=" icon-"],
+    .header-user-notifications:hover [class^="icon-"],
+    .header-user-notifications:hover [class*=" icon-"] {
+      color: #4D267F; }
+
+.notification-drop {
+  background: #4D267F;
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  color: white;
+  border-radius: 4px;
+  font-size: .8rem;
+  min-width: 19px;
+  display: inline-block;
+  text-align: center;
+  padding: 0 2px;
+  box-sizing: border-box; }
+
+.notification-drop-big {
+  font-size: 1.2rem;
+  padding: 5px; }
+
+/* ========================================================= */
+/* USER DROPDOWN */
+/* ========================================================= */
+.dropdown-user-connected-menu {
+  margin-top: 15px;
+  margin-right: -15px; }
+
+/* ========================================================= */
+/* FORMS */
+/* ========================================================= */
+.form-group-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px; }
+  .form-group-list li {
+    padding: 0;
+    margin: 0 0 10px; }
+    .form-group-list li:last-child {
+      margin-bottom: 0; }
+
+/* ERRORS */
+/* ================================ */
+.validation-summary-errors ul {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none; }
+  .validation-summary-errors ul li {
+    color: #DC3437; }
+
+.field-validation-error {
+  background: #DC3437;
+  border-radius: 2px;
+  padding: 2px 5px;
+  font-size: .8rem; }
+  .field-validation-error span {
+    color: white; }
+
+/* ========================================================= */
+/* CROPPIE / IMAGE UPLOAD CROP */
+/* ========================================================= */
+.croppie-content {
+  width: 100%;
+  height: 350px;
+  padding-bottom: 55px; }
+
+.croppie-preview-container {
+  padding: 20px;
+  background: #F9F9F9;
+  border: 1px solid #cdd3d9;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center; }
+  .croppie-preview-container img {
+    margin-bottom: 20px;
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%; }
+  .croppie-preview-container .custom-file {
+    width: auto; }
+
+/* ========================================================= */
+/* PAGE TOP HEADER */
+/* ========================================================= */
+.page-top {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
+/* ========================================================= */
+/* PROJECT USER / LINE FORM WITH BTN */
+/* ========================================================= */
+.row-with-btn .btn, .row-with-btn .custom-file-label, .row-with-btn .messagerie-contact-attachment-button, .row-with-btn body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .row-with-btn button {
+  margin-top: 21px; }
+  .row-with-btn .btn.btn-sm, .row-with-btn .btn-sm.custom-file-label, .row-with-btn .btn-sm.messagerie-contact-attachment-button, .row-with-btn body .jconfirm .jconfirm-box .jconfirm-buttons button.btn-sm, body .jconfirm .jconfirm-box .jconfirm-buttons .row-with-btn button.btn-sm {
+    margin-top: 30px; }
+
+.own-project-list .item, .own-project-list .items-listing tr, .items-listing .own-project-list tr, .own-project-list .items-listing-small tr, .items-listing-small .own-project-list tr {
+  align-items: flex-start !important; }
+  .own-project-list .item ul li, .own-project-list .items-listing tr ul li, .items-listing .own-project-list tr ul li, .own-project-list .items-listing-small tr ul li, .items-listing-small .own-project-list tr ul li {
+    align-items: center !important;
+    min-height: 40px; }
+    .own-project-list .item ul li:last-child, .own-project-list .items-listing tr ul li:last-child, .items-listing .own-project-list tr ul li:last-child, .own-project-list .items-listing-small tr ul li:last-child, .items-listing-small .own-project-list tr ul li:last-child {
+      border: none; }
+    .own-project-list .item ul li .item-picture, .own-project-list .items-listing tr ul li .item-picture, .items-listing .own-project-list tr ul li .item-picture, .own-project-list .items-listing-small tr ul li .item-picture, .items-listing-small .own-project-list tr ul li .item-picture {
+      margin: 0 10px !important; }
+    .own-project-list .item ul li img, .own-project-list .items-listing tr ul li img, .items-listing .own-project-list tr ul li img, .own-project-list .items-listing-small tr ul li img, .items-listing-small .own-project-list tr ul li img {
+      max-width: 30px;
+      max-height: 30px;
+      margin: 0 !important; }
+
+.project-need-row .item-picture {
+  margin: 15px 0px 0; }
+  .project-need-row .item-picture img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 4px 0; }
+
+/* ========================================================= */
+/* LISTING PAGES */
+/* ========================================================= */
+.items-listing {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .items-listing.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; }
+    .items-listing.grid .item, .items-listing.grid tr, .items-listing.grid .items-listing-small tr, .items-listing-small .items-listing.grid tr {
+      width: 25%;
+      flex-direction: column;
+      border-right: 1px solid #F2F2F2;
+      padding: 30px;
+      text-align: center;
+      align-items: center; }
+      .items-listing.grid .item *, .items-listing.grid tr *, .items-listing.grid .items-listing-small tr *, .items-listing-small .items-listing.grid tr * {
+        text-align: center !important; }
+      .items-listing.grid .item a.item, .items-listing.grid tr a.item, .items-listing.grid .items-listing-small tr a.item, .items-listing-small .items-listing.grid tr a.item {
+        border: none; }
+    .items-listing.grid [class^="item-"],
+    .items-listing.grid [class*=" item-"] {
+      margin-bottom: 15px; }
+      .items-listing.grid [class^="item-"]:last-child,
+      .items-listing.grid [class*=" item-"]:last-child {
+        margin-bottom: 0; }
+  .items-listing .item, .items-listing tr, .items-listing .items-listing-small tr, .items-listing-small .items-listing tr {
+    padding: 15px 20px;
+    border-bottom: 1px solid #F2F2F2;
+    display: flex;
+    align-items: flex-start; }
+    .items-listing .item .item-picture, .items-listing tr .item-picture, .items-listing .items-listing-small tr .item-picture, .items-listing-small .items-listing tr .item-picture {
+      margin: 0 20px; }
+      .items-listing .item .item-picture img, .items-listing tr .item-picture img, .items-listing .items-listing-small tr .item-picture img, .items-listing-small .items-listing tr .item-picture img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 4px 0; }
+    .items-listing .item .item-primary, .items-listing tr .item-primary, .items-listing .items-listing-small tr .item-primary, .items-listing-small .items-listing tr .item-primary {
+      flex: 4; }
+    .items-listing .item .item-secondary, .items-listing tr .item-secondary, .items-listing .items-listing-small tr .item-secondary, .items-listing-small .items-listing tr .item-secondary {
+      flex: 3; }
+    .items-listing .item .item-minor, .items-listing tr .item-minor, .items-listing .items-listing-small tr .item-minor, .items-listing-small .items-listing tr .item-minor {
+      flex: 2; }
+    .items-listing .item .item-lines, .items-listing tr .item-lines, .items-listing .items-listing-small tr .item-lines, .items-listing-small .items-listing tr .item-lines {
+      flex: 6; }
+    .items-listing .item .item-line, .items-listing tr .item-line, .items-listing .items-listing-small tr .item-line, .items-listing-small .items-listing tr .item-line, .items-listing .item .item-line .item-col-actions, .items-listing tr .item-line .item .item-col-actions, .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions {
+      display: flex;
+      margin-bottom: 5px; }
+      .items-listing .item .item-line .item-col, .items-listing tr .item-line .item-col, .items-listing .items-listing-small tr .item-line .item-col, .items-listing-small .items-listing tr .item-line .item-col, .items-listing tr .item-line .item-col-actions .item-col {
+        flex: 1;
+        padding: 5px 0;
+        word-break: break-all;
+        hyphens: auto; }
+        .items-listing .item .item-line .item-col .btn, .items-listing tr .item-line .item-col .btn, .items-listing .items-listing-small tr .item-line .item-col .btn, .items-listing-small .items-listing tr .item-line .item-col .btn, .items-listing tr .item-line .item-col-actions .item-col .btn, .items-listing .item .item-line .item-col .custom-file-label, .items-listing tr .item-line .item-col .custom-file-label, .items-listing .items-listing-small tr .item-line .item-col .custom-file-label, .items-listing-small .items-listing tr .item-line .item-col .custom-file-label, .items-listing tr .item-line .item-col-actions .item-col .custom-file-label, .items-listing .item .item-line .item-col .messagerie-contact-attachment-button, .items-listing tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing .items-listing-small tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing-small .items-listing tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing tr .item-line .item-col-actions .item-col .messagerie-contact-attachment-button, .items-listing .item .item-line .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .item-col button, .items-listing tr .item-line .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing tr .item-line .item-col button {
+          margin: -5px 0; }
+        .items-listing .item .item-line .item-col .item-picture, .items-listing tr .item-line .item-col .item-picture, .items-listing .items-listing-small tr .item-line .item-col .item-picture, .items-listing-small .items-listing tr .item-line .item-col .item-picture, .items-listing tr .item-line .item-col-actions .item-col .item-picture {
+          margin: -5px 0; }
+          .items-listing .item .item-line .item-col .item-picture img, .items-listing tr .item-line .item-col .item-picture img, .items-listing .items-listing-small tr .item-line .item-col .item-picture img, .items-listing-small .items-listing tr .item-line .item-col .item-picture img, .items-listing tr .item-line .item-col-actions .item-col .item-picture img {
+            width: 30px;
+            height: 30px;
+            margin: 0 0 0 10px; }
+      .items-listing .item .item-line .item-col-actions, .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions, .items-listing tr .item-line .item-col-actions .item-col-actions {
+        display: flex;
+        align-items: flex-start; }
+        .items-listing .item .item-line .item-col-actions:last-child, .items-listing tr .item-line .item-col-actions:last-child, .items-listing .items-listing-small tr .item-line .item-col-actions:last-child, .items-listing-small .items-listing tr .item-line .item-col-actions:last-child, .items-listing tr .item-line .item-col-actions .item-col-actions:last-child {
+          justify-content: flex-end; }
+      .items-listing .item .item-line .item-col-user, .items-listing tr .item-line .item-col-user, .items-listing .items-listing-small tr .item-line .item-col-user, .items-listing-small .items-listing tr .item-line .item-col-user, .items-listing tr .item-line .item-col-actions .item-col-user {
+        display: flex;
+        align-items: flex-start; }
+        .items-listing .item .item-line .item-col-user .item-picture, .items-listing tr .item-line .item-col-user .item-picture, .items-listing .items-listing-small tr .item-line .item-col-user .item-picture, .items-listing-small .items-listing tr .item-line .item-col-user .item-picture, .items-listing tr .item-line .item-col-actions .item-col-user .item-picture {
+          margin-right: 10px; }
+    .items-listing .item a, .items-listing tr a, .items-listing .items-listing-small tr a, .items-listing-small .items-listing tr a {
+      text-decoration: none; }
+      .items-listing .item a:hover h3, .items-listing tr a:hover h3, .items-listing .items-listing-small tr a:hover h3, .items-listing-small .items-listing tr a:hover h3 {
+        text-decoration: underline; }
+    .items-listing .item h3, .items-listing tr h3, .items-listing .items-listing-small tr h3, .items-listing-small .items-listing tr h3 {
+      color: #4D267F;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0; }
+    .items-listing .item ul, .items-listing tr ul, .items-listing .items-listing-small tr ul, .items-listing-small .items-listing tr ul {
+      color: #222122;
+      list-style: none;
+      margin: 0;
+      padding: 0; }
+    .items-listing .item .badge, .items-listing tr .badge, .items-listing .items-listing-small tr .badge, .items-listing-small .items-listing tr .badge {
+      margin: 3px; }
+    .items-listing .item .btn, .items-listing tr .btn, .items-listing .items-listing-small tr .btn, .items-listing-small .items-listing tr .btn, .items-listing .item .custom-file-label, .items-listing tr .custom-file-label, .items-listing .items-listing-small tr .custom-file-label, .items-listing-small .items-listing tr .custom-file-label, .items-listing .item .messagerie-contact-attachment-button, .items-listing tr .messagerie-contact-attachment-button, .items-listing .items-listing-small tr .messagerie-contact-attachment-button, .items-listing-small .items-listing tr .messagerie-contact-attachment-button, .items-listing .item body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item button, .items-listing tr body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing tr button {
+      margin: 20px; }
+  .items-listing tr {
+    display: table-row; }
+    .items-listing tr td {
+      padding: 5px 20px 5px 0; }
+      .items-listing tr td:last-child {
+        padding-right: 0px; }
+
+/* ========================================================= */
+/* PAGINATION */
+/* ========================================================= */
+.neo-pagination {
+  display: flex;
+  justify-content: space-between; }
+  .neo-pagination .neo-pagination-left,
+  .neo-pagination .neo-pagination-center,
+  .neo-pagination .neo-pagination-right {
+    display: flex; }
+  .neo-pagination .neo-pagination-left {
+    flex: 1; }
+    .neo-pagination .neo-pagination-left .neo-pagination-link {
+      margin-right: 10px; }
+  .neo-pagination .neo-pagination-center {
+    flex: 2;
+    justify-content: center; }
+    .neo-pagination .neo-pagination-center .neo-pagination-link {
+      margin-left: 5px;
+      margin-right: 5px; }
+  .neo-pagination .neo-pagination-right {
+    flex: 1;
+    justify-content: flex-end; }
+    .neo-pagination .neo-pagination-right .neo-pagination-link {
+      margin-left: 10px; }
+  .neo-pagination .neo-pagination-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #4D267F;
+    background: #4D267F;
+    color: white !important;
+    font-size: 1.2rem;
+    min-width: 35px;
+    height: 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .3s ease; }
+    .neo-pagination .neo-pagination-link:hover, .neo-pagination .neo-pagination-link:focus {
+      background: #6532a6;
+      color: #fff; }
+  .neo-pagination .neo-pagination-etc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #AAA29B;
+    font-size: 1.2rem;
+    min-width: 35px;
+    height: 40px; }
+
+/* ========================================================= */
+/* PROFILE */
+/* ========================================================= */
+.profile-presentation {
+  display: flex; }
+
+.profile-presentation-picture {
+  margin-right: 20px; }
+  .profile-presentation-picture img {
+    max-width: 150px;
+    border-radius: 50%; }
+
+.profile-presentation-text {
+  flex: 1;
+  margin-top: 1rem; }
+  .profile-presentation-text h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4D267F; }
+
+/* PROFILE MODAL */
+/* ================================ */
+.modal .profile-presentation-picture {
+  margin-right: 0px; }
+  .modal .profile-presentation-picture img {
+    max-width: 100px; }
+
+/* ========================================================= */
+/* LISTING SMALL */
+/* ========================================================= */
+.items-listing-small {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .items-listing-small.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; }
+    .items-listing-small.grid .item, .items-listing-small.grid .items-listing tr, .items-listing .items-listing-small.grid tr, .items-listing-small.grid tr {
+      width: 25%;
+      flex-direction: column;
+      border-right: 1px solid #F2F2F2;
+      padding: 30px;
+      text-align: center;
+      align-items: center; }
+      .items-listing-small.grid .item *, .items-listing-small.grid .items-listing tr *, .items-listing .items-listing-small.grid tr *, .items-listing-small.grid tr * {
+        text-align: center !important; }
+      .items-listing-small.grid .item a.item, .items-listing-small.grid .items-listing tr a.item, .items-listing .items-listing-small.grid tr a.item, .items-listing-small.grid tr a.item {
+        border: none; }
+    .items-listing-small.grid [class^="item-"],
+    .items-listing-small.grid [class*=" item-"] {
+      margin-bottom: 15px; }
+      .items-listing-small.grid [class^="item-"]:last-child,
+      .items-listing-small.grid [class*=" item-"]:last-child {
+        margin-bottom: 0; }
+  .items-listing-small .item, .items-listing-small .items-listing tr, .items-listing .items-listing-small tr, .items-listing-small tr {
+    padding: 15px 20px;
+    border-bottom: 1px solid #F2F2F2;
+    display: flex;
+    align-items: flex-start; }
+    .items-listing-small .item .item-picture, .items-listing-small .items-listing tr .item-picture, .items-listing .items-listing-small tr .item-picture, .items-listing-small tr .item-picture {
+      margin: 0 20px; }
+      .items-listing-small .item .item-picture img, .items-listing-small .items-listing tr .item-picture img, .items-listing .items-listing-small tr .item-picture img, .items-listing-small tr .item-picture img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 4px 0; }
+    .items-listing-small .item .item-primary, .items-listing-small .items-listing tr .item-primary, .items-listing .items-listing-small tr .item-primary, .items-listing-small tr .item-primary {
+      flex: 4; }
+    .items-listing-small .item .item-secondary, .items-listing-small .items-listing tr .item-secondary, .items-listing .items-listing-small tr .item-secondary, .items-listing-small tr .item-secondary {
+      flex: 3; }
+    .items-listing-small .item .item-minor, .items-listing-small .items-listing tr .item-minor, .items-listing .items-listing-small tr .item-minor, .items-listing-small tr .item-minor {
+      flex: 2; }
+    .items-listing-small .item .item-lines, .items-listing-small .items-listing tr .item-lines, .items-listing .items-listing-small tr .item-lines, .items-listing-small tr .item-lines {
+      flex: 6; }
+    .items-listing-small .item .item-line, .items-listing-small .items-listing tr .item-line, .items-listing .items-listing-small tr .item-line, .items-listing-small tr .item-line, .items-listing-small .items-listing .item .item-line .item-col-actions, .items-listing .items-listing-small .item .item-line .item-col-actions, .items-listing .item .item-line .items-listing-small tr .item-col-actions, .items-listing tr .item-line .items-listing-small .item .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions {
+      display: flex;
+      margin-bottom: 5px; }
+      .items-listing-small .item .item-line .item-col, .items-listing-small .items-listing tr .item-line .item-col, .items-listing .items-listing-small tr .item-line .item-col, .items-listing-small tr .item-line .item-col, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col {
+        flex: 1;
+        padding: 5px 0;
+        word-break: break-all;
+        hyphens: auto; }
+        .items-listing-small .item .item-line .item-col .btn, .items-listing-small .items-listing tr .item-line .item-col .btn, .items-listing .items-listing-small tr .item-line .item-col .btn, .items-listing-small tr .item-line .item-col .btn, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col .btn, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col .btn, .items-listing-small .item .item-line .item-col .custom-file-label, .items-listing-small .items-listing tr .item-line .item-col .custom-file-label, .items-listing .items-listing-small tr .item-line .item-col .custom-file-label, .items-listing-small tr .item-line .item-col .custom-file-label, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col .custom-file-label, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col .custom-file-label, .items-listing-small .item .item-line .item-col .messagerie-contact-attachment-button, .items-listing-small .items-listing tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing .items-listing-small tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing-small tr .item-line .item-col .messagerie-contact-attachment-button, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col .messagerie-contact-attachment-button, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col .messagerie-contact-attachment-button, .items-listing-small .item .item-line .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing-small .item .item-line .item-col button, .items-listing-small tr .item-line .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing-small tr .item-line .item-col button, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col button, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col button {
+          margin: -5px 0; }
+        .items-listing-small .item .item-line .item-col .item-picture, .items-listing-small .items-listing tr .item-line .item-col .item-picture, .items-listing .items-listing-small tr .item-line .item-col .item-picture, .items-listing-small tr .item-line .item-col .item-picture, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col .item-picture, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col .item-picture {
+          margin: -5px 0; }
+          .items-listing-small .item .item-line .item-col .item-picture img, .items-listing-small .items-listing tr .item-line .item-col .item-picture img, .items-listing .items-listing-small tr .item-line .item-col .item-picture img, .items-listing-small tr .item-line .item-col .item-picture img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col .item-picture img, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col .item-picture img {
+            width: 30px;
+            height: 30px;
+            margin: 0 0 0 10px; }
+      .items-listing-small .item .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small tr .item-line .item-col-actions, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col-actions {
+        display: flex;
+        align-items: flex-start; }
+        .items-listing-small .item .item-line .item-col-actions:last-child, .items-listing-small .items-listing tr .item-line .item-col-actions:last-child, .items-listing .items-listing-small tr .item-line .item-col-actions:last-child, .items-listing-small tr .item-line .item-col-actions:last-child, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions:last-child, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col-actions:last-child {
+          justify-content: flex-end; }
+      .items-listing-small .item .item-line .item-col-user, .items-listing-small .items-listing tr .item-line .item-col-user, .items-listing .items-listing-small tr .item-line .item-col-user, .items-listing-small tr .item-line .item-col-user, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-user, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col-user {
+        display: flex;
+        align-items: flex-start; }
+        .items-listing-small .item .item-line .item-col-user .item-picture, .items-listing-small .items-listing tr .item-line .item-col-user .item-picture, .items-listing .items-listing-small tr .item-line .item-col-user .item-picture, .items-listing-small tr .item-line .item-col-user .item-picture, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-user .item-picture, .items-listing tr .item-line .items-listing-small .item .item-col-actions .item-col-user .item-picture {
+          margin-right: 10px; }
+    .items-listing-small .item a, .items-listing-small .items-listing tr a, .items-listing .items-listing-small tr a, .items-listing-small tr a {
+      text-decoration: none; }
+      .items-listing-small .item a:hover h3, .items-listing-small .items-listing tr a:hover h3, .items-listing .items-listing-small tr a:hover h3, .items-listing-small tr a:hover h3 {
+        text-decoration: underline; }
+    .items-listing-small .item h3, .items-listing-small .items-listing tr h3, .items-listing .items-listing-small tr h3, .items-listing-small tr h3 {
+      color: #4D267F;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0; }
+    .items-listing-small .item ul, .items-listing-small .items-listing tr ul, .items-listing .items-listing-small tr ul, .items-listing-small tr ul {
+      color: #222122;
+      list-style: none;
+      margin: 0;
+      padding: 0; }
+    .items-listing-small .item .badge, .items-listing-small .items-listing tr .badge, .items-listing .items-listing-small tr .badge, .items-listing-small tr .badge {
+      margin: 3px; }
+    .items-listing-small .item .btn, .items-listing-small .items-listing tr .btn, .items-listing .items-listing-small tr .btn, .items-listing-small tr .btn, .items-listing-small .item .custom-file-label, .items-listing-small .items-listing tr .custom-file-label, .items-listing .items-listing-small tr .custom-file-label, .items-listing-small tr .custom-file-label, .items-listing-small .item .messagerie-contact-attachment-button, .items-listing-small .items-listing tr .messagerie-contact-attachment-button, .items-listing .items-listing-small tr .messagerie-contact-attachment-button, .items-listing-small tr .messagerie-contact-attachment-button, .items-listing-small .item body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing-small .item button, .items-listing-small tr body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing-small tr button {
+      margin: 20px; }
+  .items-listing-small tr {
+    display: table-row; }
+    .items-listing-small tr td {
+      padding: 5px 20px 5px 0; }
+      .items-listing-small tr td:last-child {
+        padding-right: 0px; }
+  .items-listing-small .item, .items-listing-small .items-listing tr, .items-listing .items-listing-small tr, .items-listing-small tr {
+    padding: 10px 0;
+    align-items: center; }
+    .items-listing-small .item:last-child, .items-listing-small .items-listing tr:last-child, .items-listing .items-listing-small tr:last-child, .items-listing-small tr:last-child {
+      border: none; }
+    .items-listing-small .item .form-control, .items-listing-small .items-listing tr .form-control, .items-listing .items-listing-small tr .form-control, .items-listing-small tr .form-control {
+      height: 34px !important; }
+
+/* ========================================================= */
+/* POPUP CONFIRM */
+/* ========================================================= */
+body .jconfirm .jconfirm-box .jconfirm-buttons button {
+  font-family: Montserrat !important;
+  text-transform: none !important;
+  font-weight: 300 !important; }
+  body .jconfirm .jconfirm-box .jconfirm-buttons button.btn-default {
+    background: #cdd3d9 !important;
+    border-color: #cdd3d9 !important; }
+  body .jconfirm .jconfirm-box .jconfirm-buttons button.btn-blue {
+    background: #4D267F !important; }
+
+/* ========================================================= */
+/* PARAMETERS */
+/* ========================================================= */
+.deleteSpecButton {
+  display: inline-block;
+  cursor: pointer;
+  color: #AAA29B;
+  font-size: 1.5rem;
+  margin: -8px 0 0;
+  top: 5px;
+  position: relative; }
+  .deleteSpecButton:hover {
+    color: #222122; }
+
+/* ========================================================= */
+/* TABLE CANDIDAT */
+/* ========================================================= */
+#tableCandidat .neobox-subtitle {
+  border-top: none;
+  border-bottom: 1px solid #F2F2F2; }
+
+/* ========================================================= */
+/* TABLE ADMINISTRATOR */
+/* ========================================================= */
+table .item-primary {
+  width: 30%; }
+  table .item-primary .form-control {
+    min-width: 150px; }
+
+table .item-secondary {
+  width: 15%; }
+  table .item-secondary .form-control {
+    min-width: 70px; }
+
+table .item-minor {
+  width: auto; }
+
+/* ========================================================= */
+/* 1200 */
+/* ========================================================= */
+@media (max-width: 1200px) {
+  .items-listing.grid .item, .items-listing.grid tr, .items-listing.grid .items-listing-small tr, .items-listing-small .items-listing.grid tr,
+  .items-listing.grid tr,
+  .items-listing.grid .items-listing-small tr,
+  .items-listing-small .items-listing.grid tr {
+    width: 33.333%; } }
+
+/* ========================================================= */
+/* 960 */
+/* ========================================================= */
+@media (max-width: 960px) {
+  .messagerie-left-col {
+    position: absolute;
+    transform: translateX(-100%);
+    left: 0;
+    width: calc(100% - 50px);
+    height: 100%;
+    z-index: 1;
+    transition: .3s transform ease; }
+  .messagerie-left-col-toggle {
+    position: absolute;
+    left: 100%;
+    font-size: 2.5rem;
+    background: #4D267F;
+    z-index: 1;
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer; }
+  .messagerie-right-col {
+    padding-left: 50px; }
+  .messagerie-send-form-content .btn, .messagerie-send-form-content .custom-file-label, .messagerie-send-form-content .messagerie-contact-attachment-button, .messagerie-send-form-content body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .messagerie-send-form-content button {
+    font-size: 0; }
+    .messagerie-send-form-content .btn [class^="icon-"], .messagerie-send-form-content .custom-file-label [class^="icon-"], .messagerie-send-form-content .messagerie-contact-attachment-button [class^="icon-"], .messagerie-send-form-content body .jconfirm .jconfirm-box .jconfirm-buttons button [class^="icon-"], body .jconfirm .jconfirm-box .jconfirm-buttons .messagerie-send-form-content button [class^="icon-"],
+    .messagerie-send-form-content .btn [class^="icon-"],
+    .messagerie-send-form-content .custom-file-label [class^="icon-"],
+    .messagerie-send-form-content .messagerie-contact-attachment-button [class^="icon-"],
+    .messagerie-send-form-content body .jconfirm .jconfirm-box .jconfirm-buttons button [class^="icon-"], body .jconfirm .jconfirm-box .jconfirm-buttons
+    .messagerie-send-form-content button [class^="icon-"] {
+      margin: -7px -15px -7px -17px; }
+  .messagerie {
+    position: relative;
+    overflow: hidden; }
+    .messagerie.left-column-open .messagerie-left-col {
+      transform: translateX(0px); }
+    .messagerie.left-column-open .messagerie-left-col-toggle [class^="icon-"],
+    .messagerie.left-column-open .messagerie-left-col-toggle [class^="icon-"] {
+      transform: rotate(180deg); }
+  .messagerie-contact-info {
+    flex-direction: column !important; }
+    .messagerie-contact-info .messagerie-contact-date {
+      margin: 0; }
+  .member-row,
+  .project-need-row {
+    flex-direction: column; }
+    .member-row + .member-row,
+    .member-row + .project-need-row,
+    .project-need-row + .member-row,
+    .project-need-row + .project-need-row {
+      border-top: 1px solid #cdd3d9;
+      padding-top: 10px; }
+    .member-row .col,
+    .member-row .col-sm,
+    .member-row .col-3,
+    .project-need-row .col,
+    .project-need-row .col-sm,
+    .project-need-row .col-3 {
+      flex-basis: auto;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 100%; } }
+
+/* ========================================================= */
+/* 768 */
+/* ========================================================= */
+@media (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+    align-items: center; }
+  .navbar-toggler {
+    outline: none !important; }
+  .navbar-expand {
+    justify-content: flex-start; }
+  .navbar-toggler.collapsed + a + .navbar-collapse.collapsing {
+    transform: translateX(-100%) !important; }
+  .navbar-collapse {
+    position: absolute;
+    top: 70px;
+    background: white;
+    left: 0;
+    right: 0;
+    height: calc(100vh - 71px) !important;
+    border-top: 1px solid #F2F2F2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transform: translateX(-100%);
+    transition: .3s transform ease !important; }
+    .navbar-collapse.collapsing, .navbar-collapse.show {
+      transform: translateX(0); }
+    .navbar-collapse .collapsing-elements {
+      display: block;
+      width: 100%;
+      overflow: auto; }
+    .navbar-collapse .main-nav .dropdown-menu {
+      position: relative !important;
+      transform: none !important;
+      margin-top: 0; }
+    .navbar-collapse .main-nav > .nav-item {
+      margin: 0; }
+      .navbar-collapse .main-nav > .nav-item .nav-link {
+        padding: 20px 30px; }
+    .navbar-collapse .nav-connected-user {
+      flex-direction: column;
+      width: 100%; }
+      .navbar-collapse .nav-connected-user .nav-connected-user-icons {
+        margin: 30px 30px 50px 30px; }
+      .navbar-collapse .nav-connected-user .user {
+        padding: 0 30px; }
+      .navbar-collapse .nav-connected-user .dropdown-menu {
+        display: block;
+        position: relative !important;
+        transform: none !important;
+        width: 100%;
+        box-shadow: none; }
+  .items-listing.grid .item, .items-listing.grid tr, .items-listing.grid .items-listing-small tr, .items-listing-small .items-listing.grid tr,
+  .items-listing.grid tr,
+  .items-listing.grid .items-listing-small tr,
+  .items-listing-small .items-listing.grid tr {
+    width: 50%; }
+  .items-listing .item, .items-listing tr, .items-listing .items-listing-small tr, .items-listing-small .items-listing tr,
+  .items-listing tr,
+  .items-listing .items-listing-small tr,
+  .items-listing-small .items-listing tr {
+    flex-direction: column;
+    text-align: center; }
+    .items-listing .item [class^="item-"], .items-listing tr [class^="item-"], .items-listing .items-listing-small tr [class^="item-"], .items-listing-small .items-listing tr [class^="item-"],
+    .items-listing .item [class*=" item-"], .items-listing tr [class*=" item-"],
+    .items-listing .items-listing-small tr [class*=" item-"], .items-listing-small
+    .items-listing tr [class*=" item-"],
+    .items-listing tr [class^="item-"],
+    .items-listing tr [class*=" item-"],
+    .items-listing .items-listing-small tr [class^="item-"],
+    .items-listing .items-listing-small tr [class*=" item-"],
+    .items-listing-small .items-listing tr [class^="item-"],
+    .items-listing-small .items-listing tr [class*=" item-"] {
+      margin-bottom: 15px;
+      width: 100%; }
+    .items-listing .item .item-picture, .items-listing tr .item-picture, .items-listing .items-listing-small tr .item-picture, .items-listing-small .items-listing tr .item-picture,
+    .items-listing tr .item-picture,
+    .items-listing .items-listing-small tr .item-picture,
+    .items-listing-small .items-listing tr .item-picture {
+      margin: 0 0 0 0; }
+    .items-listing .item .item-line, .items-listing tr .item-line, .items-listing .items-listing-small tr .item-line, .items-listing-small .items-listing tr .item-line, .items-listing .item .item-line .item-col-actions, .items-listing tr .item-line .item .item-col-actions, .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions,
+    .items-listing tr .item-line, .items-listing tr .item .item-line .item-col-actions, .items-listing .item .item-line tr .item-col-actions, .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions,
+    .items-listing .items-listing-small tr .item-line, .items-listing .item .item-line .items-listing-small tr .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions,
+    .items-listing-small .items-listing tr .item-line,
+    .items-listing-small .items-listing .item .item-line tr .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions {
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      margin: 0 0 10px 0;
+      border-bottom: 1px solid #F2F2F2; }
+      .items-listing .item .item-line:last-of-type, .items-listing tr .item-line:last-of-type, .items-listing .items-listing-small tr .item-line:last-of-type, .items-listing-small .items-listing tr .item-line:last-of-type, .items-listing .item .item-line .item-col-actions:last-of-type, .items-listing tr .item-line .item-col-actions:last-of-type,
+      .items-listing tr .item-line:last-of-type, .items-listing .item .item-line tr .item-col-actions:last-of-type, .items-listing tr .item-line .item-col-actions:last-of-type,
+      .items-listing .items-listing-small tr .item-line:last-of-type, .items-listing .item .item-line .items-listing-small tr .item-col-actions:last-of-type, .items-listing .items-listing-small tr .item-line .item-col-actions:last-of-type,
+      .items-listing-small .items-listing tr .item-line:last-of-type,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions:last-of-type, .items-listing-small .items-listing tr .item-line .item-col-actions:last-of-type {
+        border: none; }
+      .items-listing .item .item-line .item-col, .items-listing tr .item-line .item-col, .items-listing .items-listing-small tr .item-line .item-col, .items-listing-small .items-listing tr .item-line .item-col, .items-listing tr .item-line .item-col-actions .item-col,
+      .items-listing tr .item-line .item-col, .items-listing .item .item-line tr .item-col-actions .item-col, .items-listing tr .item-line .item-col-actions .item-col,
+      .items-listing .items-listing-small tr .item-line .item-col, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col,
+      .items-listing-small .items-listing tr .item-line .item-col,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col {
+        padding: 0;
+        margin: 0 0 5px 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center; }
+    .items-listing .item .item-col-role, .items-listing tr .item-col-role, .items-listing .items-listing-small tr .item-col-role, .items-listing-small .items-listing tr .item-col-role,
+    .items-listing .item .item-col-role p, .items-listing tr .item-col-role p,
+    .items-listing .items-listing-small tr .item-col-role p, .items-listing-small
+    .items-listing tr .item-col-role p,
+    .items-listing tr .item-col-role,
+    .items-listing tr .item-col-role p,
+    .items-listing .items-listing-small tr .item-col-role,
+    .items-listing .items-listing-small tr .item-col-role p,
+    .items-listing-small .items-listing tr .item-col-role,
+    .items-listing-small .items-listing tr .item-col-role p {
+      color: #222122; }
+    .items-listing .item .item-col-specialty, .items-listing tr .item-col-specialty, .items-listing .items-listing-small tr .item-col-specialty, .items-listing-small .items-listing tr .item-col-specialty,
+    .items-listing .item .item-col-specialty p, .items-listing tr .item-col-specialty p,
+    .items-listing .items-listing-small tr .item-col-specialty p, .items-listing-small
+    .items-listing tr .item-col-specialty p,
+    .items-listing tr .item-col-specialty,
+    .items-listing tr .item-col-specialty p,
+    .items-listing .items-listing-small tr .item-col-specialty,
+    .items-listing .items-listing-small tr .item-col-specialty p,
+    .items-listing-small .items-listing tr .item-col-specialty,
+    .items-listing-small .items-listing tr .item-col-specialty p {
+      color: #AAA29B; }
+    .items-listing .item .item-line .item-col-actions, .items-listing tr .item-line .item-col-actions, .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing-small .items-listing tr .item-line .item-col-actions, .items-listing tr .item-line .item-col-actions .item-col-actions,
+    .items-listing tr .item-line .item-col-actions, .items-listing .item .item-line tr .item-col-actions .item-col-actions, .items-listing tr .item-line .item-col-actions .item-col-actions,
+    .items-listing .items-listing-small tr .item-line .item-col-actions, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions,
+    .items-listing-small .items-listing tr .item-line .item-col-actions,
+    .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions {
+      border: none; }
+      .items-listing .item .item-line .item-col-actions .btn, .items-listing tr .item-line .item-col-actions .btn, .items-listing .items-listing-small tr .item-line .item-col-actions .btn, .items-listing-small .items-listing tr .item-line .item-col-actions .btn, .items-listing tr .item-line .item-col-actions .item-col-actions .btn, .items-listing .item .item-line .item-col-actions .custom-file-label, .items-listing tr .item-line .item-col-actions .custom-file-label, .items-listing .items-listing-small tr .item-line .item-col-actions .custom-file-label, .items-listing-small .items-listing tr .item-line .item-col-actions .custom-file-label, .items-listing tr .item-line .item-col-actions .item-col-actions .custom-file-label, .items-listing .item .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing .items-listing-small tr .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing-small .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing tr .item-line .item-col-actions .item-col-actions .messagerie-contact-attachment-button, .items-listing .item .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .item-col-actions button, .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing tr .item-line .item-col-actions button,
+      .items-listing .item .item-line .item-col-actions .item-picture, .items-listing tr .item-line .item-col-actions .item-picture,
+      .items-listing .items-listing-small tr .item-line .item-col-actions .item-picture, .items-listing-small
+      .items-listing tr .item-line .item-col-actions .item-picture, .items-listing tr .item-line .item-col-actions .item-col-actions .item-picture,
+      .items-listing tr .item-line .item-col-actions .btn, .items-listing .item .item-line tr .item-col-actions .item-col-actions .btn,
+      .items-listing tr .item-line .item-col-actions .custom-file-label, .items-listing .item .item-line tr .item-col-actions .item-col-actions .custom-file-label,
+      .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing .item .item-line tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button,
+      .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons
+      .items-listing tr .item-line .item-col-actions button, .items-listing .item .item-line tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line tr .item-col-actions .item-col-actions button,
+      .items-listing tr .item-line .item-col-actions .item-picture, .items-listing .item .item-line tr .item-col-actions .item-col-actions .item-picture,
+      .items-listing .items-listing-small tr .item-line .item-col-actions .btn, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .btn,
+      .items-listing .items-listing-small tr .item-line .item-col-actions .custom-file-label, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .custom-file-label,
+      .items-listing .items-listing-small tr .item-line .item-col-actions .messagerie-contact-attachment-button, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button,
+      .items-listing .items-listing-small tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons
+      .items-listing .items-listing-small tr .item-line .item-col-actions button, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions button,
+      .items-listing .items-listing-small tr .item-line .item-col-actions .item-picture, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .item-picture,
+      .items-listing-small .items-listing tr .item-line .item-col-actions .btn,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .btn,
+      .items-listing-small .items-listing tr .item-line .item-col-actions .custom-file-label,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .custom-file-label,
+      .items-listing-small .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button,
+      .items-listing-small .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons
+      .items-listing-small .items-listing tr .item-line .item-col-actions button,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions button,
+      .items-listing-small .items-listing tr .item-line .item-col-actions .item-picture,
+      .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .item-picture {
+        margin: 0 0 5px 0; }
+        .items-listing .item .item-line .item-col-actions .btn img, .items-listing tr .item-line .item-col-actions .btn img, .items-listing .items-listing-small tr .item-line .item-col-actions .btn img, .items-listing-small .items-listing tr .item-line .item-col-actions .btn img, .items-listing tr .item-line .item-col-actions .item-col-actions .btn img, .items-listing .item .item-line .item-col-actions .custom-file-label img, .items-listing tr .item-line .item-col-actions .custom-file-label img, .items-listing .items-listing-small tr .item-line .item-col-actions .custom-file-label img, .items-listing-small .items-listing tr .item-line .item-col-actions .custom-file-label img, .items-listing tr .item-line .item-col-actions .item-col-actions .custom-file-label img, .items-listing .item .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing .items-listing-small tr .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing-small .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing tr .item-line .item-col-actions .item-col-actions .messagerie-contact-attachment-button img, .items-listing .item .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .item-col-actions button img, .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing tr .item-line .item-col-actions button img,
+        .items-listing .item .item-line .item-col-actions .item-picture img, .items-listing tr .item-line .item-col-actions .item-picture img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions .item-picture img, .items-listing-small
+        .items-listing tr .item-line .item-col-actions .item-picture img, .items-listing tr .item-line .item-col-actions .item-col-actions .item-picture img,
+        .items-listing tr .item-line .item-col-actions .btn img, .items-listing .item .item-line tr .item-col-actions .item-col-actions .btn img,
+        .items-listing tr .item-line .item-col-actions .custom-file-label img, .items-listing .item .item-line tr .item-col-actions .item-col-actions .custom-file-label img,
+        .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing .item .item-line tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button img,
+        .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons
+        .items-listing tr .item-line .item-col-actions button img, .items-listing .item .item-line tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line tr .item-col-actions .item-col-actions button img,
+        .items-listing tr .item-line .item-col-actions .item-picture img, .items-listing .item .item-line tr .item-col-actions .item-col-actions .item-picture img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions .btn img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .btn img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions .custom-file-label img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .custom-file-label img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions .messagerie-contact-attachment-button img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons
+        .items-listing .items-listing-small tr .item-line .item-col-actions button img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions button img,
+        .items-listing .items-listing-small tr .item-line .item-col-actions .item-picture img, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-actions .item-picture img,
+        .items-listing-small .items-listing tr .item-line .item-col-actions .btn img,
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .btn img,
+        .items-listing-small .items-listing tr .item-line .item-col-actions .custom-file-label img,
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .custom-file-label img,
+        .items-listing-small .items-listing tr .item-line .item-col-actions .messagerie-contact-attachment-button img,
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .messagerie-contact-attachment-button img,
+        .items-listing-small .items-listing tr .item-line .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons
+        .items-listing-small .items-listing tr .item-line .item-col-actions button img,
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions body .jconfirm .jconfirm-box .jconfirm-buttons button img, body .jconfirm .jconfirm-box .jconfirm-buttons
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions button img,
+        .items-listing-small .items-listing tr .item-line .item-col-actions .item-picture img,
+        .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-actions .item-picture img {
+          margin: 0; }
+    .items-listing .item .item-line .item-col-user .item-picture, .items-listing tr .item-line .item-col-user .item-picture, .items-listing .items-listing-small tr .item-line .item-col-user .item-picture, .items-listing-small .items-listing tr .item-line .item-col-user .item-picture, .items-listing tr .item-line .item-col-actions .item-col-user .item-picture,
+    .items-listing tr .item-line .item-col-user .item-picture, .items-listing .item .item-line tr .item-col-actions .item-col-user .item-picture,
+    .items-listing .items-listing-small tr .item-line .item-col-user .item-picture, .items-listing .item .item-line .items-listing-small tr .item-col-actions .item-col-user .item-picture,
+    .items-listing-small .items-listing tr .item-line .item-col-user .item-picture,
+    .items-listing-small .items-listing .item .item-line tr .item-col-actions .item-col-user .item-picture {
+      margin-right: 0px; }
+  .own-project-list .item, .own-project-list .items-listing tr, .items-listing .own-project-list tr, .own-project-list .items-listing-small tr, .items-listing-small .own-project-list tr {
+    align-items: center !important; }
+    .own-project-list .item > div, .own-project-list .items-listing tr > div, .items-listing .own-project-list tr > div, .own-project-list .items-listing-small tr > div, .items-listing-small .own-project-list tr > div {
+      width: 100%; }
+  .neobox-header {
+    flex-direction: column; }
+    .neobox-header .neobox-header-container {
+      width: 100%;
+      margin-bottom: 10px; }
+      .neobox-header .neobox-header-container:last-child {
+        margin-bottom: 0; }
+  .neo-search-control {
+    flex: 1;
+    width: auto;
+    max-width: auto; } }
+
+/* ========================================================= */
+/* 680 */
+/* ========================================================= */
+@media (max-width: 680px) {
+  .align-center-680 {
+    text-align: center; }
+  .page-top {
+    flex-direction: column;
+    align-items: normal; }
+    .page-top .btn, .page-top .custom-file-label, .page-top .messagerie-contact-attachment-button, .page-top body .jconfirm .jconfirm-box .jconfirm-buttons button, body .jconfirm .jconfirm-box .jconfirm-buttons .page-top button {
+      text-align: center;
+      justify-content: center;
+      margin-top: 10px; }
+  .neobox-header .neobox-header-container {
+    flex-direction: column; }
+  .neobox-header .neo-search-control,
+  .neobox-header .neo-select2-control,
+  .neobox-header .neo-select-control,
+  .neobox-header .btn-group {
+    width: 100%;
+    margin: none;
+    margin-bottom: 10px; }
+    .neobox-header .neo-search-control:last-child,
+    .neobox-header .neo-select2-control:last-child,
+    .neobox-header .neo-select-control:last-child,
+    .neobox-header .btn-group:last-child {
+      margin-bottom: 0; }
+  .align-items-center {
+    flex-direction: column; }
+    .align-items-center > * {
+      margin-bottom: 10px; }
+      .align-items-center > *:last-child {
+        margin-bottom: 0; }
+  .profile-presentation-picture {
+    margin-right: 0; } }
+
+/* ========================================================= */
+/* 480 */
+/* ========================================================= */
+@media (max-width: 480px) {
+  .items-listing.grid .item, .items-listing.grid tr, .items-listing.grid .items-listing-small tr, .items-listing-small .items-listing.grid tr,
+  .items-listing.grid tr,
+  .items-listing.grid .items-listing-small tr,
+  .items-listing-small .items-listing.grid tr {
+    width: 100%; } }
+
+/* DATE SEPARATOR */
+/* =============================== */

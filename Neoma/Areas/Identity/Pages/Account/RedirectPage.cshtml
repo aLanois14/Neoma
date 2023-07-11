@@ -1,0 +1,35 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Redirection";
+}
+
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="neobox-content extra-padding text-center">
+                <p>Vous allez être redirigé vers la page dans quelques instants.</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<form method="post">
+    <input asp-for="Input.Id" type="hidden" />
+</form>
+
+
+@section Scripts{
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $('form').submit();
+            }, 5000);
+        });
+    </script>
+}

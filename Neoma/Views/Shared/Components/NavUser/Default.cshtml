@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model Neoma.Models.ApplicationUser
+
+@{
+    var base64 = Convert.ToBase64String(Model.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+}
+<img src="@imgAvatar" class="user-avatar" alt="user avatar" />
+<div class="user-info">
+    <p>@Model.Prenom @Model.Nom </p>
+    <i>@Model.RoleActuel</i>
+</div>
+<i class="icon-caret-bottom"></i>

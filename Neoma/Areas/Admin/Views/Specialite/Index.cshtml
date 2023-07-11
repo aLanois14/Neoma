@@ -1,0 +1,179 @@
+﻿@model Neoma.Models.SpecialiteViewModel.SpecialiteRoleViewModel
+@using Neoma.Extensions
+
+@{
+    ViewData["Title"] = "Spécialités";
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("body").on('keyup change', ".form-control", function () {
+                var editBtn = $(this).parent().parent().find(".edit");
+                var createBtn = $(this).parent().parent().find(".create");
+                editBtn.removeAttr("disabled");
+                createBtn.removeAttr("disabled");
+            })
+
+            $("body").on("click", "#Valide", function () {
+                var editBtn = $(this).parent().parent().parent().find(".edit");
+                var createBtn = $(this).parent().parent().parent().find(".create");
+                editBtn.removeAttr("disabled");
+                createBtn.removeAttr("disabled");
+                if ($(this).is(':checked')) {
+                    $(this).val(true);
+                }
+                else {
+                    $(this).val(false);
+                }
+            })
+
+            $("#Role").change(function ()
+            {
+                var link = '@Url.Action("Table", "Specialite", new { Role = "replace" })';
+
+                link = link.replace("replace", $("#Role").val());
+
+                $.post(link, function (data) {
+                    $("#tableSkill").html(data);
+
+                    $(".edit").click(function () {
+                        editSpecialite($(this));
+                    });
+
+                    $(".create").click(function ()
+                    {
+                        createSpecialite($(this));
+                    });
+                });
+            });
+
+            $(function () {
+                $(".edit").click(function () {
+                    editSpecialite($(this));
+                });
+
+                $(".create").click(function () {
+                    createSpecialite($(this));
+                });
+            });
+        });
+
+        function editSpecialite(button) {
+            var Specialite = {};
+            Specialite.Id = button.attr('data-id');
+            Specialite.Name = button.parent().parent().parent().find("#item_Name").val();
+            Specialite.RoleId = button.parent().parent().parent().find("#item_RoleId").val();
+            Specialite.Valide = button.parent().parent().parent().find("#Valide").val();
+            console.log(Specialite.Valide);
+            var items = JSON.stringify(Specialite);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Edit", "Specialite", new { area = "Admin" })', //'/Admin/Organisme/Edit',
+                contentType: "application/json; charset=utf-8",
+                data: items,
+                datatype: "json",
+                success: function () {
+                    button.attr("disabled", "disabled");
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        }
+
+        function createSpecialite(button) {
+            var Specialite = {};
+            Specialite.Name = button.parent().parent().parent().find("#item_Name").val();
+            //alert(Specialite.Name);
+            Specialite.RoleId = button.parent().parent().parent().find("#item_RoleId").val();
+            //alert(Specialite.RoleId);
+            Specialite.Valide = button.parent().parent().parent().find("#Valide").val();
+            var items = JSON.stringify(Specialite);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "Specialite", new { area = "Admin" })', //'/Admin/Specialite/CreateView',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                data: items,
+                success: function (data)
+                {
+                    location.reload();
+                },
+                error: function ()
+                {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        }
+
+        function confirmDelete(id) {
+            $.confirm({
+                title: 'Confirmation',
+                content: 'Voulez-vous vraiment supprimer cette spécialité ?',
+                buttons: {
+                    Valider: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "Specialite", new { area = "Admin"})',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response === "OK") {
+                                    window.location.href = '@Url.Action("Index", "Specialite", new { area = "Admin"})';
+                                }
+                                else
+                                    alert(response);
+                            }
+                        });
+                        return true;
+                    },
+                    Annuler: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+        function noDelete() {
+            //console.log(id);
+            $.confirm({
+                title: 'Suppression impossible',
+                content: 'Cette spécialités est utilisé par un utilisateur, besoins ou un membre de projet.',
+                type: 'red',
+                buttons: {
+                    Fermer: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2 class="w-100">@ViewData["Title"]</h2>
+                @*<button id="create" class="btn btn-sm">
+                    Ajouter une spécialité
+                </button>*@
+            </div>
+            <form method="post">
+                <div class="neobox-header">
+                    <div class="neo-select-control m-0 w-100">
+                        <label>Filtrer par rôle</label>
+                        <select asp-for="@Model.Role.Id" id="Role" asp-items="Model.RoleList.ToSelectListItem(0)" ></select>
+                    </div>
+                </div>
+            </form>
+            <div class="neobox-content">
+                <div id="tableSkill">
+                    @await Component.InvokeAsync("TableSpecialite")
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+﻿@page
+@model IndexModel
+
+@functions{
+    string photo(byte[] photo64)
+    {
+        var base64 = Convert.ToBase64String(photo64);
+        return string.Format("data:image/jpg;base64,{0}", base64);
+    }
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox mt-4">
+            <div class="neobox-title space-between">
+                <h2>Mes Informations</h2>  
+                <button class="btn btn-sm">Modifier</button>
+            </div>
+            <form method="post">
+                <div class="neobox-content">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="Input.User.Nom"></label>
+                                        <input asp-for="Input.User.Nom" class="form-control" />
+                                        <span asp-validation-for="Input.User.Nom" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="Input.User.Prenom"></label>
+                                        <input asp-for="Input.User.Prenom" class="form-control" />
+                                        <span asp-validation-for="Input.User.Prenom" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label asp-for="Input.User.Email"></label>
+                                        <input asp-for="Input.User.Email" class="form-control" />
+                                        <span asp-validation-for="Input.User.Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label>N° de téléphone</label>
+                                        <input asp-for="Input.User.PhoneNumber" class="form-control" />
+                                        <span asp-validation-for="Input.User.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <img src="@photo(Model.Input.User.Photo)" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section class="neobox mt-4">
+            <div class="neobox-title space-between">
+                <h2>Mes Spécialités</h2>
+                <button class="btn btn-sm">Modifier</button>
+            </div>
+
+            <div class="neobox-content">
+                <div class="row">
+                    <div class="form-group">
+                        @foreach (var role in Model.Input.Role)
+                        {
+                            <div class="form-group">
+                                <label>@role.Name</label>
+                                <div class="space-between">
+                                    <div>
+                                        @foreach (var specialite in Model.Input.Specialite)
+                                        {
+                                            if (specialite.RoleId == role.Id)
+                                            {
+                                                <span class="badge border-bootstrap-grey">@specialite.Name</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <form method="post" asp-action="addSpecialite" asp-controller="Home" asp-area="CommonUser">
+                    <input id="Utilisateur" value="@Model.Input.User.Id" type="hidden" />
+                    <div class="neobox-subtitle">
+                        <h3>Compétences</h3>
+                        <div class="neobox-subtitle-actions">
+                            <span id="addSkill" class="btn btn-default btn-sm">
+                                Ajouter une compétence
+                            </span>
+                        </div>
+                    </div>
+                    <div class="neobox-content">
+                        <div id="rowNeeds">
+                            @await Component.InvokeAsync("TableBesoin", null)
+                        </div>
+
+                        <div class="form-group text-right mt-5">
+                            <button id="btnSubmit" class="btn btn-large"><i class="icon-send"></i> Envoyer votre demande</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="neobox mt-4">
+            <div class="neobox-title space-between">
+                <h2>Mes Projets</h2>
+                <button class="btn btn-sm">Ajouter</button>
+            </div>
+            <div class="neobox-content">
+                <ul class="items-listing list">
+                    @foreach (var projet in Model.Input.Projet)
+                    {
+                        <li class="item p-2">
+                            <div class="item-primary">
+                                <h3>@projet.Name</h3>
+                                <p class="color-grey"><i>@projet.TypeProjet.Name</i></p>
+                                <p>@projet.Utilisateur.Organisme.Name</p>
+                            </div>
+                            <div class="item-secondary">
+                                <p><b>Rôles</b></p>
+                                <ul class="color-grey">
+                                    @foreach (var besoins in projet.Besoins)
+                                    {
+                                        <li>@besoins.Role.Name</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="item-secondary">
+                                @if (projet.Termine)
+                                {
+                                    <span class="badge btn-primary">Terminé</span>
+                                }
+                                else
+                                {
+                                    <span class="badge btn-success">En cours</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function() {
+            autosize(document.querySelectorAll('textarea'));
+            $('.make-select2').select2({
+                tags: true,
+                width: "100%"
+            });
+
+            $("body").on("change", ".Role", function () {
+                alert("bonjour");
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "Candidat", new { area = "CommonUser"})',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role": role},
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id).text(value.name));
+                        });
+                    }
+                });
+            });
+
+            $("body").on("click", ".remove", function () {
+                $(this).closest('.row').remove();
+            });
+
+            $("#btnSubmit").click(function () {
+                var Candidat = {};
+                var ListSkill = [];
+                Candidat.Id = $("#Utilisateur").val();
+                ListSkill = ListRowSkill();
+                Candidat.Role = ListSkill;
+                var items = JSON.stringify(Candidat);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("addSpecialite", "Home", new { area = "CommonUser"})',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: items,
+                    async: false,
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.result;
+                        }
+                    }
+                });
+            });
+
+            function TableAddSkill() {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("TableBesoinAdd", "Register", new { area = "CommonUser"})',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        success: function (data) {
+                            $('#rowNeeds').append(data);
+                            $('.make-select2').select2({
+                                tags: true,
+                                width: "100%"
+                            });
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            $("#addSkill").click(function () {
+                TableAddSkill();
+            });
+
+            function ListRowSkill() {
+                var ListSkill = [];
+                $("#rowNeeds .row").each(function (n) {
+                    var Role = {};
+                    var ListSpecialite = [];
+                    var specialiteInit = $(this).children().find(".specialite").select2('data');
+                    $.each(specialiteInit, function (n) {
+                        console.log(specialiteInit[n].id + " " + specialiteInit[n].text);
+                        var Specialite = {};
+                        if ($.isNumeric(specialiteInit[n].id)) {
+                            Specialite.Id = specialiteInit[n].id;
+                        }
+                        else {
+                            Specialite.Id = 0;
+                        }
+                        Specialite.Name = specialiteInit[n].text;
+                        ListSpecialite[n] = Specialite;
+                    });
+                    Role.RoleId = $(this).children().find("#Role").val();
+                    Role.UtilisateurId = $("#Utilisateur").val();
+                    Role.Specialite = ListSpecialite;
+                    ListSkill[n] = Role;
+                });
+                return ListSkill;
+            }
+        })
+    </script>
+}

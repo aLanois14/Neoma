@@ -1,0 +1,374 @@
+@import "_variables.scss";
+
+/* ========================================================= */
+/* 1200 */
+/* ========================================================= */
+
+@media (max-width: 1200px) {
+    .items-listing.grid .item, 
+    .items-listing.grid tr, 
+    .items-listing.grid .items-listing-small tr, 
+    .items-listing-small .items-listing.grid tr {
+        width: 33.333%;
+    }
+}
+
+/* ========================================================= */
+/* 960 */
+/* ========================================================= */
+
+@media (max-width: 960px) {
+
+    .messagerie-left-col {
+        position: absolute;
+        transform: translateX(-100%);
+        left: 0;
+        width: calc(100% - 50px);
+        height: 100%;
+        z-index: 1;
+        transition: .3s transform ease;
+    }
+    
+    .messagerie-left-col-toggle {
+        position: absolute;
+        left: 100%;
+        font-size: 2.5rem;
+        background: $violet;
+        z-index: 1;
+        width: 50px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+    }    
+
+    .messagerie-right-col {
+        padding-left: 50px;
+    }
+
+    .messagerie-send-form-content .btn {
+        font-size: 0;
+
+        [class^="icon-"],
+        [class^="icon-"] {
+            margin: -7px -15px -7px -17px;
+        }
+    }
+
+    .messagerie {
+        position: relative;
+        overflow: hidden;
+
+        &.left-column-open {
+
+            .messagerie-left-col {
+                transform: translateX(0px);
+            }
+
+            .messagerie-left-col-toggle {
+
+                [class^="icon-"],
+                [class^="icon-"] {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+
+    .messagerie-contact-info {
+        flex-direction: column !important;
+
+        .messagerie-contact-date {
+            margin: 0;
+        }
+    }
+
+    .member-row,
+    .project-need-row {
+        flex-direction: column;
+
+        + .member-row,
+        + .project-need-row {
+            border-top: 1px solid $bootstrap-grey;
+            padding-top: 10px;
+        }
+
+        .col,
+        .col-sm,
+        .col-3 {
+            flex-basis: auto;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+/* ========================================================= */
+/* 768 */
+/* ========================================================= */
+
+@media (max-width: 768px) {
+
+    .flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-toggler {
+        outline: none !important;
+    }
+
+    .navbar-expand {
+        justify-content: flex-start;
+    }
+    
+    .navbar-toggler.collapsed + a + .navbar-collapse.collapsing {
+        transform: translateX(-100%) !important;
+    }
+    
+    .navbar-collapse {
+        position: absolute;
+        top: 70px;
+        background: white;
+        left: 0;
+        right: 0;
+        height: calc(100vh - 71px) !important;
+        border-top: 1px solid $light-grey;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        transform: translateX(-100%);
+        transition: .3s transform ease !important;
+
+        &.collapsing,
+        &.show {
+            transform: translateX(0);
+        }
+        
+        .collapsing-elements {
+            display: block;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .main-nav {
+            .dropdown-menu {
+                position: relative !important;
+                transform: none !important;
+                margin-top: 0;
+            }
+
+            > .nav-item {
+                margin: 0;
+
+                .nav-link {
+                    padding: 20px 30px;
+                }
+            }
+        }
+
+        .nav-connected-user {
+            flex-direction: column;
+            width: 100%;
+            
+            .nav-connected-user-icons {
+                margin: 30px 30px 50px 30px;
+            }
+
+            .user {
+                padding: 0 30px;
+            }
+
+            .dropdown-menu {
+                display: block;
+                position: relative !important;
+                transform: none !important;
+                width: 100%;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .items-listing.grid .item, 
+    .items-listing.grid tr, 
+    .items-listing.grid .items-listing-small tr, 
+    .items-listing-small .items-listing.grid tr {
+        width: 50%;
+    }
+
+    .items-listing .item, 
+    .items-listing tr, 
+    .items-listing .items-listing-small tr, 
+    .items-listing-small .items-listing tr {
+        flex-direction: column;
+        text-align: center;
+
+        [class^="item-"],
+        [class*=" item-"] {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .item-picture {
+            margin: 0 0 0 0;
+        }
+    
+        .item-line {
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid $light-grey;
+
+            &:last-of-type {
+                border: none;
+            }
+
+            .item-col {
+                padding: 0;
+                margin: 0 0 5px 0;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        } 
+
+        .item-col-role,
+        .item-col-role p {
+            color: $dark;
+        }
+
+        .item-col-specialty,
+        .item-col-specialty p {
+            color: $grey;
+        }
+
+        .item-line .item-col-actions {
+            @extend .item-line;
+            border: none;
+
+            .btn,
+            .item-picture {
+                margin: 0 0 5px 0;
+
+                img {
+                    margin: 0;
+                }
+            }
+        } 
+
+        .item-line .item-col-user .item-picture {
+            margin-right: 0px;
+        }
+    }
+
+    .own-project-list {
+
+        .item {
+            align-items: center!important;
+            
+            > div {
+                width: 100%;
+            }
+        }
+    }
+
+    .neobox-header {
+        flex-direction: column;
+
+        .neobox-header-container {
+            width: 100%;
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+
+    .neo-search-control {
+        flex: 1;
+        width: auto;
+        max-width: auto;
+    }
+}
+
+/* ========================================================= */
+/* 680 */
+/* ========================================================= */
+
+@media (max-width: 680px) {
+
+    .align-center-680 {
+        text-align: center
+    }
+    
+    .page-top {
+        flex-direction: column;
+        align-items: normal;
+
+        .btn {
+            text-align: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+    }
+
+    .neobox-header {
+
+        .neobox-header-container {
+            flex-direction: column;
+        }
+
+        .neo-search-control,
+        .neo-select2-control,
+        .neo-select-control,
+        .btn-group {
+            width: 100%;
+            margin: none;
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .align-items-center {
+        flex-direction: column;
+        
+        > * {
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .profile-presentation-picture {
+        margin-right: 0;
+    }
+}
+
+/* ========================================================= */
+/* 480 */
+/* ========================================================= */
+
+@media (max-width: 480px) {
+
+    .items-listing.grid .item, 
+    .items-listing.grid tr, 
+    .items-listing.grid .items-listing-small tr, 
+    .items-listing-small .items-listing.grid tr {
+        width: 100%;
+    }
+}
+
+/* DATE SEPARATOR */
+/* =============================== */

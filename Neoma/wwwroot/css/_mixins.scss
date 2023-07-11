@@ -1,0 +1,234 @@
+@import "_variables.scss";
+
+@mixin neobox() {
+    background: white;
+    box-shadow: 0px 0px 1px rgba(0,0,0,.2);
+}
+
+@mixin badge-color($color) {
+    border-color: $color;
+    background-color: $color;
+    color: white;
+}
+
+@mixin badge-color-outline($color) {
+    border-color: $color;
+    color: $color;
+}
+
+@mixin nav-item() {
+    display: flex;
+    align-items: center;
+    color: $dark;
+    text-transform: none;
+    min-height: 50px;
+    width: 100%;
+    border: none;
+    background: none;
+
+    &:hover {
+        color: $violet;
+    }
+}
+
+@mixin checkbox {
+    display: flex;
+    cursor: pointer;
+
+    input {
+        display: none;
+    }
+
+    .custom-visual {
+        width: 20px;
+        height: 20px;
+        border-radius: 2px;
+        background: white;
+        border: 1px solid $grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 10px;
+
+        &::before {
+            content: "";
+            width: 10px;
+            height: 5px;
+            border-bottom: 1px solid white;
+            border-left: 1px solid white;
+            transform: rotate(-45deg);
+            margin-top: -3px;
+        }
+    }
+
+    input:checked + .custom-visual {
+        border-color: $violet;
+        background-color: $violet;
+    }
+
+    .text {
+        font-style: normal;
+        font-size: 1rem;
+        color: $dark;
+    }
+}
+
+@mixin items-listing() {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &.grid {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+
+        .item {
+            width: 25%;
+            flex-direction: column;
+            border-right: 1px solid $light-grey;
+            padding: 30px;
+            text-align: center;
+            align-items: center;
+            
+            * {
+                text-align: center !important;
+            }
+
+            a.item {
+                border: none;
+            }
+        }
+        
+        [class^="item-"], 
+        [class*=" item-"] {
+            margin-bottom: 15px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .item {
+        padding: 15px 20px;
+        border-bottom: 1px solid $light-grey;
+        display: flex;
+        align-items: flex-start;
+
+        .item-picture {
+            margin: 0 20px;
+
+            img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin: 4px 0;
+            }
+        }
+
+        .item-primary {
+            flex: 4;
+        }
+
+        .item-secondary {
+            flex: 3;
+        }
+
+        .item-minor {
+            flex: 2;
+        }
+
+        .item-lines {
+            flex: 6;
+        }
+
+        .item-line {
+            display: flex; 
+            margin-bottom: 5px;
+
+            .item-col {
+                flex: 1;
+                padding: 5px 0;
+                word-break: break-all;
+                hyphens: auto;
+
+                .btn {
+                    margin: -5px 0;
+                }
+
+                .item-picture {
+                    margin: -5px 0;
+                    
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        margin: 0 0 0 10px;
+                    }
+                }
+            }
+
+            .item-col-actions {
+                display: flex;
+                align-items: flex-start;
+                
+                &:last-child {
+                    justify-content: flex-end;
+                }
+            }
+
+            .item-col-user {
+                display: flex;
+                align-items: flex-start;
+
+                .item-picture {
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        a {
+            text-decoration: none;
+
+            &:hover h3 {
+                text-decoration: underline;
+            }
+        }
+
+        h3 {
+            color: $violet;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        ul {
+            color: $dark;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .badge {
+            margin: 3px;
+        }
+
+        .btn {
+            margin: 20px;
+        }
+    }
+
+    tr {
+        @extend .item;
+        display: table-row;
+
+        td {
+            padding: 5px 20px 5px 0;
+
+            &:last-child {
+                padding-right: 0px;
+            }
+        }
+    }
+}

@@ -1,0 +1,229 @@
+﻿@page
+@model RegisterModel
+@using Neoma.Extensions
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/croppie/croppie.css" />
+}
+
+@{
+    ViewData["Title"] = "Créer un compte";
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <div class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="neobox-content extra-padding">
+                <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="Input.LastName"></label>
+                        <input asp-for="Input.LastName" class="form-control" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.FirstName"></label>
+                        <input asp-for="Input.FirstName" class="form-control" />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" id="EnterPass" class="form-control" onkeyup="return passwordChanged();" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <input asp-for="Input.ConfirmPassword" id="RepeatPass" class="form-control" disabled="disabled" onkeyup="confirmPass();" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <p class="mb-3"><i>Le mot de passe doit contenir au moins un caractère spécial, une majuscule, un chiffre, une lettre et faire minimum 8 caractères.</i></p>
+                    <div class="form-group">
+                        <label asp-for="Input.PhoneNumber"></label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" data-inputmask="'mask': '99 99 99 99 99'" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Status" class="custom-label"></label>
+                        <select asp-for="Input.Status" class="form-control">
+                            <option value="0">Fondateur</option>
+                            <option value="1">Co-Surfeur</option>
+                            <option value="2">Swimmer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="custom-label">Avatar</label>
+                        <div id="croppiePreview">
+                            <!-- Temporaire => La pop up doit se lancer lorsqu'on choisit une photo -->
+                            <div class="custom-file">
+                                <input type="file" id="Photo" class="custom-file-input" />
+                                <label class="custom-file-label">Choisissez une photo</label>
+                                <span asp-validation-for="Input.Photo" class="text-danger"></span>
+                                <input type="hidden" asp-for="Input.Photo" />
+                            </div>
+                            <!-- /Temporaire -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Campus" class="custom-label"></label>
+                        <select asp-for="Input.Campus" asp-items="Model._organisme.ToSelectListItem(0)" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group text-center mt-5">
+                        <button id="btnSetPassword" type="submit" class="btn btn-large" disabled="disabled">Continuer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="croppieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="croppie-content">
+                        <div id="croppie"></div>
+                    </div>
+                    <div class="modal-footer bg-soft-grey">
+                        <button type="button" class="btn btn-cancel" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn croppie-result" data-dismiss="modal">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/lib/croppie/croppie.js"></script>
+    <script src="~/lib/inputmask-4/js/inputmask.js"></script>
+
+    <script>
+
+        $(function () {
+            Inputmask().mask(document.querySelectorAll("input"));
+        });
+
+        var myCroppie;
+        $('#croppieModal').on('shown.bs.modal', function () {
+            if ($('#Photo')[0].files && $('#Photo')[0].files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    myCroppie.croppie('bind', {
+                        url: e.target.result
+                    }).then(function () {
+                        console.log('jQuery bind complete');
+                    });
+
+                };
+
+                reader.readAsDataURL($('#Photo')[0].files[0]);
+            }
+            else {
+                swal("Sorry - you're browser doesn't support the FileReader API");
+            }
+        });
+
+        myCroppie = $('#croppie').croppie({
+            viewport: {
+                width: 200,
+                height: 200,
+                type: 'circle'
+            }
+        });
+
+        //on button click
+        myCroppie.croppie('result', 'html').then(function (html) {
+            // html is div (overflow hidden)
+            // with img positioned inside.
+        });
+
+        function popupResult(result) {
+            if (result.html) {
+                html = result.html;
+            }
+            if (result.src) {
+                $('.custom-file-label').text("Changer de photo");
+            }
+            $("#Input_Photo").val(result.src);
+            var preview = $('#croppiePreview');
+            preview.addClass('croppie-preview-container');
+            if (preview.find('img').length) {
+                preview.find('img').replaceWith('<img src="' + result.src + '" />');
+            }
+            else {
+                preview.prepend('<img src="' + result.src + '" />');
+            }
+
+        }
+
+        $('body').on('change', ".custom-file-input", function () {
+            $('#croppieModal').modal();
+        });
+
+        $('.croppie-result').on('click', function () {
+            var w = 100,
+                h = 100,
+                size = 'viewport';
+            if (w || h) {
+                size = { width: w, height: h };
+            }
+            myCroppie.croppie('result', {
+                type: 'canvas',
+                size: size,
+                resultSize: {
+                    width: 50,
+                    height: 50
+                }
+            }).then(function (resp) {
+                popupResult({
+                    src: resp
+                });
+            });
+        });
+
+
+        function passwordChanged() {
+            var strongRegex = new RegExp("^(?=.{6,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+            //var strongRegex = new RegExp("^(?=.{12,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+
+            var pwd = document.getElementById("EnterPass");
+
+            document.getElementById("RepeatPass").value = null;
+            if (strongRegex.test(pwd.value)) {
+                document.getElementById("RepeatPass").removeAttribute("disabled");
+                document.getElementById("RepeatPass").setAttribute("enabled", "enabled");
+            }
+            else {
+                document.getElementById("RepeatPass").removeAttribute("enabled");
+                document.getElementById("RepeatPass").setAttribute("disabled", "disabled");
+                document.getElementById("btnSetPassword").removeAttribute("enabled");
+                document.getElementById("btnSetPassword").setAttribute("disabled", "disabled");
+            }
+        }
+
+        function confirmPass() {
+            var boutonOK = document.getElementById("RepeatPass").value === document.getElementById("EnterPass").value;
+
+            if (boutonOK) {
+                document.getElementById("btnSetPassword").removeAttribute("disabled");
+                document.getElementById("btnSetPassword").setAttribute("enabled", "enabled");
+            }
+            else {
+                document.getElementById("btnSetPassword").removeAttribute("enabled");
+                document.getElementById("btnSetPassword").setAttribute("disabled", "disabled");
+            }
+        }
+
+    </script>
+}

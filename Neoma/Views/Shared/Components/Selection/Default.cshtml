@@ -1,0 +1,105 @@
+﻿@model Neoma.Models.SelectionViewModel.SelectionViewModel
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Html
+
+@{
+    var base64 = Convert.ToBase64String(Model.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+}
+
+@functions{
+    List<SelectListItem> ListRole(List<Besoins> besoins)
+    {
+        List<SelectListItem> list = new List<SelectListItem>();
+        foreach(var besoin in besoins)
+        {
+            var specialiteText = "(";
+            if(besoin.Specialite.Count == 1)
+            {
+                specialiteText += besoin.Specialite[0].Name + ")";
+            }
+            else
+            {
+                if(besoin.Specialite.Count <= 3)
+                {
+                    var last = besoin.Specialite.Last();
+
+                    foreach (var special in besoin.Specialite)
+                    {
+                        specialiteText += !special.Equals(last) ? special.Name + " - " : special.Name + ")";
+                    }
+                }
+                else
+                {
+                    for(int i = 0; i < 3; i++)
+                    {
+                        specialiteText += besoin.Specialite[i].Name + " - ";
+                    }
+                    specialiteText += " ... )";
+                }
+            }
+
+            list.Add(new SelectListItem
+            {
+                Value = besoin.Id.ToString(),
+                Text = besoin.Role.Name + " " + specialiteText
+            });
+        }
+
+        return list;
+    }
+}
+
+<div class="modal-header bg-light-grey">
+    <h5 class="modal-title" id="exampleModalLabel">Ajout à la selection</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form id="formulaire" asp-action="AddSelection" asp-controller="DetailCandidat" method="post">
+    <input type="hidden" asp-for="@Model.Selection.UtilisateurId" value="@Model.User.Id"/>
+    <div class="modal-body">
+        <div class="d-flex flex-column justicy-content-center align-items-center mb-3">
+            <div class="profile-presentation-picture">
+                <img src="@imgAvatar" alt="" />
+            </div>
+            <div class="profile-presentation-text">
+                <p><b class="color-violet">@ViewData["Title"]</b></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nom du projet</label>
+            <select asp-for="@Model.Selection.ProjetId" asp-items="Model.Projets.ToSelectListItem(0)" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <label>Rôle</label>
+            <select asp-for="@Model.Selection.BesoinsId" asp-items="@ListRole(Model.Besoins)" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <label>Spécialité</label>
+            <div class="space-between">
+                <div id="specialiteList">
+                    @foreach (var specialite in Model.Besoins[0].Specialite)
+                    {
+                        <span class="badge border-bootstrap-grey">@specialite.Name</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Note personnelle</label>
+            <div id="rateStar"></div>
+            <input type="hidden" asp-for="@Model.Selection.NoteString" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Commentaire</label>
+            <textarea asp-for="@Model.Selection.Commentaire" id="Presentation" rows="3" class="form-control"></textarea>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-dismiss="modal">Annuler</button>
+        <input type="submit" class="btn btn-primary" value="Ajouter" />
+    </div>
+</form>

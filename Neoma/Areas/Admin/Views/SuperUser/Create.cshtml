@@ -1,0 +1,176 @@
+﻿@model Neoma.Models.ApplicationUser
+
+@using Neoma.Extensions
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/croppie/croppie.css" />
+}
+
+@{ 
+    List<Organisme> Organisme = ViewBag.Organisme;
+}
+
+@{
+    ViewData["Title"] = "Créer un super utilisateur";
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <div class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="neobox-content extra-padding">
+                <form asp-action="Create" asp-controller="SuperUser" asp-area="Admin" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="Nom"></label>
+                        <input asp-for="Nom" class="form-control" />
+                        <span asp-validation-for="Nom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Prenom"></label>
+                        <input asp-for="Prenom" class="form-control" />
+                        <span asp-validation-for="Prenom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="custom-label">Avatar</label>
+                        <div id="croppiePreview">
+                            <!-- Temporaire => La pop up doit se lancer lorsqu'on choisit une photo -->
+                            <div class="custom-file">
+                                <input type="file" id="Photo"  class="custom-file-input" />
+                                <label class="custom-file-label">Choisissez une photo</label>
+                                <span asp-validation-for="PhotoStr" class="text-danger"></span>
+                                <input type="hidden" asp-for="PhotoStr" />
+                            </div>
+                            <!-- /Temporaire -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="OrganismeId" class="custom-label"></label>
+                        <select asp-for="OrganismeId" asp-items="Organisme.ToSelectListItem(0)" class="form-control"></select>
+                    </div>
+                    <div class="form-group text-center mt-5">
+                        <input type="submit" class="btn btn-large" value="Continuer"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="croppieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="croppie-content">
+                        <div id="croppie"></div>
+                    </div>
+                    <div class="modal-footer bg-soft-grey">
+                        <button type="button" class="btn btn-cancel" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn croppie-result" data-dismiss="modal">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/lib/croppie/croppie.js"></script>
+
+    <script>
+
+        var myCroppie;
+        $('#croppieModal').on('shown.bs.modal', function () {
+            if ($('#Photo')[0].files && $('#Photo')[0].files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    myCroppie.croppie('bind', {
+                        url: e.target.result
+                    }).then(function () {
+                        console.log('jQuery bind complete');
+                    });
+
+                };
+
+
+                reader.readAsDataURL($('#Photo')[0].files[0]);
+            }
+            else {
+                swal("Sorry - you're browser doesn't support the FileReader API");
+            }
+        });
+
+        myCroppie = $('#croppie').croppie({
+            viewport: {
+                width: 200,
+                height: 200,
+                type: 'circle'
+            }
+        });
+
+        //on button click
+        myCroppie.croppie('result', 'html').then(function (html) {
+            // html is div (overflow hidden)
+            // with img positioned inside.
+        });
+
+        function popupResult(result) {
+
+            if (result.html) {
+                html = result.html;
+            }
+            if (result.src) {
+                $('.custom-file-label').text("Changer de photo");
+            }
+            $("#Input_PhotoStr").val(result.src);
+            var preview = $('#croppiePreview');
+            preview.addClass('croppie-preview-container');
+            if (preview.find('img').length) {
+                preview.find('img').replaceWith('<img src="' + result.src + '" />');
+            }
+            else {
+                preview.prepend('<img src="' + result.src + '" />');
+            }
+
+        }
+
+        $('body').on('change', ".custom-file-input", function () {
+            $('#croppieModal').modal();
+        });
+
+        $('.croppie-result').on('click', function () {
+            var w = 100,
+                h = 100,
+                size = 'viewport';
+            if (w || h) {
+                size = { width: w, height: h };
+            }
+            myCroppie.croppie('result', {
+                type: 'canvas',
+                size: size,
+                resultSize: {
+                    width: 50,
+                    height: 50
+                }
+            }).then(function (resp) {
+                popupResult({
+                    src: resp
+                });
+            });
+        });
+    </script>
+}

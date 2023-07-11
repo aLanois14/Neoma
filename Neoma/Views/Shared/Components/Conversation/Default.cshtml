@@ -1,0 +1,200 @@
+﻿@model IEnumerable<Neoma.Models.Message>
+@using Neoma.Extensions
+@using System.Globalization
+@using System.IO
+
+<div class="messagerie-discussion">
+    <div class="messagerie-discussion-content">
+        @{
+            var currentDate = new DateTime();
+        }
+        @foreach (var message in Model)
+        {
+            if (currentDate.ToString("dd/MM/yyyy") != message.DateEnvoi.ToString("dd/MM/yyyy"))
+            {
+                currentDate = message.DateEnvoi;
+
+                <p class="messagerie-discussion-date-separator color-grey">
+                    @message.DateEnvoi.ToString("D", CultureInfo.CreateSpecificCulture("fr-FR"))
+                </p>
+            }
+
+            var base64 = Convert.ToBase64String(message.Utilisateur.Photo);
+            var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+
+
+            if (message.UtilisateurId == User.getUserId())
+            {
+                <div class="messagerie-discussion-message messagerie-discussion-message-right">
+                    <input type="hidden" value="@message.Id" />
+                    <img src="@imgAvatar" alt="" class="messagerie-contact-image" />
+                    <div class="messagerie-contact-text">
+                        <div class="messagerie-contact-info">
+                            <p class="messagerie-contact-name">
+                                <b>@message.Utilisateur.Prenom @message.Utilisateur.Nom</b>
+                            </p>
+                            <p class="messagerie-contact-date color-grey">
+                                @message.DateEnvoi.ToString("HH:mm")
+                            </p>
+                        </div>
+                        <p class="messagerie-contact-message">
+                            @message.Text
+                        </p>
+                        @if (message.Files != null)
+                        {
+                            @if (message.Files == "deleted")
+                            {
+                                <p class="color-grey">pièce-jointe supprimée</p>
+                            }
+                            else
+                            {
+                                var extension = System.IO.Path.GetExtension(message.Files);
+                                <div class="messagerie-contact-attachment">
+                                    @if (extension != ".jpg" && extension != ".png")
+                                    {
+                                        <span class="messagerie-contact-attachment-name">@message.FileName</span>
+                                    }
+
+
+                                    <div class="messagerie-contact-attachment-actions">
+                                        <a href="@message.Files" class="messagerie-contact-attachment-button" target="_blank" download>
+                                            <i class="icon-download"></i>
+                                        </a>
+                                        @if (extension == ".jpg" || extension == ".png")
+                                        {
+                                            <button class="messagerie-contact-attachment-button messagerie-attachment-reduce">
+                                                <i class="icon-reduce"></i>
+                                            </button>
+                                            <button class="messagerie-contact-attachment-button messagerie-attachment-expand">
+                                                <i class="icon-expand"></i>
+                                            </button>
+
+                                        }
+                                        <button class="messagerie-contact-attachment-button messagerie-attachment-close" data-message-id="@message.Id">
+                                            <i class="icon-close"></i>
+                                        </button>
+
+                                    </div>
+                                    @if (extension == ".jpg" || extension == ".png")
+                                    {
+                                        <img src="@message.Files" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+                                    else if (extension == ".pdf")
+                                    {
+                                        <img src="https://res.cloudinary.com/sanchez-consultant/image/upload/v1550829556/pdf.png" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://res.cloudinary.com/sanchez-consultant/image/upload/v1551256889/document.png" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="messagerie-discussion-message">
+                    <input type="hidden" value="@message.Id" />
+                    <img src="@imgAvatar" alt="" class="messagerie-contact-image" />
+                    <div class="messagerie-contact-text">
+                        <div class="messagerie-contact-info">
+                            <p class="messagerie-contact-name">
+                                <b>@message.Utilisateur.Prenom @message.Utilisateur.Nom</b>
+                            </p>
+                            <p class="messagerie-contact-date color-grey">
+                                @message.DateEnvoi.ToString("HH:mm")
+                            </p>
+                        </div>
+                        <p class="messagerie-contact-message">
+                            @message.Text
+                        </p>
+                        @if (message.Files != null)
+                        {
+                            @if (message.Files == "deleted")
+                            {
+                                <p class="color-grey">pièce-jointe supprimée</p>
+                            }
+                            else
+                            {
+                                var extension = System.IO.Path.GetExtension(message.Files);
+                                <div class="messagerie-contact-attachment">
+                                    @if (extension != ".jpg" && extension != ".png")
+                                    {
+                                        <span class="messagerie-contact-attachment-name">@message.FileName</span>
+                                    }
+
+
+                                    <div class="messagerie-contact-attachment-actions">
+                                        <a href="@message.Files" class="messagerie-contact-attachment-button" target="_blank" download>
+                                            <i class="icon-download"></i>
+                                        </a>
+                                        @if (extension == ".jpg" || extension == ".png")
+                                        {
+                                            <button class="messagerie-contact-attachment-button messagerie-attachment-reduce">
+                                                <i class="icon-reduce"></i>
+                                            </button>
+                                            <button class="messagerie-contact-attachment-button messagerie-attachment-expand">
+                                                <i class="icon-expand"></i>
+                                            </button>
+                                        }
+
+                                    </div>
+                                    @if (extension == ".jpg" || extension == ".png")
+                                    {
+                                        <img src="@message.Files" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+                                    else if (extension == ".pdf")
+                                    {
+                                        <img src="https://res.cloudinary.com/sanchez-consultant/image/upload/v1550829556/pdf.png" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://res.cloudinary.com/sanchez-consultant/image/upload/v1551256889/document.png" class="messagerie-contact-attachment-preview" alt="" />
+                                    }
+
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+
+        }
+        
+        @*<div class="messagerie-discussion-message messagerie-discussion-message-right">
+            <div class="messagerie-contact-text">
+                <p class="messagerie-contact-load">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                </p>
+            </div>
+        </div>*@
+    </div>
+</div>
+
+<form method="get" id="formMessage" enctype="multipart/form-data">
+    <div class="messagerie-send-form">
+        <div class="messagerie-attachments">
+
+        </div>
+        <div class="messagerie-send-form-content">
+            <input type="hidden" value="@ViewBag.Conversation" id="conversation" />
+            <input type="hidden" value="@ViewBag.User" id="user" />
+            <textarea class="form-control" placeholder="Mon message" id="message" rows="1" autosize></textarea>
+            <label class="label-form-upload">
+                <i class="icon-attachment"></i>
+                <input type="file" class="file-upload"/>
+            </label>
+            <button class="btn new" type="submit">
+                <i class="icon-send"></i>
+                Envoyer
+            </button>
+        </div>
+    </div>
+</form>
+
+

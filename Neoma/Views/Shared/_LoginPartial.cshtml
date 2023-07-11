@@ -1,0 +1,142 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using Neoma.Extensions
+@using System.Security.Claims
+@using Neoma.Utility
+@inject IHttpContextAccessor HttpContextAccessor
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = SignInManager.UserManager.Users.FirstOrDefault(u => u.Id == User.getUserId());
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="nav-connected-user">
+        @if (currentUser.RoleActuel != "Administrateur" && currentUser.RoleActuel != "Super utilisateur")
+        {
+            <div class="nav-connected-user-icons">
+                @if (currentUser.RoleActuel == "Fondateur")
+                {
+                    <a asp-action="Index" asp-controller="Selections" asp-area="" data-toggle="tooltip" title="Liste des co-surfeur sélectionnés" class="header-user-messages">
+                        <i class="icon-favorite-user"></i>
+                        <span class="notification-drop selection"></span>
+                    </a>
+
+                }
+                else if (currentUser.RoleActuel == "Co-surfeur")
+                {
+                    <a class="header-user-notifications" data-toggle="tooltip" title="Liste des candidatures pour des projets" asp-action="Index" asp-controller="CandidatureCandidat" asp-area="">
+                        <i class="icon-cv"></i>
+                        <span class="notification-drop candidature"></span>
+                    </a>
+                }
+
+                <a asp-action="Index" asp-controller="Messagerie" asp-area="" class="header-user-messages">
+                    <i class="icon-mail"></i>
+                    <span class="notification-drop messages"></span>
+                </a>
+
+                @if (currentUser.RoleActuel == "Fondateur")
+                {
+                    <a class="header-user-notifications" data-toggle="tooltip" title="Liste des candidatures reçues" asp-action="Index" asp-controller="CandidaturePorteur" asp-area="">
+                        <i class="icon-cv"></i>
+                        <span class="notification-drop candidatureR" title=""></span>
+                    </a>
+                }
+                else if (currentUser.RoleActuel == "Co-surfeur")
+                {
+                    <a asp-action="Index" asp-controller="CandidatureRetenue" asp-area="" data-toggle="tooltip" title="Liste des projets retenus" class="header-user-messages">
+                        <i class="icon-favorite-user"></i>
+                        <span class="notification-drop candidatureT"></span>
+                    </a>
+                }
+            </div>
+        }
+
+        <div class="dropdown">
+            <div id="UserNavDropdown" class="user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @await Component.InvokeAsync("NavUser")
+            </div>
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" aria-labelledby="UserNavDropdown" id="logoutForm" class="dropdown-menu dropdown-menu-right dropdown-user-connected-menu">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <i class="nav-item-label">Changer de rôle</i>
+                    </li>
+                    @if (currentUser.RoleActuel != "Co-surfeur" && currentUser.EstCandidat)
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("ChangeRole", "Home", new { Area = "", role = "Co-surfeur" })" class="nav-item-full-link">
+                                <span class="nav-item-full-link-text">Co-surfeur</span>
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </li>
+                    }
+                    @if (currentUser.RoleActuel != "Fondateur" && currentUser.EstPorteur)
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("ChangeRole", "Home", new { Area = "", role = "Fondateur" })" class="nav-item-full-link">
+                                <span class="nav-item-full-link-text">Fondateur</span>
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </li>
+                    }
+                    @if (currentUser.RoleActuel != "Swimmer" && currentUser.EstAficionado)
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("ChangeRole", "Home", new { Area = "", role = "Swimmer" })" class="nav-item-full-link">
+                                <span class="nav-item-full-link-text">Swimmer</span>
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </li>
+                    }
+                    @if (currentUser.RoleActuel != "Super utilisateur" && await SignInManager.UserManager.IsInRoleAsync(currentUser, SD.SuperEndUser))
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("ChangeRole", "Home", new { Area = "", role = "Super utilisateur" })" class="nav-item-full-link">
+                                <span class="nav-item-full-link-text">Super utilisateur</span>
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </li>
+                    }
+                    @if (currentUser.RoleActuel != "Administrateur" && await SignInManager.UserManager.IsInRoleAsync(currentUser, SD.AdminEndUser))
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("ChangeRole", "Home", new { Area = "", role = "Administrateur" })" class="nav-item-full-link">
+                                <span class="nav-item-full-link-text">Administrateur</span>
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a asp-action="Index" asp-controller="Parametre" asp-area="" class="nav-link" title="Manage">
+                            <i class="icon-gear"></i>
+                            Paramètres
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button type="submit" class="nav-link">
+                            <i class="icon-logout"></i>
+                            Déconnexion
+                        </button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+
+
+    <ul class="nav navbar-nav navbar-collapse nav-visitor-user justify-content-end">
+        <li class="nav-item">
+            <a asp-area="Identity" asp-page="/Account/Register" class="nav-link">Inscription</a>
+        </li>
+        <li class="nav-item">
+            <a asp-area="Identity" asp-page="/Account/Login" class="nav-link">Connexion</a>
+        </li>
+    </ul>
+}

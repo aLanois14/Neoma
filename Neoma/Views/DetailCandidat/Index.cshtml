@@ -1,0 +1,222 @@
+﻿@model Neoma.Models.CandidatViewModel.ListCandidatViewModel
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using Neoma.Extensions
+@using Neoma.Utility
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = Model.User.Prenom + " " + Model.User.Nom;
+    var currentUser = SignInManager.UserManager.Users.FirstOrDefault(u => u.Id == User.getUserId());
+}
+
+
+@{
+    var base64 = Convert.ToBase64String(Model.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+}
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+
+            $("body").on("change", "#Selection_ProjetId", function () {
+                var projet = $(this).val();
+                var user = $("#user").val();
+                var role = $(this).parent().parent().find("#Selection_BesoinsId");
+                var specialite = $(this).parent().parent().find("#specialiteList");
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateRoleProjet", "Candidat")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "projet": projet, "user" : user },
+                    success: function (data) {
+                        role.find('option').remove();
+                        specialite.find('span').remove();
+                        $.each(data, function (key, value) {
+                            role.append($("<option></option>")
+                                .attr("value", value.id).text(value.role.name));
+                        })
+                        var specialiteList = data[0].specialite;
+                        $.each(specialiteList, function (key, value) {
+                            specialite.append($("<span class='badge border-bootstrap-grey'></span>")
+                                .text(value.name))
+                        })
+                    }
+                })
+            })
+
+            $("body").on("submit", "#formulaire", function (e) {
+                e.preventDefault();
+                $.confirm({
+                    title: 'Confirmation',
+                    content: 'Voulez-vous ajouter ce candidat à vos sélections ?',
+                    buttons: {
+                        Valider: function () {
+                            e.currentTarget.submit();
+                            return true;
+                        },
+                        Annuler: function () {
+                            return true;
+                        }
+                    }
+                });
+            });
+
+            $("body").on("change", "#Selection_BesoinsId", function () {
+                var role = $(this).val();
+                var specialite = $(this).parent().parent().find("#specialiteList");
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialiteBesoins", "Candidat")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role": role },
+                    success: function (data) {
+                        specialite.find('span').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<span class='badge border-bootstrap-grey'></span>")
+                                .text(value.name))
+                        })
+                    }
+                })
+            })
+
+            $(".selection").on("click", function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-role');
+                var user = $buttonClicked.attr('data-user');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("SelectionView", "Candidat")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "id": id, "user": user },
+                    success: function (data) {
+                        $('.myModal').html(data);
+                        $('.selectModal').modal(options);
+                        $('.selectModal').modal('show');
+                        $("#Selection_NoteString").attr("value", 1);
+                        var valeur = $("#rateStar").rateYo({
+                            normalFill: "#A0A0A0",
+                            halfStar: true,
+                            rating: 1
+                        });
+
+                        $("#rateStar").rateYo("option", "onSet", function () {
+                            $("#Selection_NoteString").val(valeur.rateYo("rating"));
+                        })
+                    }
+                })
+            })
+        })
+    </script>
+
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Co-surfeurs</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@ViewBag.ArianeUrl">@ViewBag.Path</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Detail co-surfeur
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <a href="@ViewBag.Url" class="btn btn-sm mb-3"><i class="icon-caret-left"></i> Retour</a>
+        <section class="neobox">
+            <div class="neobox-header align-items-center">
+                <div class="profile-presentation-picture">
+                    <img src="@imgAvatar" alt="" />
+                </div>
+                <div class="profile-presentation-text align-center-680">
+                    <h2>@ViewData["Title"]</h2>
+                    <div class="form-group">
+                        <label>Téléphone portable</label>
+                        <p>@Model.User.PhoneNumber</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Organisme</label>
+                        <p>@Model.Organisme.Name - @Model.Organisme.Ville</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neobox-content">
+                <div class="form-group">
+                    <label>Présentation</label>
+                    <p>@Model.User.Description</p>
+                </div>
+            </div>
+            <div class="neobox-subtitle">
+                <h2>Domaines de compétences</h2>
+            </div>
+            <div class="neobox-content">
+                @foreach (var item in Model.RoleUser)
+                {
+                    <div class="form-group">
+                        <label>
+                            @item.Role.Name
+                        </label>
+                        <div class="space-between">
+                            <div>
+                                @foreach (var spec in item.Specialite)
+                                {
+                                    <span class="badge border-bootstrap-grey"> @spec.Name </span>
+                                }
+                            </div>
+                            @if (currentUser.RoleActuel == "Fondateur")
+                            {
+                                @if (item.Role.PeutSelectionner)
+                                {
+                                    <button type="button" class="btn btn-sm selection" data-role="@item.Role.Id" data-user="@Model.User.Id">
+                                        Ajouter à la sélection
+                                    </button>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+            <div class="neobox-footer text-right">
+                <a asp-action="NewConversation" asp-controller="SharedAction" asp-route-user="@Model.User.Id" class="btn mr-3">
+                    <i class="icon-send"></i>
+                    Écrire
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+</div>
+
+<!-- MODAL ADD TO SELECTION -->
+<div class="modal fade selectModal" id="addToSelection" tabindex="-1" role="dialog" aria-labelledby="addToSelectionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content myModal">
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="user" value="@Model.User.Id" />

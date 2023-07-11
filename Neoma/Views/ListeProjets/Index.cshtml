@@ -1,0 +1,228 @@
+﻿@model Neoma.Models.ProjetViewModel.ViewProjetViewModel
+@using Neoma.Extensions
+@using Neoma.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Projets";
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script type="text/javascript" src="~/js/filtersearchprojet.js"></script>
+    <script>
+        $(function () {
+            $(".Role").prop('selectedIndex', 0);
+
+            $('.make-select2').attr("disabled", "disabled");
+            $('.make-select2').select2({
+                placeholder: "Spécialités"
+            });
+
+            $('.make-select2').on('select2:unselect', function () {
+                updateCall()
+            });
+
+            $('.make-select2').on('select2:select', function () {
+                updateCall()
+            });
+
+            $("body").on("change", ".filter", function () {
+                updateCall();
+            })
+
+            $('#searchText').keyup(delay(function () {
+                updateCall()
+            }, 1000));
+
+            function delay(callback, ms) {
+                var timer = 0;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    time = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
+            $("body").on("change", ".Role", function () {
+
+                var index = $(this)[0].selectedIndex;
+                if (index === 0) {
+                    $('.make-select2').removeAttr("enabled");
+                    $('.make-select2').attr("disabled", "disabled");
+                }
+                else {
+                    $('.make-select2').removeAttr("disabled");
+                    $('.make-select2').attr("enabled", "enabled");
+                }
+
+                //var chaineRecherche = $("#searchText").val();
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+                //var Role = {};
+                //Role.Id = $(this).val();
+                //var FilterViewModel = {};
+                //FilterViewModel.Role = Role;
+                //FilterViewModel.TexteRecherche = chaineRecherche ? chaineRecherche.toLowerCase() : chaineRecherche;
+                //var items = JSON.stringify(FilterViewModel);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "ListeProjets")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role": role},
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id).text(value.name));
+                        });
+                    }
+                });
+                //UpdateCall(items);
+                updateCall();
+            });
+
+            function updateCall() {
+                var chaineRecherche = $("#searchText").val();
+                chaineRecherche = chaineRecherche ? chaineRecherche.toLowerCase() : chaineRecherche;
+                var SelectedFilterProject = {};
+                SelectedFilterProject.Role = $('.Role').val();
+                SelectedFilterProject.TypeProjet = $('.type').val();
+                SelectedFilterProject.Organisme = $('.organisme').val();
+                SelectedFilterProject.TexteRecherche = chaineRecherche;
+                var specialite = $(".specialite").select2('data');
+                var ListeSpecialite = [];
+                $.each(specialite, function (n) {
+                    var Specialite = {};
+                    Specialite.Id = specialite[n].id;
+                    Specialite.Name = specialite[n].text;
+                    ListeSpecialite[n] = Specialite;
+                });
+                SelectedFilterProject.Specialite = ListeSpecialite;
+                var items = JSON.stringify(SelectedFilterProject);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("TableProjet", "ListeProjets")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: items,
+                    success: function (data) {
+                        $("#tableProjet").html(data);
+                        HighlightSearch();
+                        //$("#maxRows").change();
+                    },
+                    error: function (request, status, error) {
+                        alert(request.responseText);
+                    }
+                })
+            }
+
+            //getPagination('.items-listing');
+            //$('.btn-grid').click(function () {
+            //    $(this).addClass('active');
+            //    $('.items-listing').addClass('grid');
+            //    $('.items-listing').removeClass('list');
+            //    $('.btn-list').removeClass('active');
+            //});
+            //$('.btn-list').click(function () {
+            //    $(this).addClass('active');
+            //    $('.items-listing').addClass('list');
+            //    $('.items-listing').removeClass('grid');
+            //    $('.btn-grid').removeClass('active');
+            //});
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Projets</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Liste projets
+            </li>
+        </ol>
+    </nav>
+
+    @if (!User.IsInRole(SD.SuperEndUser))
+    {
+        <a href="@Url.Action("IndexHolder", "Register", new { userId = User.getUserId(), code = "1" })" class="btn btn-large">Créer un projet</a>
+    }
+
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+
+        <!-- EMAIL / NEW USER -->
+        <section class="neobox">
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    @if (!User.IsInRole(SD.SuperEndUser))
+                    {
+                        <div class="neo-select-control">
+                            <label>Organisation</label>
+                            <select asp-items="Model.Organisme.ToSelectListItem(0)" class="filter organisme"></select>
+                        </div>
+                    }
+                    <div class="neo-select-control">
+                        <label>Type de projet</label>
+                        <select asp-items="Model.TypeProjet.ToSelectListItem(0)" class="filter type"></select>
+                    </div>
+                    <div class="neo-select-control">
+                        <label>Rôle</label>
+                        <select asp-items="Model.Role.ToSelectListItem(0)" class="Role"></select>
+                    </div>
+                    <div class="neo-select2-control">
+                        <select class="make-select2 specialite" multiple="multiple" asp-items="Model.Specialite.ToSelectListItem(0)"></select>
+                    </div>
+                </div>
+
+                <div class="neobox-header-container">
+                    <div class="neo-search-control">
+                        <i class="icon-search"></i>
+                        <input id="searchText" type="text" class="form-control" placeholder="Rechercher" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="neobox-content p-0">
+                <ul class="items-listing list" id="tableProjet">
+                    @await Component.InvokeAsync("TableProjet", null)
+                </ul>
+            </div>
+
+        </section>
+
+        @*<div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+
+            <div class="neo-pagination-center">
+            </div>
+
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>*@
+
+    </div>
+</div>
+
+
+

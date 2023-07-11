@@ -1,0 +1,252 @@
+﻿@model IEnumerable<Neoma.Models.CandidatureRetenueViewModel.ItemCandidatureRetenueViewModel>
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Html
+
+@{
+    ViewData["Title"] = "Candidatures retenues";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    IHtmlContent Specialite(List<Specialite> Specialite)
+    {
+        string text = "";
+
+        Specialite last = Specialite.Last();
+        foreach (var special in Specialite)
+        {
+            text += !special.Equals(last) ? special.Name + " - " : special.Name;
+        }
+        return Html.Raw(text);
+    }
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Projets</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Mes projets retenus
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox">
+
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    <div class="neo-select-control">
+                        <label>Ligne à afficher</label>
+                        <select id="maxRows">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="0" selected>Tous</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neobox-content p-0">
+                <ul class="items-listing list">
+                    @foreach (var item in Model)
+                    {
+                        var base64 = Convert.ToBase64String(item.User.Photo);
+                        var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+                        <li class="item p-0">
+                            <div class="item w-100">
+                                <a class="item-picture" asp-action="DetailProjet" asp-controller="CandidatureRetenue" asp-route-id="@item.Projet.Id">
+                                    <img src="@imgAvatar" alt="" />
+                                </a>
+                                <a class="item-primary" asp-action="DetailProjet" asp-controller="CandidatureRetenue" asp-route-id="@item.Projet.Id">
+                                    <h3>@item.Projet.Name</h3>
+                                    <p class="color-grey"><i>@item.TypeProjet.Name</i></p>
+                                    <p>@item.Organisme.Name</p>
+                                    <p></p>
+                                </a>
+                                <div class="item-secondary">
+                                    <p><b>Rôles</b></p>
+                                    @foreach (var candidature in item.Candidatures)
+                                    {
+                                        <p class="color-grey"><i>@candidature.ItemBesoin.Role.Name</i></p>
+                                    }
+                                    @foreach (var proposition in item.Propositions)
+                                    {
+                                        <p class="color-grey"><i>@proposition.ItemBesoin.Role.Name</i></p>
+                                    }
+                                </div>
+
+                                <div class="item-secondary">
+                                    <p><b>Spécialités</b></p>
+                                    <ul class="color-grey">
+                                        @foreach (var candidature in item.Candidatures)
+                                        {
+                                            <li>@Specialite(candidature.ItemBesoin.Specialites)</li>
+                                        }
+                                        @foreach (var proposition in item.Propositions)
+                                        {
+                                            <li>@Specialite(proposition.ItemBesoin.Specialites)</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="item-secondary">
+                                    @foreach (var candidature in item.Candidatures)
+                                    {
+                                        <p><button class="btn btn-sm leave" value="@candidature.Candidature.Id">Quitter ce poste</button></p>
+                                    }
+                                    @foreach (var proposition in item.Propositions)
+                                    {
+                                        <p><button class="btn btn-sm refuse" value="@proposition.Proposition.Id">Refuser ce poste</button></p>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+
+        <div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+            <div class="neo-pagination-center">
+            </div>
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script>
+        $(function () {
+            $("body").on("click", ".refuse", function () {
+                var value = $(this).val();
+                $.confirm({
+                    title: 'Refus de poste',
+                    content: '' +
+                        '<form action="" class="formName">' +
+                        '<div class="form-group">' +
+                        '<label>Motif du refus</label>' +
+                        '<textarea class="motif form-control"></textarea>' +
+                        '<span class="text-danger"></span>' +
+                        '</div>' +
+                        '</form>',
+                    buttons: {
+                        formSubmit: {
+                            text: 'Valider',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                var motif = this.$content.find('.motif').val();
+                                if (!motif) {
+                                    $(".text-danger").text('Veuillez saisir un motif.');
+                                    return false;
+                                }
+                                var link = '@Url.Action("Refuse", "CandidatureRetenue", new { id = "idtext", motif = "motiftext" })';
+                                link = link.replace("idtext", value);
+                                link = link.replace("motiftext", motif);
+                                $.post(link, function (data) {
+                                    if (data.success) {
+                                        window.location.href = data.result;
+                                    }
+                                });
+                            }
+                        },
+                        Annuler: function () {
+                            //close
+                        },
+                    },
+                    onContentReady: function () {
+                        // bind to events
+                        var jc = this;
+                        this.$content.find('form').on('submit', function (e) {
+                            // if the user submits the form by pressing enter in the field.
+                            e.preventDefault();
+                            jc.$$formSubmit.trigger('click'); // reference the button and click it
+                        });
+                    }
+                });
+            });
+
+            $("body").on("click", ".leave", function () {
+                var value = $(this).val();
+                $.confirm({
+                    title: 'Retrait de poste',
+                    content: '' +
+                        '<form action="" class="formName">' +
+                        '<div class="form-group">' +
+                        '<label>Motif du refus</label>' +
+                        '<textarea class="motif form-control"></textarea>' +
+                        '<span class="text-danger"></span>' +
+                        '</div>' +
+                        '</form>',
+                    buttons: {
+                        formSubmit: {
+                            text: 'Valider',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                var motif = this.$content.find('.motif').val();
+                                if (!motif) {
+                                    $(".text-danger").text('Veuillez saisir un motif.');
+                                    return false;
+                                }
+                                var link = '@Url.Action("Leave", "CandidatureRetenue", new { id = "idtext", motif = "motiftext" })';
+                                link = link.replace("idtext", value);
+                                link = link.replace("motiftext", motif);
+                                $.post(link, function (data){
+                                    if (data.success) {
+                                        window.location.href = data.result;
+                                    }
+                                });
+                            }
+                        },
+                        Annuler: function () {
+                            //close
+                        },
+                    },
+                    onContentReady: function () {
+                        // bind to events
+                        var jc = this;
+                        this.$content.find('form').on('submit', function (e) {
+                            // if the user submits the form by pressing enter in the field.
+                            e.preventDefault();
+                            jc.$$formSubmit.trigger('click'); // reference the button and click it
+                        });
+                    }
+                });
+            })
+
+            getPagination('.items-listing');
+            $('.btn-grid').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('grid');
+                $('.items-listing').removeClass('list');
+                $('.btn-list').removeClass('active');
+            });
+            $('.btn-list').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('list');
+                $('.items-listing').removeClass('grid');
+                $('.btn-grid').removeClass('active');
+            });
+        })
+    </script>
+}
+

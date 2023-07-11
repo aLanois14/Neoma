@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Neoma.Models.ApplicationUser>
+@using Neoma.Extensions
+@{
+    ViewData["Title"] = "Liste Aficionado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/filtersearchcandidat.js"></script>
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script>
+        $(function () {
+            $('#searchText').keyup(delay(function () {
+                updateCandidat()
+            }, 1000));
+
+            function delay(callback, ms) {
+                var timer = 0;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    time = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
+            getPagination('.items-listing');
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Co-surfeurs</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Liste swimmer
+            </li>
+        </ol>
+    </nav>
+
+    <a href="@Url.Action("IndexHolder", "Register", new { Area = "CommonUser", userId = User.getUserId(), code = "1" })" class="btn btn-large">Créer un projet</a>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox">
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    <div class="neo-select-control">
+                        <label>Ligne à afficher</label>
+                        <select id="maxRows">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="0" selected>Tous</option>
+                        </select>
+                    </div>
+                    <div class="neo-search-control">
+                        <i class="icon-search"></i>
+                        <input id="searchText" type="text" class="form-control" placeholder="Rechercher" />
+                    </div>
+                </div>
+            </div>
+            <div class="neobox-content p-0">
+                <ul class="items-listing grid">
+                    @foreach (var index in Model)
+                    {
+
+                        var base64 = Convert.ToBase64String(index.Photo);
+                        var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+                        <li class="item">
+                            <input type="hidden" value="@index.Id"/>
+                            <a asp-area="CommonUser" asp-controller="Aficionado" asp-action="DetailAficionado" asp-route-id="@index.Id" class="item-picture">
+                                <img src="@imgAvatar" alt="" />
+                            </a>
+                            <a asp-area="CommonUser" asp-controller="Aficionado" asp-action="DetailAficionado" asp-route-id="@index.Id" class="item-primary">
+                                <h3>@index.Nom @index.Prenom</h3>
+                                <p class="color-grey">@index.Organisme.Name</p>
+                            </a>                           
+                        </li>
+
+                    }
+                </ul>
+            </div>
+        </section>
+
+        <div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+
+            <div class="neo-pagination-center">
+            </div>
+
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Neoma.Models.ProjetViewModel.ItemProjetViewModel>
+@using Microsoft.AspNetCore.Html
+
+@functions{
+    IHtmlContent Specialite(List<Specialite> Specialites)
+    {
+        string text = "";
+
+        if (Specialites.Count > 0)
+        {
+            Specialite last = Specialites.Last();
+            foreach (var special in Specialites)
+            {
+                text += !special.Equals(last) ? special.Name + " - " : special.Name;
+            }
+        }
+        return Html.Raw(text);
+    }
+}
+
+@foreach (var item in Model)
+{
+    var base64 = Convert.ToBase64String(item.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+    var FiltreRecherche = ViewBag.TestFilter;
+    bool RolesOK = false;
+
+    foreach (var besoin in item.ItemBesoin)
+    {
+        RolesOK = (FiltreRecherche == null || FiltreRecherche == "") || string.Format("{0} ({1})", besoin.Role.Name, Specialite(besoin.Specialites)).ToLower().Contains(FiltreRecherche);
+        if (RolesOK) { break; }
+    }
+
+    bool AffichageOK = (FiltreRecherche == null || FiltreRecherche == "") ||
+        (item.Projet.Name.ToLower().Contains(FiltreRecherche) ||
+        (item.Projet.PresentationProjet != null && item.Projet.PresentationProjet.ToLower().Contains(FiltreRecherche)) ||
+        RolesOK ||
+        (item.TypeProjet.Name.ToLower().Contains(FiltreRecherche)) ||
+        (item.User.Organisme.Name.ToLower().Contains(FiltreRecherche)));
+    if (AffichageOK)
+    {
+        <li class="item p-0">
+            <a asp-action="Index" asp-controller="DetailProjet" asp-route-id="@item.Projet.Id" asp-route-path="Matching" class="item w-100">
+                <div class="item-picture">
+                    <img src="@imgAvatar" alt="" />
+                </div>
+                <div class="item-secondary">
+                    <h3>@item.Projet.Name</h3>
+                    <p class="color-grey"><i>@item.TypeProjet.Name</i></p>
+                    <p>@item.Organisme.Name</p>
+                    <p style="padding:15px 20px 0px 0px;text-align:justify">@item.Projet.PresentationProjet</p>
+                </div>
+
+                <div class="item-lines">
+                    <div class="item-line">
+                        <div class="item-col item-col-role entete">
+                            <p><b>Rôles</b></p>
+                        </div>
+                        <div class="item-col item-col-specialty entete">
+                            <p><b>Spécialités</b></p>
+                        </div>
+                        <div class="item-col">
+                        </div>
+                    </div>
+                    @foreach (var besoin in item.ItemBesoin)
+                    {
+                        if (besoin.Specialites.Count > 0)
+                        {
+                            <div class="item-line color-grey">
+                                <div class="item-col item-col-role @(besoin.User == null ? "" : "text-line")">@besoin.Role.Name</div>
+                                <div class="item-col item-col-specialty @(besoin.User == null ? "" : "text-line")">
+                                    <span>@Specialite(besoin.Specialites)</span>
+                                    @if (besoin.User == null)
+                                    {
+                                        <b class="color-violet">&nbsp; (@besoin.Candidatures.Count)&nbsp;</b>
+                                    }
+                                </div>
+                                <div class="item-col item-col-user">
+
+                                    @if (besoin.User != null)
+                                    {
+                                        var base64Util = Convert.ToBase64String(besoin.User.Photo);
+                                        var imgAvatarUtil = string.Format("data:image/jpg;base64,{0}", base64Util);
+
+                                        <div class="item-picture">
+                                            <img src="@imgAvatarUtil" alt="" />
+                                        </div>
+
+                                        <div class="color-grey">
+                                            @besoin.User.Prenom @besoin.User.Nom
+                                        </div>
+                                    }
+                                    else if (besoin.IsCandidat)
+                                    {
+                                        <span class="badge badge-warning no-border" style="position: relative;top: -3px;margin: 0px 3px;"><i class="fa fa-arrow-left"></i> Je suis candidat</span>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+
+            </a>
+        </li>
+    }
+}

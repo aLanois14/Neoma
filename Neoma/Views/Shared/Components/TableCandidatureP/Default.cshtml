@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Neoma.Models.CandidaturePorteurViewModel.ItemCandidaturePorteurViewModel>
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@functions{
+    IHtmlContent SpecialiteUser(int role, List<Specialite> specialite)
+    {
+        List<Specialite> list = new List<Specialite>();
+        string text = "";
+        foreach (var spec in specialite)
+        {
+            if (spec.RoleId == role)
+            {
+                list.Add(spec);
+            }
+        }
+
+        if (list.Count > 0)
+        {
+            Specialite last = list.Last();
+            foreach (var special in list)
+            {
+                text += !special.Equals(last) ? special.Name + " - " : special.Name;
+            }
+        }
+        return Html.Raw(text);
+    }
+
+    IHtmlContent Specialite(Besoins Besoin)
+    {
+        string text = "";
+
+        Specialite last = Besoin.Specialite.Last();
+        foreach (var special in Besoin.Specialite)
+        {
+            text += !special.Equals(last) ? special.Name + " - " : special.Name;
+        }
+        return Html.Raw(text);
+    }
+}
+
+@foreach (var index in Model)
+{
+    var base64 = Convert.ToBase64String(index.ItemUser.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+    string FiltreRecherche = @ViewBag.TestFilter;
+    string Prenom_Nom = string.Format("{0} {1}", index.ItemUser.User.Prenom, index.ItemUser.User.Nom);
+    bool RolesOK = false;
+    var Projet_Name = index.Projet.Name;
+    bool CandidatureOK = false;
+
+    foreach (var role in index.ItemUser.Role)
+    {
+        RolesOK = (FiltreRecherche == null || FiltreRecherche == "") ||
+            string.Format("{0} ({1})", role.Role.Name, SpecialiteUser(role.Role.Id, role.Specialites)).ToLower().Contains(FiltreRecherche);
+        if (RolesOK) { break; }
+    }
+
+    foreach(var candidature in index.ItemCandidature)
+    {
+        CandidatureOK = (FiltreRecherche == null || FiltreRecherche == "") ||
+            string.Format("{0} ({1})", candidature.ItemRole.Role.Name, SpecialiteUser(candidature.ItemRole.Role.Id, candidature.ItemRole.Specialites)).ToLower().Contains(FiltreRecherche);
+        if (CandidatureOK) { break; }
+    }
+
+    bool AffichageOK = (FiltreRecherche == null || FiltreRecherche == "") || (Prenom_Nom.ToLower().Contains(FiltreRecherche) || (Projet_Name != null && Projet_Name.ToLower().Contains(FiltreRecherche)) || RolesOK ||CandidatureOK);
+
+    if (AffichageOK)
+    {
+        <li class="item">
+            <a asp-controller="CandidaturePorteur" asp-action="DetailCandidature" asp-route-user="@index.ItemUser.User.Id" asp-route-projet="@index.Projet.Id" class="item w-100">
+                <div class="item-picture">
+                    <img src="@imgAvatar" alt="" />
+                </div>
+                <div class="item-primary">
+                    <h3>@Prenom_Nom</h3>
+                    <ul>
+                        @foreach (var role in index.ItemUser.Role)
+                        {
+                            <li>@role.Role.Name (@SpecialiteUser(role.Role.Id, role.Specialites))</li>
+                        }
+                    </ul>
+                </div>
+                <div class="item-secondary">
+                    <p><b>Projet</b></p>
+                    <ul class="color-grey">
+                        <li>@index.Projet.Name</li>
+                    </ul>
+                </div>
+                <div class="item-secondary">
+                    <p><b>Poste</b></p>
+                    <ul class="color-grey">
+                        @foreach (var candidature in index.ItemCandidature)
+                        {
+                            <li>@candidature.ItemRole.Role.Name (@SpecialiteUser(candidature.ItemRole.Role.Id, candidature.ItemRole.Specialites))</li>
+                        }
+
+                        <!--<li>Communications <b class="color-violet">(1/1)</b></li>-->
+                    </ul>
+                </div>
+            </a>
+        </li>
+    }
+}

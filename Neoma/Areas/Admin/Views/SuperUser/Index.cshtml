@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Neoma.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Super Utilisateur";
+}
+
+<script type="text/javascript">
+    function confirmDelete(id) {
+            $.confirm({
+                title: 'Confirmation',
+                content: 'Voulez-vous vraiment supprimer ce super utilisateur ?',
+                buttons: {
+                    Valider: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "SuperUser", new { area = "Admin"})',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response === "OK") {
+                                    window.location.href = '@Url.Action("Index", "SuperUser", new { area = "Admin"})';
+                                }
+                                else
+                                    alert(response);
+                            }
+                        });
+                        return true;
+                    },
+                    Annuler: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+</script>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-10">
+
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2 class="w-100">@ViewData["Title"]</h2>
+                <a asp-action="Create" asp-controller="SuperUser" asp-area="Admin" class="btn btn-sm">
+                    Créer Super Utilisateur
+                </a>
+            </div>
+            <div class="neobox-content">
+                <table class="items-listing-small w-100">
+                    <thead>
+                        <tr>
+                            <th class="item-secondary mr-2">
+                                <label>Photo</label>
+                            </th>
+                            <th class="item-secondary mr-2">
+                                <label>Nom</label>
+                            </th>
+                            <th class="item-secondary mr-2">
+                                <label>Prénom</label>
+                            </th>
+                            <th class="item-secondary mr-2">
+                                <label>Email</label>
+                            </th>
+                            <th class="item-secondary mr-2">
+                                <label>Organisme</label>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var base64 = Convert.ToBase64String(item.Photo);
+                            var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+                            <tr>
+                                <td class="item-secondary">
+                                    <div class="item-picture">
+                                        <img src="@imgAvatar" alt="" />
+                                    </div>
+                                </td>
+                                <td class="item-secondary">
+                                    <label>@item.Nom</label>
+                                </td>
+                                <td class="item-secondary">
+                                    <label>@item.Prenom</label>
+                                </td>
+                                <td class="item-secondary">
+                                    <label>@item.Email</label>
+                                </td>
+                                <td class="item-secondary">
+                                    <label>@item.Organisme.Name</label>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <partial name="_TableButton2Partial" model="@item.Id" />
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,407 @@
+@import "_variables.scss";
+
+.messagerie {
+    display: flex;
+    height: calc(100vh - 160px);
+}
+
+/* ========================================================= */
+/* LEFT COLUMN */
+/* ========================================================= */
+
+.messagerie-left-col,
+.messagerie-right-col {
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.messagerie-left-col {
+    width: 275px;
+    border-right: 1px solid $bootstrap-grey;
+}
+
+.messagerie-left-col-toggle {
+    display: none;
+}
+
+/* TITLE */
+/* =============================== */
+
+.messagerie-title {
+    font-size: 1.5rem;
+    padding: 10px;
+    border-bottom: 1px solid $bootstrap-grey;
+
+    .notification-drop {
+        position: relative;
+        left: 0;
+        top: 0;
+    }
+}
+
+/* SEARCH */
+/* =============================== */
+
+.messagerie-search {
+    padding: 10px;
+    background: $light-grey;
+    border-bottom: 1px solid $bootstrap-grey;
+
+    .neo-search-control {
+        width: 100%;
+    }
+}
+
+/* CONTACT LIST */
+/* =============================== */
+
+.mesagerie-contact-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: auto;
+}
+
+.messagerie-contact {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid $bootstrap-grey;
+    position: relative;
+
+    &.active {
+        background-color: #EFEFEF;
+
+        .messagerie-contact-name {
+            color: $violet;
+        }
+
+        &::before {
+            content: "";
+            width: 3px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: $violet;
+        }
+    }
+
+    &.new-message::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: $violet;
+        border-radius: 50%;
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+    }
+
+    &.contact-connected::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: $green;
+        border-radius: 50%;
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+    }
+
+    &.contact-disconnected::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: $grey;
+        border-radius: 50%;
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+    }
+
+    &.contact-away::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: $orange;
+        border-radius: 50%;
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+    }
+}
+
+.messagerie-contact-image {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.messagerie-contact-text {
+    max-width: calc(100% - 60px);
+    flex: 1;
+}
+
+.messagerie-contact-info {
+    display: flex;
+    justify-content: space-between;
+    
+    p {
+        margin: 0;
+    }
+}
+
+.messagerie-contact-message {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: .9rem;
+}
+
+/* ========================================================= */
+/* RIGHT COLUMN */
+/* ========================================================= */
+
+.messagerie-right-col {
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.messagerie-discussion {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    flex-direction: column-reverse
+}
+
+/* DATE SEPARATOR */
+/* =============================== */
+
+.messagerie-discussion-date-separator {
+    border-top: 1px solid $bootstrap-grey;
+    border-bottom: 1px solid $bootstrap-grey;
+    padding: 12px 20px;
+}
+
+/* MESSAGE */
+/* =============================== */
+
+.messagerie-discussion-message {
+    @extend .messagerie-contact;
+    align-items: flex-start;
+    cursor: default;
+    border: none;
+
+    .messagerie-contact-date {
+        margin: 0 20px;
+    }
+
+    .messagerie-contact-info {
+        justify-content: flex-start;
+    }
+
+    .messagerie-contact-message {
+        overflow: unset;
+        white-space: normal;
+    }
+
+    .messagerie-contact-text {
+        max-width: 70%;
+    }
+
+    .messagerie-contact-load{
+        font-size: 0.8em;
+    }
+}
+
+.messagerie-discussion-message-right {
+    flex-direction: row-reverse;
+    text-align: right;
+
+    .messagerie-contact-image {
+        margin-left: 10px;
+        margin-right: 0px;
+    }
+
+    .messagerie-contact-info {
+        flex-direction: row-reverse;
+    }
+}
+
+/* SEND MESSAGE */
+/* =============================== */
+
+.messagerie-send-form {
+    background-color: $soft-grey;
+    border-top: 1px solid $bootstrap-grey;
+    padding: 10px;
+
+    textarea {
+        min-height: 43px;
+        margin-right: 10px;
+        padding: 10px;
+        overflow-y: auto;
+        max-height: 30vh;
+    }
+}
+.messagerie-send-form-content {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+
+}
+
+.label-form-upload {
+    font-size: 2.5rem;
+    line-height: 1;
+    display: flex;
+    height: 43px;
+    width: 43px;
+    min-width: 43px;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: .3s all ease;
+
+    &:hover {
+        color: $violet;
+    }
+
+    input {
+        display: none;
+    }
+}
+
+/* MESSAGE ATTACHMENT (SEND FORM) */
+/* =============================== */
+
+.messagerie-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -10px;
+}
+
+.attachment {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid $bootstrap-grey;
+    margin: 0 10px 10px 0;
+    background: white;
+
+    .attachment-preview {
+        width: 60px;
+        height: 60px;
+    }
+
+    .attachment-name {
+        display: inline-block;
+        max-width: 155px;
+        hyphens: auto;
+        line-height: 1;
+        margin: 0 5px;
+    }
+
+    .attachment-remove {
+        font-size: 2rem;
+        padding: 5px 10px;
+        cursor: pointer;
+        color: $grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            color: $violet;
+        }
+    }
+}
+
+/* MESSAGE ATTACHMENT (DISCUSSION) */
+/* =============================== */
+
+.messagerie-contact-attachment {
+    display: inline-flex;
+    align-items: flex-start;
+    background: $soft-grey;
+    border: 1px solid $bootstrap-grey;
+    padding: 5px;
+    flex-direction: column;
+    border-radius: 4px;
+    max-width: 100%;
+    margin-bottom: 5px;
+
+    .messagerie-attachment-expand {
+        display: inline-flex;
+    }
+    .messagerie-attachment-reduce {
+        display: none;
+    }
+
+    &.expanded {
+        
+        .messagerie-attachment-expand {
+            display: none;
+        }
+        .messagerie-attachment-reduce {
+            display: inline-flex;
+        }
+
+        .messagerie-contact-attachment-preview {
+            max-height: none;
+        }
+    }
+}
+
+.messagerie-contact-attachment-preview {
+    max-width: 100%;
+    max-height: 150px;
+}
+
+.messagerie-contact-attachment-name {
+    font-size: .8rem;
+    margin-top: 5px;
+    word-break: break-all;
+    hyphens: auto;
+}
+
+.messagerie-contact-attachment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 45px;
+    width:100%;
+}
+
+.messagerie-contact-attachment-button {
+    @extend .btn;
+    display: inline-flex;
+    border: none;
+    background: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    text-decoration: none !important;
+    width: 35px;
+    height: 35px;
+    margin: 5px 5px 5px 0;
+    border: 1px solid $violet;
+    background: $violet;
+    border-radius: 4px;
+    padding: 0;
+    transition: .3s all ease;
+    cursor: pointer;
+    outline: none !important;
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        margin: 0;
+        font-size: 1em;
+    }
+
+
+}

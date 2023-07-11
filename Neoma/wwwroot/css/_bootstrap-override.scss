@@ -1,0 +1,438 @@
+@import "_mixins.scss";
+
+
+
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+
+/* ========================================================= */
+/* DROPDOWN */
+/* ========================================================= */
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0px 0px 20px rgba(0,0,0,.2);
+    
+    &::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 17px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 6px 6px 6px;
+        border-color: transparent transparent #ffffff transparent;
+        -webkit-transform:rotate(360deg)
+    }
+
+    &.dropdown-menu-right::before {
+        left: auto;
+        right: 17px;
+    }
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.dropdown-menu .nav-item {
+    display: block;
+    width: 100%;
+
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        font-size: 2.2rem;
+    }
+
+    > * {
+        padding: 10px 20px;
+    }
+    
+    a,
+    a * {
+        font-size: 1rem;
+    }
+
+    .nav-item-label {
+        color: $grey;
+        font-size: .9rem;
+        display: inline-block;
+    }
+
+    .nav-item-full-link {
+        background: $violet;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        border-bottom: 1px solid white;
+
+        * {
+            color: white;
+        }
+    }
+
+    .nav-item-full-link-text {
+        flex: 1;
+    }
+
+    .nav-link {
+        @include nav-item();
+    }
+}
+
+.dropdown-item {
+    @include nav-item();
+}
+
+/* ========================================================= */
+/* FORMS */
+/* ========================================================= */
+
+.form-group::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+label {
+    font-style: italic;
+    color: $grey;
+    font-size: .9rem;
+    margin-bottom: 0px;
+}
+
+.form-control {
+    outline: none;
+    transition: .3s all ease;
+    line-height: 1.5;
+    
+    &:focus {
+        box-shadow: none;
+        border-color: $violet;
+    }
+    
+    &:not(textarea) {
+        height: 50px;
+        line-height: 2.7;
+    }
+}
+
+select.form-control:not([size]):not([multiple]) {
+    height: 50px;
+}
+
+/* ========================================================= */
+/* BTN BUTTONS */
+/* ========================================================= */
+
+.btn {
+    border: 1px solid $violet;
+    background-color: $violet;
+    color: #fff;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    text-transform: none;
+
+    &:hover,
+    &:focus {
+        background: lighten($violet, 10);
+        color: #fff;
+    }
+
+    &:disabled {
+        background-color: $bootstrap-grey !important;
+    }
+
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        font-size: 2.5rem;
+        margin: -10px 5px -10px -10px
+    }
+}
+
+.btn-white {
+    background: white;
+    color: $violet;
+}
+
+.btn-cancel {
+    color: $grey;
+    background: none;
+    border: transparent;
+
+    &:hover {
+        background: none;
+        color: $violet;
+    }
+}
+
+.btn-danger {
+    background-color: $red;
+    border-color: $red;
+}
+
+.btn-outline {
+    background: white;
+    border-color: $bootstrap-grey;
+    color: $bootstrap-grey;
+
+    &:hover,
+    &:focus {
+        color: $bootstrap-grey;
+        background: white;
+        border-color: lighten($violet, 10);
+        z-index: 2 !important;
+    }
+
+    &.active {
+        color: $violet;
+    }
+}
+
+.btn-large {
+    padding: 10px 50px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        font-size: 1.5rem;
+    }
+
+    &.btn-large {
+        padding: 5px 20px;
+    }
+}
+
+
+.btn-square {
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+
+    &.btn-sm {
+        width: 34px;
+        height: 34px;
+        padding: 3px;
+        font-size: 1rem;
+
+        [class^="icon-"], 
+        [class*=" icon-"] {
+            font-size: 2rem;
+        }
+    }
+
+    [class^="icon-"], 
+    [class*=" icon-"] {
+        margin: 0px;
+    }
+}
+
+.btn-danger {
+    background: $red;
+    border: $red;
+
+    &:hover,
+    &:focus {
+        background-color: lighten($red, 10);
+    }
+}
+
+.btn-success {
+    background: $green;
+    border: $green;
+
+    &:hover,
+    &:focus {
+        background-color: lighten($green, 10);
+    }
+}
+
+
+
+.checkbox {
+    @include checkbox();
+}
+
+.radio {
+    @include checkbox();
+
+    .custom-visual {
+        border-radius: 50%;
+
+        &::before {
+            border: none;
+            background: #fff;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 0px;
+        }
+    }
+}
+
+.custom-file {
+    height: auto;
+    width: 100%;
+    
+    .custom-file-input {
+        height: 50px;
+        width: 100%;
+        cursor: pointer;
+        position: absolute;
+    }
+
+    .custom-file-label {
+        position: relative;
+    }
+}
+
+.custom-file-label {
+    @extend .btn;
+    font-style: normal;
+    font-size: 1rem;
+    height: auto;
+    width: auto;
+    line-height: 1.9;
+    text-align: center;
+
+    &::after {
+        content: none;
+    }
+}
+
+/* ========================================================= */
+/* MODAL */
+/* ========================================================= */
+
+.modal-footer {
+    border-radius: 0 0 4px 4px;
+}    
+
+/* ========================================================= */
+/* BREADCRUMB */
+/* ========================================================= */
+
+.breadcrumb {
+    padding: 0;
+    background: none;
+    margin: 0;
+
+    .breadcrumb-item {
+
+        a {
+            color: $grey;
+        }
+
+        &.active {
+            color: $violet;
+            
+            &::before {
+                color: $grey;
+            }
+        }
+    }
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+}
+
+/* ========================================================= */
+/* BADGES */
+/* ========================================================= */
+
+.badge {
+    font-size: 0.9rem;
+    font-weight: normal;
+    padding: 6px 7px;
+    border: 1px solid;
+    border-radius: 50px;
+    margin: 4px 4px 4px 0;
+}
+
+.badge-green {
+    @include badge-color($green);
+}
+.badge-violet {
+    @include badge-color($violet);
+}
+.badge-dark {
+    @include badge-color($dark);
+}
+.badge-grey {
+    @include badge-color($grey);
+}
+.badge-light-grey {
+    @include badge-color($light-grey);
+}
+.badge-soft-grey {
+    @include badge-color($soft-grey);
+}
+.badge-bootstrap-grey {
+    @include badge-color($bootstrap-grey);
+}
+.badge-red {
+    @include badge-color($red);
+}
+
+.badge-green-outline {
+    @include badge-color-outline($green);
+}
+.badge-violet-outline {
+    @include badge-color-outline($violet);
+}
+.badge-dark-outline {
+    @include badge-color-outline($dark);
+}
+.badge-grey-outline {
+    @include badge-color-outline($grey);
+}
+.badge-light-grey-outline {
+    @include badge-color-outline($light-grey);
+}
+.badge-soft-grey-outline {
+    @include badge-color-outline($soft-grey);
+}
+.badge-bootstrap-grey-outline {
+    @include badge-color-outline($bootstrap-grey);
+}
+.badge-red-outline {
+    @include badge-color-outline($red);
+}

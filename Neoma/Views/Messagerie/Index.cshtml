@@ -1,0 +1,288 @@
+﻿@model IEnumerable<Neoma.Models.ConversationUtilisateur>
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Messagerie";
+}
+
+@section Scripts{
+    <script src="~/js/messagerie.js"></script>
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+
+            $("body").on("click", ".messagerie-contact", function () {
+                $(".messagerie-contact.active").each(function () {
+                    $(this).removeClass("active");
+                });
+
+                $(this).addClass("active");
+
+                var conversationId = $(this).find('input').val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateDiscussion", "Messagerie")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "ConversationId": conversationId },
+                    success: function (data) {
+                        $(".messagerie-right-col").html(data);
+                        autosize(document.querySelectorAll('.messagerie-send-form-content textarea'));
+                    }
+                });
+
+                ReadMessage();
+            })
+
+            $('body').on('keypress', 'textarea', function (e) {
+                if (event.shiftKey) {
+
+                }
+                else if (event.keyCode == 13) {
+                    e.preventDefault();
+                    NewMessageCall();
+                }
+            });
+
+            $('body').on('click', '.messagerie-discussion, #message', function () {
+                ReadMessage();
+            })
+
+            $('body').on("submit", "#formMessage", function (e) {
+                e.preventDefault();
+                NewMessageCall();
+            });
+
+            $("body").on('change', '.file-upload', function (e) {
+                if (this.files[0].size > 5242880) {
+                    alert("le fichier est trop volumineux");
+                    $(this).val(null);
+                }
+                else {
+                    readURL(this);
+                }
+
+            });
+
+            $("body").on('click', '.file-upload', function () {
+                $(this).val(null);
+            });
+
+            $("body").on('click', '.icon-close', function () {
+                $(this).closest('.attachment').remove();
+            })
+
+            $('body').on('click', '.messagerie-attachment-close', function () {
+                var id = $(this).data('message-id');
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("RemoveFile", "Messagerie")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "message": id },
+                    success: function (result) {
+                    }
+                })
+            })
+
+            function ReadMessage() {
+                $(".messagerie-contact.active").each(function () {
+                    $(this).removeClass("new-message");
+                    var conversationId = $('#conversation').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("ReadMessage", "Messagerie")',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        data: { "conversation": conversationId },
+                        success: function (result) {
+                            $(".notification-drop.messages").html(result.count);
+                            $(".notification-drop.notification-drop-big").html(result.count + "+");
+                        }
+                    });
+                })
+            }
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var fileSize = FileConvertSize(input.files[0].size);
+                    reader.onload = function (e) {
+                        var extension = input.files[0].name.split('.').pop();
+                        var img;
+                        if (extension === "jpg" || extension === "png") {
+                            img = e.target.result;
+                        }
+                        else if (extension === "pdf") {
+                            img = "https://res.cloudinary.com/sanchez-consultant/image/upload/v1551086069/pdf.jpg";
+                        }
+                        else {
+                            img = "https://res.cloudinary.com/sanchez-consultant/image/upload/v1551256889/document.png";
+                        }
+                        $(".messagerie-attachments").html(
+                            '<div class="attachment">' +
+                                '<img src="' + img + '" class="attachment-preview" alt="" />' +
+                                '<span class="attachment-name">' + input.files[0].name +'</span>' +
+                                '<span class="attachment-name">' + fileSize +'</span>' +
+                                '<span class="attachment-remove">' +
+                                    '<i class="icon-close"></i>' +
+                                '</span>' +
+                            '</div>');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            function NewMessageCall() {
+                var files = $('.file-upload')[0].files;
+                var fdata = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fdata.append("filese", files[i]);
+                }
+
+                fdata.append("text", $("#message").val());
+                fdata.append("user", $("#user").val());
+                fdata.append("conversation", $("#conversation").val());
+                $("#message").val("");
+                $(".messagerie-attachments").empty();
+                //$("body").append('<div class="overlay"></div>');
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("NewMessage", "Messagerie")',
+                        contentType: false,
+                        data: fdata,
+                        processData:false,
+                        success: function (data) {
+                            $("#conversation").val(data.result.conversationId);
+                            $('.file-upload').val(null);
+                        },
+                        error: function (e) {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            function FileConvertSize(aSize) {
+                aSize = Math.abs(parseInt(aSize, 10));
+                var def = [[1, 'octets'], [1024, 'ko'], [1024 * 1024, 'Mo'], [1024 * 1024 * 1024, 'Go'], [1024 * 1024 * 1024 * 1024, 'To']];
+                for (var i = 0; i < def.length; i++) {
+                    if (aSize < def[i][0]) return (aSize / def[i - 1][0]).toFixed(2) + '' + def[i - 1][1];
+                }
+            }
+
+            $(document).on("click", ".messagerie-attachment-reduce", function () {
+                $(this).parents(".messagerie-contact-attachment").removeClass("expanded");
+            });
+            $(document).on("click", ".messagerie-attachment-expand", function () {
+                $(this).parents(".messagerie-contact-attachment").addClass("expanded");
+            });
+        })
+    </script>
+
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item active">
+                @ViewData["Title"]
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <a href="@ViewBag.Url" class="btn btn-sm mb-3"><i class="icon-caret-left"></i> Retour</a>
+        <section class="neobox messagerie left-column-open">
+
+            <!-- LEFT COL -->
+            <div class="messagerie-left-col">
+                <span class="messagerie-left-col-toggle">
+                    <i class="icon-caret-right"></i>
+                </span>
+                <div class="messagerie-title">
+                    <span class="notification-drop notification-drop-big"></span>
+                    @ViewData["Title"]
+                </div>
+                <div class="messagerie-search">
+                    <div class="neo-search-control">
+                        <i class="icon-search"></i>
+                        <input type="text" class="form-control" placeholder="Rechercher" />
+                    </div>
+                </div>
+                <ul class="mesagerie-contact-list">
+                    @foreach (var conversationUser in Model)
+                    {
+                        var base64 = Convert.ToBase64String(conversationUser.Utilisateur.Photo);
+                        var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+                        var active = "";
+                        var newMessage = "";
+                        var connected = conversationUser.Utilisateur.Presence == 1 ? "contact-connected" : conversationUser.Utilisateur.Presence == 2 ? "contact-disconnected" : "contact-away";
+                        if (ViewBag.Conversation == null)
+                        {
+                            if (conversationUser == Model.First())
+                            {
+                                active = "active";
+                            }
+                        }
+                        else
+                        {
+                            if (conversationUser.ConversationId == ViewBag.Conversation)
+                            {
+                                active = "active";
+                            }
+                        }
+                        if (!conversationUser.LastMessage.MessageLu && conversationUser.LastMessage.UtilisateurId != User.getUserId())
+                        {
+                            newMessage = "new-message";
+                        }
+
+                        <li class="messagerie-contact @active @connected">
+                            <input type="hidden" value="@conversationUser.ConversationId" />
+                            <img src="@imgAvatar" alt="" class="messagerie-contact-image" />
+                            <div class="messagerie-contact-text">
+                                <div class="messagerie-contact-info">
+                                    <p class="messagerie-contact-name">
+                                        <b>@conversationUser.Utilisateur.Prenom @conversationUser.Utilisateur.Nom</b>
+                                    </p>
+                                    <p class="color-grey">@(conversationUser.LastMessage == null ? "" : conversationUser.LastMessage.DateEnvoi.ToString("dd/MM/yy"))</p>
+                                </div>
+                                <p class="messagerie-contact-message color-grey">
+                                    <i>@(conversationUser.LastMessage == null ? "" : conversationUser.LastMessage.Text)</i>
+                                </p>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- RIGHT COL -->
+            <div class="messagerie-right-col">
+                @if (ViewBag.Conversation != null)
+                {
+                    @if (ViewBag.Conversation == -1)
+                    {
+                        @await Component.InvokeAsync("Conversation", new { ConversationId = -1, user = ViewBag.User })
+                    }
+                    else if (Model.Count() > 0)
+                    {
+                        @await Component.InvokeAsync("Conversation", new { ConversationId = ViewBag.Conversation, user = ViewBag.User })
+                    }
+                }
+
+            </div>
+
+
+        </section>
+
+    </div>
+</div>
+

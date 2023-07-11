@@ -1,0 +1,248 @@
+﻿@model Neoma.Models.MatchingViewModel.MatchCandidatViewModel
+@using Neoma.Extensions
+
+@{
+    ViewData["Title"] = "Matching";
+}
+
+@section Scripts{
+    <script src="~/js/CandidatGlobal.js"></script>
+    <script type="text/javascript" src="~/js/filtersearchcandidat.js"></script>
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script>
+        $(function () {
+            $(".Projet").prop('selectedIndex', 0);
+            $('.Role').attr("disabled", "disabled");
+            
+            $("body").on("change", ".Projet", function () {
+                //Si l'élément tous projet est sélectionné alors désactivation de la zone rôle
+                accessibilityFilterProject($(this)[0].selectedIndex);
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).parent().parent().find(".Role");
+                var projet = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateRole", "MatchingPorteur")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { 'projet': projet },
+                    success: function (data) {
+                        role.find('option').remove();
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            role.append($("<option></option>")
+                                .attr("value", value.id).text(value.role.name));
+                        });
+                    }
+                });
+                if ($(this)[0].selectedIndex == 0) {
+                    var FilterViewModel = null;
+                    var items = JSON.stringify(FilterViewModel);
+                    UpdateCall(items);
+                }
+                else {
+                    updateCandidat(true);
+                }
+            })
+
+
+            $("body").on("change", ".Role", function () {
+                accessibilityFilterRole($(this)[0].selectedIndex);
+
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "MatchingPorteur")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: {'besoins': role },
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id)
+                                .attr("selected", "selected")
+                                .text(value.name));
+                        });
+                        updateCandidat();
+                    }
+                });
+
+            });
+
+
+            $('.make-select2').on('select2:unselect', function () {
+                updateCandidat()
+            });
+
+            $('.make-select2').on('select2:select', function () {
+                updateCandidat()
+            });
+
+            function updateCandidat(changementDeProjet) {
+                var specialite = $(".specialite").select2('data');
+                var Besoins = {};
+                Besoins.Id = $(".Role").val();
+                var FilterViewModel = {};
+                var ListeSpecialite = [];
+                $.each(specialite, function (n) {
+                    var Specialite = {};
+                    Specialite.Id = specialite[n].id;
+                    Specialite.Name = specialite[n].text;
+                    ListeSpecialite[n] = Specialite;
+                });
+                //console.log(ListeSpecialite);
+                var chaineRecherche = $("#searchText").val();
+                chaineRecherche = chaineRecherche ? chaineRecherche.toLowerCase() : chaineRecherche;
+                FilterViewModel.Specialite = ListeSpecialite;
+                FilterViewModel.Besoins = Besoins;
+                FilterViewModel.TexteRecherche = chaineRecherche;
+
+                if (changementDeProjet || Besoins.Id === "0") {
+                    var projetId = $(".Projet").val();
+                    var projet = {};
+                    projet.Id = projetId;
+                    FilterViewModel.Projet = projet;
+                }
+
+                var items = JSON.stringify(FilterViewModel);
+                UpdateCall(items);
+            }
+
+            function UpdateCall(items) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("TableCandidatMatching", "MatchingPorteur")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: items,
+                    success: function (data) {
+                        $("#tableCandidat").html(data);
+                        var len = $("#tableCandidat .item").length;
+                        if (len > 1) {
+                            $(".result").html('<b class="color-violet">' + len + '</b> co-surfeurs correspondent à votre recherche');
+                        }
+                        else {
+                            $(".result").html('<b class="color-violet">' + len + '</b> co-surfeur correspond à votre recherche');
+                        }
+                        HighlightSearch();
+                        $("#maxRows").change();
+                    }
+                });
+            }
+
+            $('#searchText').keyup(delay(function () {
+                updateCandidat()
+            }, 1000));
+
+            function delay(callback, ms) {
+                var timer = 0;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    time = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
+            getPagination('.items-listing');
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Co-surfeurs</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Matching
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+        <section class="neobox">
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    <div class="neo-select-control">
+                        <label>Type de projet</label>
+                        <select asp-items="Model.Projet.ToSelectListItem(0)" class="Projet"></select>
+                    </div>
+                    <div class="neo-select-control">
+                        <label>Rôle</label>
+                        <select asp-items="Model.Role.ToSelectListItem(0)" class="Role"></select>
+                    </div>
+                    <div class="neo-select2-control">
+                        <select class="make-select2 specialite" multiple="multiple" asp-items="Model.Specialite.ToSelectListItem(0)"></select>
+                    </div>
+                    <div class="neo-select-control">
+                        <label>Ligne à afficher</label>
+                        <select id="maxRows">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="0" selected>Tous</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="neobox-header-container">
+                    <div class="neo-search-control">
+                        <i class="icon-search"></i>
+                        <input id="searchText" type="text" class="form-control" placeholder="Rechercher" />
+                    </div>
+                    <div class="btn-group ml-2">
+                        <span class="btn btn-outline btn-grid">
+                            <i class="fa fa-grip-horizontal"></i>
+                        </span>
+                        <span class="btn btn-outline btn-list active">
+                            <i class="fa fa-list"></i>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="neobox-content">
+                <div class="items-listing-number-result">
+                    <p class="color-grey result"><b class="color-violet">0</b> co-surfeur correspond à votre recherche</p>
+                </div>
+            </div>
+            <div class="neobox-content p-0">
+                <ul class="items-listing list" id="tableCandidat">
+                    @await Component.InvokeAsync("TableCandidatMatching", null)
+                </ul>
+            </div>
+
+        </section>
+
+        <div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+
+            <div class="neo-pagination-center">
+            </div>
+            
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+

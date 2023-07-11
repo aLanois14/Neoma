@@ -1,0 +1,14 @@
+﻿@using Neoma.RazorClassLib.Views.Shared
+@using Neoma.RazorClassLib.Views.Emails.LeaveProject
+@model LeaveProjectEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Un co-surfeur a quitté votre projet";
+}
+<p>
+    @Model.CandidatName a quitté votre projet <b>@Model.ProjetName</b> pour le motif suivant :
+</p>
+<p>
+    @Model.Motif
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Consulter détail", Model.EmailUrl))

@@ -1,0 +1,113 @@
+﻿@model Neoma.Models.MembreProjetViewModel.MembreProjetViewModel
+@using Neoma.Extensions
+
+@functions{
+    List<SelectListItem> Role(List<Role> list, Role role)
+    {
+        List<SelectListItem> selectList = new List<SelectListItem>();
+
+        foreach (var item in list)
+        {
+            if (item == role)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString(),
+                    Selected = true
+                });
+            }
+            else
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+            }
+        }
+
+        return selectList;
+    }
+}
+
+<div class="row row-with-btn mb-3 project-need-row">
+    <input type="hidden" id="idBesoin" value="@(Model.Besoins == null ? 0 : Model.Besoins[0].Id)" />
+    @*@if (Model.Besoins != null)
+        {
+            <input type="hidden" id="BesoinUser" value="@(Model.Besoins[0].UtilisateurId == Model.Besoins[0].Projet.UtilisateurId ? "0" : Model.Besoins[0].UtilisateurId)" />
+        }*@
+    <input type="hidden" id="BesoinUser" value="@(Model.Besoins != null ? (Model.Besoins[0].UtilisateurId == Model.Besoins[0].Projet.UtilisateurId ? "0" : Model.Besoins[0].UtilisateurId) : "0")" />
+
+    <div class="col-3">
+        <label>Rôle</label>
+        @if (Model.Besoins == null)
+        {
+            <select id="Role"
+                    asp-items="@(Model.Besoins == null ? Model.Role.ToSelectListItem(0) : Role(Model.Role, Model.Besoins[0].Role))"
+                    class="form-control Role" onchange="TesteTousLesBesoins()"></select>
+        }
+        else
+        {
+            <select id="Role" class="form-control Role"
+                    asp-items="@(Model.Besoins == null ? Model.Role.ToSelectListItem(0) : Role(Model.Role, Model.Besoins[0].Role))"
+                    disabled="@(Model.Besoins[0].UtilisateurId == null ? false : true )"></select>
+        }
+
+
+    </div>
+    <div class="col">
+        <label>Spécialité</label>
+        @if (Model.Besoins == null)
+        {
+            <select class="form-control make-select2 specialite" multiple="multiple" onchange="TesteTousLesBesoins()">
+                @foreach (Specialite CetteSpec in Model.Specialite)
+                {
+                    <option value="@CetteSpec.Id" selected="@(CetteSpec.Match ? true : false)">@CetteSpec.Name</option>
+                }
+            </select>
+        }
+        else
+        {
+            <select class="form-control make-select2 specialite" multiple="multiple" @(Model.Besoins[0].UtilisateurId == null ? "" : "disabled")>
+                @foreach (Specialite CetteSpec in Model.Specialite)
+                {
+                    <option value="@CetteSpec.Id" selected="@(CetteSpec.Match ? true : false)">@CetteSpec.Name</option>
+                }
+            </select>
+        }
+    </div>
+    <div class="col-3 item">
+        @if (Model.Besoins != null)
+        {
+            if (Model.Besoins[0].UtilisateurId != null)
+            {
+
+                var base64 = Convert.ToBase64String(Model.Besoins[0].Utilisateur.Photo);
+                var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+                <div class="item-picture" style="display:inline-block">
+                    <img src="@imgAvatar" alt="" />
+                </div>
+
+                <div style="display:inline-block;margin-left:5px">@Model.Besoins[0].Utilisateur.Prenom @Model.Besoins[0].Utilisateur.Nom</div>
+            }
+        }
+
+    </div>
+
+    <div class="col-auto">
+        @if (Model.Besoins == null)
+        {
+            <button class="btn btn-square btn-danger btn-sm remove">
+                <i class="fa fa-times"></i>
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-square btn-danger btn-sm remove" @(Model.Besoins[0].UtilisateurId == null ? "" : "disabled")>
+                <i class="fa fa-times"></i>
+            </button>
+        }
+    </div>
+</div>

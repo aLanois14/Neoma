@@ -1,0 +1,411 @@
+﻿@model Neoma.Models.MembreProjetViewModel.MembreProjetViewModel
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Html
+
+@{
+    ViewData["Title"] = "Modification d'un projet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    List<SelectListItem> Type(List<TypeProjet> list, TypeProjet type)
+    {
+        List<SelectListItem> selectList = new List<SelectListItem>();
+
+        foreach (var item in list)
+        {
+            if (item == type)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString(),
+                    Selected = true
+                });
+            }
+            else
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+            }
+        }
+
+        return selectList;
+    }
+}
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+
+            $('.make-select2').select2({
+                tags: true,
+                width: "100%"
+            });
+
+            $("body").on("change", ".Role", function () {
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "SharedAction")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role": role },
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id).text(value.name));
+                        });
+                    }
+                });
+            });
+
+            $("#btnSubmit").click(function (e) {
+                e.preventDefault();
+                if (ValidateFields()) {
+                    $.confirm({
+                        title: 'Confirmation',
+                        content: 'Voulez-vous valider les modifications ?',
+                        buttons: {
+                            Valider: function () {
+                                var MembreProjet = {};
+                                var ListMembre = [];
+                                var ListBesoin = [];
+                                var Projet = {};
+                                Projet.Id = $("#idProjet").val();
+                                Projet.Name = $("#NomProjet").val();
+                                Projet.PresentationProjet = $("#Presentation").val();
+                                Projet.TypeProjetId = $("#Type option:selected").val();
+                                Projet.UtilisateurId = $("#Utilisateur").val();
+                                Projet.Termine = document.getElementById("Termine").checked;
+                                Projet.Actif = document.getElementById("ActifPro").value;
+                                ListMembre = ListRowMember();
+                                ListBesoin = ListRowBesoin();
+
+                                MembreProjet.Projet = Projet;
+                                MembreProjet.Membre = ListMembre;
+                                MembreProjet.Besoins = ListBesoin;
+                                var items = JSON.stringify(MembreProjet);
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Action("SaveEdit", "MesProjets")',
+                                    contentType: "application/json; charset=utf-8",
+                                    datatype: "json",
+                                    data: items,
+                                    async: false,
+                                    success: function (response) {
+                                        if (response.success) {
+                                            window.location.href = response.result;
+                                        }
+                                        else {
+                                            $(".text-danger > ul").empty();
+                                            for (var i = 0; i < response.errors.length; i++) {
+                                                var error = response.errors[i].errors[0].errorMessage;
+                                                $(".text-danger > ul").append('<li>' + error + '</li>');
+                                            }
+                                        }
+                                    }
+                                });
+                                return true;
+                            },
+                            Annuler: function () {
+                                return true;
+                            }
+                        }
+                    });
+                }
+                else {
+                    $.confirm({
+                        title: 'Données manquantes',
+                        content: 'Certains champs indispensables n\'ont pas été remplis. Veuillez compléter le formulaire.',
+                        buttons: {
+                            OK: function () {
+                                return true;
+                            }
+                        }
+                    });
+                }
+            });
+
+            $("#addMember").click(function () {
+                TableAddMember();
+            });
+
+            $("#addBesoin").click(function () {
+                TableAddBesoin();
+            });
+
+            $("body").on("click", ".remove", function () {
+                $(this).closest('.row').remove();
+            });
+
+            function TableAddMember() {
+                document.getElementById("Erreur0Membre").style.display = "none";
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("TableMembreAdd", "Register")',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        success: function (data) {
+                            $('#rowMember').append(data);
+                            $('.make-select2').select2({
+                                tags: true,
+                                width: "100%"
+                            });
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            function TableAddBesoin() {
+                document.getElementById("Erreur0Besoin").style.display = "none";
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("TableBesoinAdd", "Register")',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        success: function (data) {
+                            $('#rowNeeds').append(data);
+                            $('.make-select2').select2({
+                                tags: true,
+                                width: "100%"
+                            });
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            function ListRowMember() {
+                var ListMembre = [];
+                $("#rowMember .row").each(function (n) {
+                    var Membre = {};
+                    var ListSpecialite = [];
+                    var specialiteInit = $(this).children().find(".specialite").select2('data');
+                    $.each(specialiteInit, function (n) {
+                        var Specialite = {};
+                        if ($.isNumeric(specialiteInit[n].id)) {
+                            Specialite.Id = specialiteInit[n].id;
+                        }
+                        else {
+                            Specialite.Id = 0;
+                        }
+                        Specialite.Name = specialiteInit[n].text;
+                        ListSpecialite[n] = Specialite;
+                    });
+                    Membre.Id = $(this).find("#idMembre").val();
+                    Membre.Prenom = $(this).children().find("#FirstName").val();
+                    Membre.Nom = $(this).children().find("#LastName").val();
+                    Membre.Mail = $(this).children().find("#Email").val();
+                    Membre.RoleId = $(this).children().find("#Role").val();
+                    Membre.Specialite = ListSpecialite;
+                    ListMembre[n] = Membre;
+                });
+                return ListMembre;
+            }
+
+            function ListRowBesoin() {
+                var ListBesoin = [];
+                $("#rowNeeds .row").each(function (n) {
+                    var Besoin = {};
+                    var ListSpecialite = [];
+                    var specialiteInit = $(this).children().find(".specialite").select2('data');
+                    $.each(specialiteInit, function (n) {
+                        var Specialite = {};
+                        if ($.isNumeric(specialiteInit[n].id)) {
+                            Specialite.Id = specialiteInit[n].id;
+                        }
+                        else {
+                            Specialite.Id = 0;
+                        }
+                        Specialite.Name = specialiteInit[n].text;
+                        ListSpecialite[n] = Specialite;
+                    });
+                    Besoin.Id = $(this).find("#idBesoin").val();
+                    Besoin.RoleId = $(this).find("#Role").val();
+                    if ($(this).find("#BesoinUser").val() == "0") {
+                        Besoin.UtilisateurId = null;
+                    }
+                    else {
+                        Besoin.UtilisateurId = $(this).find("#BesoinUser").val();
+                    }
+
+                    Besoin.Specialite = ListSpecialite;
+                    ListBesoin[n] = Besoin;
+                });
+                return ListBesoin;
+            }
+        })
+
+        function ValidateFields() {
+            var toutEstOK = false;
+            var nomProjet = $("#NomProjet").val().trim();
+            var presentationProjet = $("#Presentation").val().trim();
+            var membres = $("#rowMember").children();
+            var nbMembres = membres.length - 2;
+            var besoins = $("#rowNeeds").children();
+            var nbBesoins = besoins.length - 2;
+
+            if (nomProjet === "")
+                document.getElementById("ErreurNomProjet").style.display = "inline-block";
+            if (presentationProjet === "")
+                document.getElementById("ErreurPresentationProjet").style.display = "inline-block";
+            //if (nbMembres === 0)
+            //    document.getElementById("Erreur0Membre").style.display = "inline-block";
+            if (nbBesoins === 0)
+                document.getElementById("Erreur0Besoin").style.display = "inline-block";
+
+            var testMembres = TesteTousLesMembres();
+            if (!testMembres)
+                document.getElementById("ErreurChampsMembres").style.display = "inline-block";
+
+            var testBesoins = TesteTousLesBesoins();
+            if (!testBesoins)
+                document.getElementById("ErreurChampsBesoins").style.display = "inline-block";
+
+            toutEstOK = nomProjet !== "" && presentationProjet !== "" && /*nbMembres !== 0 &&*/ nbBesoins !== 0 && testMembres && testBesoins;
+
+            return toutEstOK;
+        }
+
+        function ValueChanged(item) {
+            if (item.id == "NomProjet")
+                document.getElementById("ErreurNomProjet").style.display = "none";
+            else if (item.id == "Presentation")
+                document.getElementById("ErreurPresentationProjet").style.display = "none";
+        }
+
+        function TesteTousLesMembres() {
+            var membres = $("#rowMember").children();
+            var nbMembres = membres.length;
+            var tousLesMembresOK = true;
+            for (var i = 2; i < nbMembres; i++) {
+                var nomOK = membres[i].children[1].children[1].value !== "";
+                var prenomOK = membres[i].children[2].children[1].value !== "";
+                var mailOK = membres[i].children[3].children[1].value !== "";
+                var roleOK = membres[i].children[4].children[1].value !== "";
+                var specsOK = membres[i].children[5].children[1].value !== "";
+                tousLesMembresOK = tousLesMembresOK && nomOK && prenomOK && mailOK && roleOK && specsOK;
+            }
+            if (tousLesMembresOK)
+                document.getElementById("ErreurChampsMembres").style.display = "none";
+            return tousLesMembresOK;
+        }
+
+        function TesteTousLesBesoins() {
+            var besoins = $("#rowNeeds").children();
+            var nbBesoins = besoins.length;
+            var tousLesBesoinsOK = true;
+            for (var i = 2; i < nbBesoins; i++) {
+                var roleOK = besoins[i].children[2].children[1].value !== "";
+                var specsOK = besoins[i].children[3].children[1].value !== "";
+                tousLesBesoinsOK = roleOK && specsOK;
+            }
+            if (tousLesBesoinsOK)
+                document.getElementById("ErreurChampsBesoins").style.display = "none";
+            return tousLesBesoinsOK;
+        }
+    </script>
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+
+        <!-- EMAIL / NEW USER -->
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <form method="post">
+                <div class="neobox-content">
+                    <input type="hidden" id="idProjet" value="@Model.Projet.Id" />
+                    <input type="hidden" id="Utilisateur" value="@Model.Projet.UtilisateurId" />
+                    <input type="hidden" id="ActifPro" value="@(Model.Projet.Actif ? "true" : "false")"/>
+                    <div class="text-danger">
+                        <ul></ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nom du projet</label>
+                                <input id="NomProjet" class="form-control" value="@Model.Projet.Name" onkeypress="ValueChanged(this)" onchange="ValueChanged(this)"/>
+                                <span id="ErreurNomProjet" class="text-danger" style="display:none">Veuillez saisir un nom pour votre projet</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="Projet.TypeProjetId">Type du projet</label>
+                                <select id="Type" asp-items="@Type(Model.TypeProjet, Model.Projet.TypeProjet)" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Présentation du projet</label>
+                        <textarea id="Presentation" rows="3" class="form-control" onkeypress="ValueChanged(this)" onchange="ValueChanged(this)">@Model.Projet.PresentationProjet</textarea>
+                        <span id="ErreurPresentationProjet" class="text-danger" style="display:none">Veuillez décrire votre projet</span>
+                    </div>
+                </div>
+                <div class="neobox-subtitle">
+                    <h3>Membres du projet</h3>
+                    <div class="neobox-subtitle-actions">
+                        <span id="addMember" class="btn btn-default btn-sm">
+                            Ajouter un membre
+                        </span>
+                    </div>
+                </div>
+                <div class="neobox-content">
+                    <div id="rowMember">
+                        <span id="Erreur0Membre" class="text-danger" style="display:none">Veuillez entrer au moins un membre pour ce projet</span>
+                        <span id="ErreurChampsMembres" class="text-danger" style="display:none">Veuillez renseigner tous les champs pour tous les membres</span>
+                        @foreach (var item in Model.Membre)
+                        {
+                            @await Component.InvokeAsync("TableMembre", new { membre = item })
+                        }
+                    </div>
+                </div>
+                <div class="neobox-subtitle">
+                    <h3>Vos Besoins</h3>
+                    <div class="neobox-subtitle-actions">
+                        <span id="addBesoin" class="btn btn-default btn-sm">
+                            Ajouter un besoin
+                        </span>
+                    </div>
+                </div>
+                <div class="neobox-content">
+                    <div id="rowNeeds">
+                        <span id="Erreur0Besoin" class="text-danger" style="display:none">Veuillez entrer au moins un besoin pour ce projet</span>
+                        <span id="ErreurChampsBesoins" class="text-danger" style="display:none">Veuillez renseigner les spécialités pour tous les besoins</span>
+                        @foreach (var item in Model.Besoins)
+                        {
+                            @await Component.InvokeAsync("TableBesoin", new { besoin = item })
+                        }
+                    </div>
+
+                    <div class="form-group text-right mt-5">
+
+                        <div style="float:left">
+                            <label class="checkbox">
+                                <input type="checkbox" id="Termine" checked="@(Model.Projet.Termine ? true : false)" />
+                                <span class="custom-visual"></span>Terminé
+                            </label>
+                        </div>
+
+                        <button id="btnSubmit" class="btn btn-large"><i class="icon-send"></i> Enregistrer les modifications</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,255 @@
+﻿@model IEnumerable<Neoma.Models.MesProjetsViewModel.ItemProjetViewModel>
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Mes projets";
+    var currentUser = SignInManager.UserManager.Users.FirstOrDefault(u => u.Id == User.getUserId());
+}
+
+@functions{
+    IHtmlContent Specialite(List<Specialite> Specialites)
+    {
+        string text = "";
+
+        foreach (var special in Specialites)
+        {
+            text += special != Specialites.Last() ? special.Name + " - " : special.Name;
+        }
+        return Html.Raw(text);
+    }
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pagination.js"></script>
+    <script>
+
+        $(function () {
+            getPagination('.items-listing');
+            $('.btn-grid').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('grid');
+                $('.items-listing').removeClass('list');
+                $('.btn-list').removeClass('active');
+            });
+            $('.btn-list').click(function () {
+                $(this).addClass('active');
+                $('.items-listing').addClass('list');
+                $('.items-listing').removeClass('grid');
+                $('.btn-grid').removeClass('active');
+            });
+        })
+
+        $(".delete").click(function () {
+            var value = $(this).val();
+            $.confirm({
+                title: 'Suppression de poste',
+                content: '' +
+                    '<form action="" class="formName">' +
+                    '<div class="form-group">' +
+                    '<label>Motif de la suppression</label>' +
+                    '<textarea class="motif form-control"></textarea>' +
+                    '<span class="text-danger"></span>' +
+                    '</div>' +
+                    '</form>',
+                buttons: {
+                    formSubmit: {
+                        text: 'Valider',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            var motif = this.$content.find('.motif').val();
+                            if (!motif) {
+                                $(".text-danger").text('Veuillez saisir un motif.');
+                                return false;
+                            }
+                            var link = '@Url.Action("Delete", "MesProjets", new { id = "idtext", motif = "motiftext" })';
+                            link = link.replace("idtext", value);
+                            link = link.replace("motiftext", motif);
+                            $.post(link, function (data){
+                                if (data.success) {
+                                    window.location.href = data.result;
+                                }
+                            });
+                        }
+                    },
+                    Annuler: function () {
+                        //close
+                    },
+                },
+                onContentReady: function () {
+                    // bind to events
+                    var jc = this;
+                    this.$content.find('form').on('submit', function (e) {
+                        // if the user submits the form by pressing enter in the field.
+                        e.preventDefault();
+                        jc.$$formSubmit.trigger('click'); // reference the button and click it
+                    });
+                }
+            });
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Projets</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Mes projets
+            </li>
+        </ol>
+    </nav>
+    @if (currentUser.RoleActuel == "Fondateur")
+    {
+        <a href="@Url.Action("IndexHolder", "Register", new { userId = User.getUserId(), code = "1" })" class="btn btn-large">Créer un projet</a>
+    }
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+
+        <!-- EMAIL / NEW USER -->
+        <section class="neobox">
+
+            <div class="neobox-header">
+                <div class="neobox-header-container">
+                    <div class="neo-select-control">
+                        <label>Ligne à afficher</label>
+                        <select id="maxRows">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="0" selected>Tous</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neobox-content p-0">
+                <ul class="items-listing list own-project-list">
+                    @foreach (var item in Model)
+                    {
+                        <li class="item p-0">
+                            <div class="item w-100">
+                                <a asp-action="EditProject" asp-controller="MesProjets" asp-route-projetId="@item.Projet.Id" class="item-minor">
+                                    <h3>@item.Projet.Name</h3>
+                                    <p class="color-grey"><i>@item.Projet.TypeProjet.Name</i></p>
+                                    <p>@item.Organisme.Name</p>
+                                    <p style="padding:15px 20px 0px 0px;text-align:justify">@item.Projet.PresentationProjet</p>
+                                    @if (item.Projet.Termine)
+                                    {
+                                        <span class="badge badge-primary">Terminé</span>
+                                    }
+                                    else if (item.Projet.Complet)
+                                    {
+                                        <span class="badge" style="background-color:mediumpurple;color:white">Complet</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success">En cours</span>
+                                    }
+                                </a>
+
+                                <div class="item-lines">
+                                    <div class="item-line item-line-title">
+                                        <div class="item-col item-col-role">
+                                            <p><b>Rôles</b></p>
+                                        </div>
+                                        <div class="item-col item-col-specialty">
+                                            <p><b>Spécialités</b></p>
+                                        </div>
+                                        <div class="item-col">
+                                        </div>
+                                        <div class="item-col">
+                                        </div>
+                                    </div>
+                                    @foreach (var besoin in item.Besoins)
+                                    {
+                                        <div class="item-line color-grey">
+                                            <div class="item-col item-col-role @(besoin.Besoin.UtilisateurId == null ? "" : "text-line")">@besoin.ItemRole.Role.Name</div>
+                                            <div class="item-col item-col-specialty @(besoin.Besoin.UtilisateurId == null ? "" : "text-line")">
+                                                @Specialite(besoin.ItemRole.Specialites)
+
+                                                @if (besoin.Besoin.UtilisateurId == null)
+                                                {
+                                                    <b class="color-violet">&nbsp; (@besoin.Candidatures.Count)&nbsp;</b>
+                                                }
+                                            </div>
+                                            <div class="item-col item-col-user">
+
+                                                @if (besoin.Besoin.UtilisateurId != null)
+                                                {
+                                                    var base64 = Convert.ToBase64String(besoin.Besoin.Utilisateur.Photo);
+                                                    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+
+                                                    <div class="item-picture">
+                                                        <img src="@imgAvatar" alt="" />
+                                                    </div>
+
+                                                    <div class="color-grey">
+                                                        @besoin.Besoin.Utilisateur.Prenom @besoin.Besoin.Utilisateur.Nom
+                                                    </div>
+                                                }
+                                                else if (besoin.Candidatures.Count > 0)
+                                                {
+                                                    foreach (Candidature cetteCandidature in besoin.Candidatures)
+                                                    {
+                                                        if (cetteCandidature.Utilisateur.Photo != null)
+                                                        {
+                                                            var base64candid = Convert.ToBase64String(cetteCandidature.Utilisateur.Photo);
+                                                            var imgAvatarCandid = string.Format("data:image/jpg;base64,{0}", base64candid);
+
+                                                            <a data-toggle="tooltip" data-original-title="Voir @cetteCandidature.Utilisateur.Prenom @cetteCandidature.Utilisateur.Nom" href="@Url.Action("DetailCandidature", "CandidaturePorteur", new { user = cetteCandidature.Utilisateur.Id, projet = cetteCandidature.Projet.Id })">
+                                                                <div class="item-picture">
+                                                                    <img src="@imgAvatarCandid" alt="" />
+                                                                </div>
+                                                            </a>
+                                                        }
+                                                    }
+                                                }
+
+                                            </div>
+                                            <div class="item-col item-col-actions">
+
+                                                @if (besoin.Besoin.UtilisateurId != null)
+                                                {
+                                                    <button class="btn btn-sm delete" value="@besoin.Besoin.Id">Retirer utilisateur</button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+        </section>
+
+        <div class="neo-pagination mt-5 mb-5">
+            <div class="neo-pagination-left">
+                <a class="neo-pagination-link">
+                    <i class="icon-start"></i>
+                </a>
+            </div>
+            <div class="neo-pagination-center">
+            </div>
+            <div class="neo-pagination-right">
+                <a class="neo-pagination-link">
+                    <i class="icon-end"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

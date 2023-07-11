@@ -1,0 +1,205 @@
+﻿@model IEnumerable<Neoma.Models.Role>
+
+@{
+    ViewData["Title"] = "Rôles";
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".form-control").keyup(function () {
+                var editBtn = $(this).parent().parent().find(".edit");
+                var createBtn = $(this).parent().parent().find(".create");
+                editBtn.removeAttr("disabled");
+                createBtn.removeAttr("disabled");
+            })
+
+            $("body").on("click", "#Valide", function () {
+                var editBtn = $(this).parent().parent().parent().find(".edit");
+                var createBtn = $(this).parent().parent().parent().find(".create");
+                editBtn.removeAttr("disabled");
+                createBtn.removeAttr("disabled");
+                if ($(this).is(':checked')) {
+                    $(this).val(true);
+                }
+                else {
+                    $(this).val(false);
+                }
+            })
+
+            $(function () {
+                $(".edit").click(function () {
+                    var $buttonClicked = $(this);
+                    var Role = {};
+                    Role.Id = $buttonClicked.attr('data-id');
+                    Role.Name = $(this).parent().parent().parent().find("#item_Name").val();
+                    Role.Valide = $(this).parent().parent().parent().find("#Valide").val();
+                    var items = JSON.stringify(Role);
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Edit", "Role", new { area = "Admin" })',
+                        contentType: "application/json; charset=utf-8",
+                        data: items,
+                        datatype: "json",
+                        success: function (data) {
+                            $buttonClicked.attr("disabled", "disabled");
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $(".create").click(function () {
+                    var Role = {};
+                    Role.Name = $(this).parent().parent().parent().find("#item_Name").val();
+                    Role.Valide = $(this).parent().parent().parent().find("#Valide").val();
+                    var items = JSON.stringify(Role);
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Create", "Role", new { area = "Admin" })',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        data: items,
+                        success: function (data) {
+                            location.reload();
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+        });
+
+        function confirmDelete(id) {
+            $.confirm({
+                title: 'Confirmation',
+                content: 'Voulez-vous vraiment supprimer ce rôle ?',
+                buttons: {
+                    Valider: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "Role", new { area = "Admin"})',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response === "OK") {
+                                    window.location.href = '@Url.Action("Index", "Role", new { area = "Admin"})';
+                                }
+                                else
+                                    alert(response);
+                            }
+                        });
+                        return true;
+                    },
+                    Annuler: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+        function noDelete() {
+            //console.log(id);
+            $.confirm({
+                title: 'Suppression impossible',
+                content: 'Une ou plusieurs spécialités sont liés à ce rôle.',
+                type: 'red',
+                buttons: {
+                    Fermer: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2 class="w-100">@ViewData["Title"]</h2>
+                @*<button id="create" class="btn btn-sm">
+                    Ajouter un rôle
+                </button>*@
+            </div>
+            <div class="neobox-content">
+
+                <table class="items-listing-small w-100">
+                    <thead>
+                        <tr>
+                            <th class="item-secondary mr-2" style="width:100%">
+                                <label>Libellé</label>
+                            </th>
+                            <th class="item-secondary">
+                                <label>Valide</label>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="item-secondary mr-2">
+                                    <input asp-for="@item.Name" class="form-control" />
+                                </td>
+                                <td class="item-secondary">
+                                    <label class="checkbox">
+                                        <input type="checkbox" id="Valide" checked="@(item.Valide ? true : false)" value="@(item.Valide ? "true" : "false")"/>
+                                        <span class="custom-visual"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-square btn-success btn-sm ml-2 edit" disabled data-id="@item.Id">
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                        @if (item.CanDelete)
+                                        {
+                                            <div class="btn btn-square btn-danger btn-sm ml-2" onclick="confirmDelete('@item.Id')">
+                                                <i class="fa fa-times"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="btn btn-square btn-danger btn-sm ml-2" onclick="noDelete()">
+                                                <i class="fa fa-times"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="item-secondary mr-2">
+                                <input id="item_Name" class="form-control" />
+                            </td>
+                            <td class="item-secondary">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="Valide" checked value="true" />
+                                    <span class="custom-visual"></span>
+                                </label>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-start">
+                                    <button type="button" class="btn btn-square btn-success btn-sm ml-2 create" disabled>
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+

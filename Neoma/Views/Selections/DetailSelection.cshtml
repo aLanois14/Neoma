@@ -1,0 +1,110 @@
+﻿@model Neoma.Models.SelectionViewModel.ItemSelectionViewModel
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = Model.User.Prenom + " " + Model.User.Nom;
+}
+
+@functions{
+    //IHtmlContent Telephone(string telephone)
+    //{
+    //    return Html.Raw(Convert.ToInt32(telephone).ToString("0# ## ## ## ##"));
+    //}
+}
+@{
+    var base64 = Convert.ToBase64String(Model.User.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+}
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+        })
+    </script>
+
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Co-surfeur</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index" asp-controller="Selections">Mes selections</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Detail co-surfeur
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        <a href="@ViewBag.Url"  class="btn btn-sm mb-3"><i class="icon-caret-left"></i> Retour</a>
+        <section class="neobox">
+            <div class="neobox-header align-items-center">
+                <div class="profile-presentation-picture">
+                    <img src="@imgAvatar" alt="" />
+                </div>
+                <div class="profile-presentation-text align-center-680">
+                    <h2>@ViewData["Title"]</h2>
+                    <div class="form-group">
+                        <label>Téléphone portable</label>
+                        @*<p>@Telephone(Model.User.PhoneNumber)</p>*@
+                        <p>@Model.User.PhoneNumber</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Organisme</label>
+                        <p>@Model.User.Organisme.Name - @Model.User.Organisme.Ville</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neobox-content">
+                <div class="form-group">
+                    <label>Présentation</label>
+                    <p>@Model.User.Description</p>
+                </div>
+            </div>
+            <div class="neobox-subtitle">
+                <h2>Domaines de compétences</h2>
+            </div>
+            <div class="neobox-content">
+                @foreach (var item in Model.ItemRole)
+                {
+                    <div class="form-group">
+                        <label>
+                            @item.Role.Name
+                        </label>
+                        <div class="space-between">
+                            <div>
+                                @foreach (var spec in item.Specialites)
+                                {
+                                    <span class="badge border-bootstrap-grey"> @spec.Name </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="neobox-footer text-right">
+                <a asp-action="NewConversation" asp-controller="SharedAction" asp-route-user="@Model.User.Id" class="btn mr-3">
+                    <i class="icon-send"></i>
+                    Écrire
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+</div>

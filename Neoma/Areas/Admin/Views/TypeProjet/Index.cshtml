@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Neoma.Models.TypeProjet>
+
+@{
+    ViewData["Title"] = "Type de projet";
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".form-control").keyup(function () {
+                var editBtn = $(this).parent().parent().find(".edit");
+                var createBtn = $(this).parent().parent().find(".create");
+                editBtn.removeAttr("disabled");
+                createBtn.removeAttr("disabled");
+            })
+
+            $(function () {
+                $(".edit").click(function () {
+                    var $buttonClicked = $(this);
+                    var TypeProjet = {};
+                    TypeProjet.Id = $buttonClicked.attr('data-id');
+                    TypeProjet.Name = $(this).parent().parent().find("#item_Name").val();
+                    var items = JSON.stringify(TypeProjet);
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Edit", "TypeProjet", new { area = "Admin" })', //'/Admin/TypeProjet/Edit',
+                        contentType: "application/json; charset=utf-8",
+                        data: items,
+                        datatype: "json",
+                        success: function () {
+                            $buttonClicked.attr("disabled", "disabled");
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+
+            $(function () {
+                $(".create").click(function () {
+                    var TypeProjet = {};
+                    TypeProjet.Name = $(this).parent().parent().find("#item_Name").val();
+                    var items = JSON.stringify(TypeProjet);
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Create", "TypeProjet", new { area = "Admin" })', //'/Admin/TypeProjet/CreateView',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        data: items,
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+        });
+
+        function confirmDelete(id) {
+            $.confirm({
+                title: 'Confirmation',
+                content: 'Voulez-vous vraiment supprimer ce type de projet ?',
+                buttons: {
+                    Valider: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "TypeProjet", new { area = "Admin"})',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response === "OK") {
+                                    window.location.href = '@Url.Action("Index", "TypeProjet", new { area = "Admin"})';
+                                }
+                                else
+                                    alert(response);
+                            }
+                        });
+                        return true;
+                    },
+                    Annuler: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+        function noDelete() {
+            //console.log(id);
+            $.confirm({
+                title: 'Suppression impossible',
+                content: 'Un ou plusieurs projets sont liés à ce type de projet.',
+                type: 'red',
+                buttons: {
+                    Fermer: function () {
+                        return true;
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2 class="w-100">@ViewData["Title"]</h2>
+                @*<button id="create" class="btn btn-sm">
+                    Ajouter un type de projet
+                </button>*@
+            </div>
+            <div class="neobox-content">
+                <ul class="items-listing-small">
+                    @foreach (var item in Model)
+                    {
+                        <li class="item">
+                            <div class="item-secondary">
+                                <input asp-for="@item.Name" class="form-control" />
+                            </div>
+                            <button type="button" class="btn btn-square btn-success btn-sm ml-2 edit" disabled data-id="@item.Id">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            @if (item.CanDelete)
+                            {
+                                <div class="btn btn-square btn-danger btn-sm ml-2" onclick="confirmDelete('@item.Id')">
+                                    <i class="fa fa-times"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="btn btn-square btn-danger btn-sm ml-2" onclick="noDelete()">
+                                    <i class="fa fa-times"></i>
+                                </div>
+                            }
+                        </li>
+                    }
+                    <li class="item">
+                        <div class="item-secondary">
+                            <input id="item_Name" class="form-control" />
+                        </div>
+                        <div class="d-flex justify-content-start" style="width:82px">
+                            <button type="button" class="btn btn-square btn-success btn-sm ml-2 create" disabled>
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

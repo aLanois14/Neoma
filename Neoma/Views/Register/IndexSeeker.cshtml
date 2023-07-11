@@ -1,0 +1,223 @@
+﻿@model Neoma.Models.CandidatViewModel.CandidatViewModel
+
+@{
+    ViewData["Title"] = "Présentez-vous";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{ 
+    <script>
+        $(function() {
+            autosize(document.querySelectorAll('textarea'));
+            $('.make-select2').select2({
+                tags: true,
+                width: "100%",
+                language: {
+                    noResults: function (params) {
+                        return "Aucune spécialité pour ce rôle, vous pouvez en créer une.";
+                    }
+                }
+            });
+
+            $("body").on("change", ".Role", function () {
+                var specialite = $(this).parent().parent().find(".specialite");
+                var role = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateSpecialite", "SharedAction")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: { "role":  role },
+                    success: function (data) {
+                        specialite.find('option').remove();
+                        $.each(data, function (key, value) {
+                            specialite.append($("<option></option>")
+                                .attr("value", value.id).text(value.name));
+                        });
+                    }
+                });
+            });
+
+            $("body").on("click", ".remove", function () {
+                $(this).closest('.row').remove();
+            });
+
+            $("#btnSubmit").click(function (e) {
+                e.preventDefault();
+                if (ValidateFields()) {
+                var Candidat = {};
+                var ListSkill = [];
+                Candidat.Id = $("#Utilisateur").val();
+                Candidat.Description = $("#Presentation").val();
+                ListSkill = ListRowSkill();
+                Candidat.Role = ListSkill;
+                var items = JSON.stringify(Candidat);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ValidateCandidat", "Register")',
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    data: items,
+                    async: false,
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.result;
+                        }
+                        else {
+                            $(".text-danger > ul").empty();
+                            for (var i = 0; i < response.errors.length; i++) {
+                                var error = response.errors[i].errors[0].errorMessage;
+                                $(".text-danger > ul").append('<li>' + error + '</li>');
+                            }
+                        }
+                    },
+                    error: function (request, status, error) {
+                        alert(request.responseText);
+                    }
+                    });
+                }
+                else {
+                    $.confirm({
+                        title: 'Données manquantes',
+                        content: 'Certains champs indispensables n\'ont pas été remplis. Veuillez compléter le formulaire.',
+                        buttons: {
+                            OK: function () {
+                                return true;
+                            }
+                        }
+                    });
+                }
+            });
+
+            function TableAddSkill() {
+                document.getElementById("Erreur0Besoin").style.display = "none";
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("TableBesoinAdd", "Register")',
+                        contentType: "application/json; charset=utf-8",
+                        datatype: "json",
+                        success: function (data) {
+                            $('#rowNeeds').append(data);
+                            $('.make-select2').select2({
+                                tags: true,
+                                width: "100%",
+                                language: {
+                                    noResults: function (params) {
+                                        return "Aucune spécialité pour ce rôle, vous pouvez en créer une.";
+                                    }
+                                }
+                            });
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+            }
+
+            $("#addSkill").click(function () {
+                TableAddSkill();
+            });
+
+            function ListRowSkill() {
+                var ListSkill = [];
+                $("#rowNeeds .row").each(function (n) {
+                    var Role = {};
+                    var ListSpecialite = [];
+                    var specialiteInit = $(this).children().find(".specialite").select2('data');
+                    $.each(specialiteInit, function (n) {
+                        //console.log(specialiteInit[n].id + " " + specialiteInit[n].text);
+                        var Specialite = {};
+                        if ($.isNumeric(specialiteInit[n].id)) {
+                            Specialite.Id = specialiteInit[n].id;
+                        }
+                        else {
+                            Specialite.Id = 0;
+                        }
+                        Specialite.Name = specialiteInit[n].text;
+                        ListSpecialite[n] = Specialite;
+                    });
+                    Role.RoleId = $(this).children().find("#Role").val();
+                    Role.UtilisateurId = $("#Utilisateur").val();
+                    Role.Specialite = ListSpecialite;
+                    ListSkill[n] = Role;
+                });
+                return ListSkill;
+            }
+        })
+
+        function ValidateFields() {
+            var toutEstOK = false;
+            var competences = $("#rowNeeds").children();
+            var nbCompetences = competences.length - 2;
+
+            if (nbCompetences === 0)
+                document.getElementById("Erreur0Besoin").style.display = "inline-block";
+
+            var testCompetences = TesteTousLesBesoins();
+            if (!testCompetences)
+                document.getElementById("ErreurChampsBesoins").style.display = "inline-block";
+
+            toutEstOK = nbCompetences !== 0 && testCompetences;
+
+            return toutEstOK;
+        }
+
+        function TesteTousLesBesoins() {
+            var besoins = $("#rowNeeds").children();
+            var nbBesoins = besoins.length;
+            var tousLesBesoinsOK = true;
+            for (var i = 2; i < nbBesoins; i++) {
+                var roleOK = besoins[i].children[2].children[1].value !== "";
+                var specsOK = besoins[i].children[3].children[1].value !== "";
+                tousLesBesoinsOK = roleOK && specsOK;
+            }
+            if (tousLesBesoinsOK)
+                document.getElementById("ErreurChampsBesoins").style.display = "none";
+            return tousLesBesoinsOK;
+        }
+    </script>
+
+}
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12">
+
+        <!-- EMAIL / NEW USER -->
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <form method="post">
+                <div class="neobox-content">
+                    <input type="hidden" id="Utilisateur" value="@Model.Id" />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label>Présentation</label>
+                        <textarea id="Presentation" rows="3" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="neobox-subtitle">
+                    <h3>Compétences</h3>
+                    <div class="neobox-subtitle-actions">
+                        <span id="addSkill" class="btn btn-default btn-sm">
+                            Ajouter une compétence
+                        </span>
+                    </div>
+                </div>
+                <div class="neobox-content">
+                    <div id="rowNeeds">
+                        <span id="Erreur0Besoin" class="text-danger" style="display:none">Veuillez entrer au moins une compétence</span>
+                        <span id="ErreurChampsBesoins" class="text-danger" style="display:none">Veuillez renseigner les spécialités pour tous les rôles</span>
+                        @await Component.InvokeAsync("TableBesoin", null)
+                    </div>
+
+                    <div class="form-group text-right mt-5">
+                        <button id="btnSubmit" class="btn btn-large"><i class="icon-send"></i> Envoyer votre demande</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

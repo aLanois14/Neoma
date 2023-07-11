@@ -1,0 +1,66 @@
+﻿@model Neoma.Models.MembreProjetViewModel.MembreProjetViewModel
+@using Neoma.Extensions
+
+@functions{
+    List<SelectListItem> Role(List<Role> list, Role role)
+    {
+        List<SelectListItem> selectList = new List<SelectListItem>();
+
+        foreach (var item in list)
+        {
+            if (item == role)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString(),
+                    Selected = true
+                });
+            }
+            else
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+            }
+        }
+
+        return selectList;
+    }
+}
+
+<div class="row member-row row-with-btn mb-3">
+    <input type="hidden" id="idMembre" value="@(Model.Membre == null ? 0 : Model.Membre[0].Id)"/>
+    <div class="col-sm">
+        <label>Prénom</label>
+        <input id="FirstName" class="form-control" value="@(Model.Membre == null ? null : Model.Membre[0].Prenom)" onkeypress="TesteTousLesMembres()" onchange="TesteTousLesMembres()" />
+    </div>
+    <div class="col">
+        <label>Nom</label>
+        <input id="LastName" class="form-control" value="@(Model.Membre == null ? null : Model.Membre[0].Nom)"  onkeypress="TesteTousLesMembres()" onchange="TesteTousLesMembres()"/>
+    </div>
+    <div class="col">
+        <label>Adresse mail</label>
+        <input id="Email" class="form-control" value="@(Model.Membre == null ? null : Model.Membre[0].Mail)" onkeypress="TesteTousLesMembres()" onchange="TesteTousLesMembres()" />
+    </div>
+    <div class="col">
+        <label>Rôle</label>
+        <select id="Role" asp-items="@(Model.Membre == null ? Model.Role.ToSelectListItem(0) : Role(Model.Role, Model.Membre[0].Role))" class="form-control Role" onchange="TesteTousLesMembres()"></select>
+    </div>
+    <div class="col-3">
+        <label>Spécialité</label>
+        <select class="form-control make-select2 specialite" multiple="multiple" onchange="TesteTousLesMembres()">
+            @foreach (Specialite CetteSpec in Model.Specialite)
+            {
+                <option value="@CetteSpec.Id" selected="@(CetteSpec.Match ? true : false)">@CetteSpec.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <span class="btn btn-square btn-danger btn-sm remove">
+            <i class="fa fa-times"></i>
+        </span>
+    </div>
+</div>

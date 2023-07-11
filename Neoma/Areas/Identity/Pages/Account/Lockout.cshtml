@@ -1,0 +1,20 @@
+﻿@page
+@model LockoutModel
+@{
+    ViewData["Title"] = "Compte verrouillé";
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+
+        <!-- EMAIL / NEW USER -->
+        <section class="neobox mt-5">
+            <div class="neobox-title">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="neobox-content extra-padding text-center">
+                <p class="text-danger">Ce compte a été verrouillé, veuillez réessayer plus tard.</p>
+            </div>
+        </section>
+    </div>
+</div>

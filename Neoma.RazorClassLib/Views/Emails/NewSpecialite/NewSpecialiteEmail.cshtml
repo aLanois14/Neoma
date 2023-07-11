@@ -1,0 +1,19 @@
+﻿@using Neoma.RazorClassLib.Views.Emails.NewSpecialite
+@using Neoma.RazorClassLib.Views.Shared
+@model NewSpecialiteEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Confirmation spécialité";
+}
+<p>
+    Un utilisateur a créé les spécialités suivantes :
+</p>
+@foreach (var specialite in Model.Specialites)
+{
+    <p>&nbsp;- @specialite</p>
+}
+<br />
+<p>
+    Veuillez vous connecter pour les valider.
+</p>
+<br/>
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Consulter détail", Model.NewSpecialiteEmailUrl))

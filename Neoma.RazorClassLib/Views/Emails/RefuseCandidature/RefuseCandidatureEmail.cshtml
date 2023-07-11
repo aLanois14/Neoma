@@ -1,0 +1,14 @@
+﻿@using Neoma.RazorClassLib.Views.Shared
+@using Neoma.RazorClassLib.Views.Emails.RefuseCandidature
+@model RefuseCandidatureEmailViewModel
+@{
+    ViewData["EmailTitle"] = "Candidature refusée";
+}
+<p>
+    Votre candidature pour le projet <b>@Model.ProjetName</b> a été refusée pour le motif suivant :
+</p>
+<p>
+    @Model.Motif
+</p>
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonViewModel("Consulter détail", Model.EmailUrl))

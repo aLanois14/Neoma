@@ -1,0 +1,8 @@
+﻿@model object
+
+<button type="button" class="btn btn-square btn-success btn-sm ml-2 edit" disabled data-id="@Model">
+    <i class="fa fa-save"></i>
+</button>
+<div class="btn btn-square btn-danger btn-sm ml-2" onclick = "confirmDelete('@Model')">
+    <i class="fa fa-times"></i>
+</div>

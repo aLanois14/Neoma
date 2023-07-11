@@ -1,0 +1,117 @@
+﻿@model Neoma.Models.Projet
+@using Neoma.Extensions
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@{
+    var base64 = Convert.ToBase64String(Model.Utilisateur.Photo);
+    var imgAvatar = string.Format("data:image/jpg;base64,{0}", base64);
+}
+
+@section Scripts{
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+        })
+    </script>
+}
+
+<div class="page-top">
+    <nav class="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Accueil</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Projets</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index" asp-controller="CandidatureCandidat">Mes candidatures</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Detail projet
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-10">
+        <a href="@ViewBag.Url" class="btn btn-sm mb-3"><i class="icon-caret-left"></i> Retour</a>
+        <section class="neobox">
+            <div class="neobox-header">
+                <div class="profile-presentation-text">
+                    <h2>@Model.Name</h2>
+                    <p>@Model.TypeProjet.Name</p>
+                </div>
+            </div>
+            <div class="neobox-content align-center-680">
+                <div class="form-group">
+                    <div class="d-flex align-items-center">
+                        <img src="@imgAvatar" class="mr-2 rounded-circle" alt="" />
+                        <div class="w-100">
+                            <p><b>@Model.Utilisateur.Prenom @Model.Utilisateur.Nom</b></p>
+                            <p class="color-grey">@Model.Utilisateur.Organisme.Name</p>
+                        </div>
+                        <div class="text-right">
+                            <a asp-action="NewConversation" asp-controller="SharedAction" asp-route-user="@Model.Utilisateur.Id" class="btn mr-3">
+                                <i class="icon-send"></i>
+                                Écrire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p>@Model.PresentationProjet</p>
+                </div>
+            </div>
+            <div class="neobox-subtitle">
+                <h2>Besoins pour ce projet</h2>
+            </div>
+            <div class="neobox-content">
+                <div class="form-group">
+                    @foreach (var item in Model.Besoins)
+                    {
+                        if (item.Specialite.Count > 0)
+                        {
+                            <div class="form-group">
+                                <label>
+                                    @item.Role.Name
+                                </label>
+                                <div class="space-between">
+                                    <div>
+                                        @foreach (var index in item.Specialite)
+                                        {
+                                            <span class="@(index.Match ? "btn-success" : "btn-danger") badge border-bootstrap-grey">@index.Name</span>
+                                        }
+                                    </div>
+                                    <div>
+                                        @if (item.UtilisateurId != null)
+                                        {
+                                            var base64Candid = Convert.ToBase64String(item.Utilisateur.Photo);
+                                            var imgAvatarCandid = string.Format("data:image/jpg;base64,{0}", base64Candid);
+
+                                            <div class="item-picture" style="display:inline-block;margin-right:7px">
+                                                <img src="@imgAvatarCandid" alt="" style="width:30px" />
+                                            </div>
+
+                                            <div class="color-grey" style="display:inline-block">
+                                                @item.Utilisateur.Prenom @item.Utilisateur.Nom
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
